@@ -1,0 +1,82 @@
+<a class="ima-brand" href="/" aria-label="IMA AgroDigital — página inicial da documentação">
+  <span class="ima-brand__logo-wrap">
+    <img
+      class="ima-brand__logo"
+      src="/logo-ima.png"
+      width="210"
+      height="98"
+      alt="Instituto Mineiro de Agropecuária"
+    />
+  </span>
+  <span class="ima-brand__label" aria-hidden="true">
+    <strong>AgroDigital</strong>
+    <small>Documentação</small>
+  </span>
+</a>
+
+<style>
+  .ima-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    color: var(--sl-color-white);
+    text-decoration: none;
+  }
+
+  .ima-brand__logo-wrap {
+    display: grid;
+    flex: none;
+    width: 5.15rem;
+    height: 2.55rem;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid rgb(0 0 0 / 7%);
+    border-radius: 0.45rem;
+    background: #fff;
+  }
+
+  .ima-brand__logo {
+    display: block;
+    width: 4.75rem;
+    height: auto;
+  }
+
+  .ima-brand__label {
+    display: grid;
+    min-width: 0;
+    line-height: 1.05;
+  }
+
+  .ima-brand__label strong {
+    overflow: hidden;
+    font-size: 0.94rem;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+    text-overflow: ellipsis;
+  }
+
+  .ima-brand__label small {
+    margin-top: 0.25rem;
+    color: var(--sl-color-gray-3);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 27rem) {
+    .ima-brand__label {
+      display: none;
+    }
+
+    .ima-brand__logo-wrap {
+      width: 4.6rem;
+      height: 2.3rem;
+    }
+
+    .ima-brand__logo {
+      width: 4.25rem;
+    }
+  }
+</style>

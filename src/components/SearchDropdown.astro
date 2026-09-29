@@ -1,0 +1,384 @@
+---
+import { getCollection } from 'astro:content';
+import { Icon } from '@astrojs/starlight/components';
+
+const normalizeSearchText = (value: string) =>
+  value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('pt-BR');
+
+const entries = await getCollection('docs');
+const documents = entries
+  .filter((entry) => entry.id !== '404' && entry.data.pagefind !== false)
+  .map((entry) => {
+    const path = entry.id === 'index' ? '' : entry.id.replace(/\/index$/, '');
+    const title = entry.data.title;
+
+    return {
+      title,
+      url: `/${path}${path ? '/' : ''}`,
+      searchText: normalizeSearchText(`${title} ${entry.body ?? ''}`),
+    };
+  });
+
+const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
+---
+
+<agrodigital-search class={Astro.props.class}>
+  <div class="search-anchor">
+    <div class="search-control">
+      <Icon name="magnifier" />
+      <label class="sr-only" for="agrodigital-search-input">Pesquisar na documentação</label>
+      <input
+        id="agrodigital-search-input"
+        type="search"
+        inputmode="search"
+        autocomplete="off"
+        placeholder="Pesquisar"
+        aria-expanded="false"
+        aria-controls="agrodigital-search-results"
+        data-search-input
+      />
+      <button type="button" class="clear-search" data-clear-search hidden aria-label="Limpar pesquisa">
+        ×
+      </button>
+      <kbd class="sl-hidden md:sl-flex" data-shortcut>
+        <kbd>Ctrl</kbd><kbd>K</kbd>
+      </kbd>
+    </div>
+
+    <section class="search-dropdown" data-search-dropdown hidden aria-label="Resultados da pesquisa">
+      <p class="search-status" data-search-status aria-live="polite">
+        Digite para pesquisar em toda a documentação.
+      </p>
+      <ul id="agrodigital-search-results" class="search-results" data-search-results></ul>
+    </section>
+  </div>
+
+  <script type="application/json" data-search-documents set:html={serializedDocuments} />
+</agrodigital-search>
+
+<script>
+  type SearchDocument = {
+    title: string;
+    url: string;
+    searchText: string;
+  };
+
+  class AgroDigitalSearch extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready === 'true') return;
+      this.dataset.ready = 'true';
+
+      const input = this.querySelector<HTMLInputElement>('[data-search-input]');
+      const clearButton = this.querySelector<HTMLButtonElement>('[data-clear-search]');
+      const dropdown = this.querySelector<HTMLElement>('[data-search-dropdown]');
+      const status = this.querySelector<HTMLElement>('[data-search-status]');
+      const results = this.querySelector<HTMLUListElement>('[data-search-results]');
+      const data = this.querySelector<HTMLScriptElement>('[data-search-documents]');
+      const shortcut = this.querySelector<HTMLElement>('[data-shortcut]');
+
+      if (!input || !clearButton || !dropdown || !status || !results || !data) return;
+
+      let documents: SearchDocument[] = [];
+      try {
+        documents = JSON.parse(data.textContent || '[]');
+      } catch {
+        status.textContent = 'Não foi possível carregar o índice de pesquisa.';
+      }
+
+      const normalize = (value: string) =>
+        value
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLocaleLowerCase('pt-BR')
+          .trim();
+
+      const openSearch = () => {
+        dropdown.hidden = false;
+        input.setAttribute('aria-expanded', 'true');
+      };
+
+      const closeSearch = () => {
+        dropdown.hidden = true;
+        input.setAttribute('aria-expanded', 'false');
+      };
+
+      const renderResults = () => {
+        const rawQuery = input.value.trim();
+        const query = normalize(rawQuery);
+        clearButton.hidden = !rawQuery;
+        results.replaceChildren();
+
+        if (!query) {
+          status.textContent = 'Digite para pesquisar em toda a documentação.';
+          return;
+        }
+
+        const terms = query.split(/\s+/).filter(Boolean);
+        const matches = documents
+          .filter((searchDocument) =>
+            terms.every((term) => searchDocument.searchText.includes(term)),
+          )
+          .sort((left, right) => {
+            const leftTitle = normalize(left.title).includes(query) ? 1 : 0;
+            const rightTitle = normalize(right.title).includes(query) ? 1 : 0;
+            return rightTitle - leftTitle || left.title.localeCompare(right.title, 'pt-BR');
+          })
+          .slice(0, 12);
+
+        status.textContent = matches.length
+          ? `${matches.length} ${matches.length === 1 ? 'resultado encontrado' : 'resultados encontrados'}`
+          : `Nenhum resultado encontrado para “${rawQuery}”.`;
+
+        for (const searchDocument of matches) {
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          const title = document.createElement('strong');
+
+          link.href = searchDocument.url;
+          title.textContent = searchDocument.title;
+          link.append(title);
+          item.append(link);
+          results.append(item);
+        }
+      };
+
+      input.addEventListener('focus', openSearch);
+      input.addEventListener('click', openSearch);
+      input.addEventListener('input', () => {
+        openSearch();
+        renderResults();
+      });
+      input.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown') {
+          results.querySelector<HTMLAnchorElement>('a')?.focus();
+          event.preventDefault();
+        } else if (event.key === 'Escape') {
+          closeSearch();
+          input.blur();
+        }
+      });
+
+      clearButton.addEventListener('click', () => {
+        input.value = '';
+        renderResults();
+        input.focus();
+      });
+
+      document.addEventListener('pointerdown', (event) => {
+        if (!this.contains(event.target as Node)) closeSearch();
+      });
+
+      window.addEventListener('keydown', (event) => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLocaleLowerCase() === 'k') {
+          openSearch();
+          input.focus();
+          event.preventDefault();
+        }
+      });
+
+      const platformKey = shortcut?.querySelector('kbd');
+      if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+        platformKey.textContent = '⌘';
+        input.setAttribute('aria-keyshortcuts', 'Meta+K');
+      } else {
+        input.setAttribute('aria-keyshortcuts', 'Control+K');
+      }
+    }
+  }
+
+  if (!customElements.get('agrodigital-search')) {
+    customElements.define('agrodigital-search', AgroDigitalSearch);
+  }
+</script>
+
+<style>
+  agrodigital-search {
+    display: block;
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  .search-anchor {
+    position: relative;
+    width: 100%;
+  }
+
+  .search-control {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.85rem;
+    padding-inline: 0.9rem 0.65rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: var(--ima-radius-md);
+    background: var(--sl-color-black);
+    color: var(--sl-color-gray-2);
+    box-shadow: var(--ima-shadow-sm);
+    transition: border-color 140ms ease, box-shadow 140ms ease;
+  }
+
+  .search-control:focus-within {
+    border-color: var(--sl-color-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
+  }
+
+  .search-control > :global(svg) {
+    color: var(--sl-color-text-accent);
+  }
+
+  .search-control input {
+    width: 100%;
+    height: 2.7rem;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--sl-color-white);
+    font: inherit;
+  }
+
+  .search-control input::-webkit-search-cancel-button {
+    display: none;
+  }
+
+  .clear-search {
+    width: 1.7rem;
+    height: 1.7rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--sl-color-gray-3);
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  .clear-search:hover {
+    background: var(--sl-color-accent-low);
+    color: var(--sl-color-text-accent);
+  }
+
+  kbd[data-shortcut] {
+    gap: 0.25em;
+    padding-inline: 0.375rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 0.35rem;
+    background: var(--sl-color-bg);
+    font-size: var(--sl-text-2xs);
+  }
+
+  .search-dropdown {
+    position: absolute;
+    z-index: calc(var(--sl-z-index-navbar) + 1);
+    inset-block-start: calc(100% + 0.55rem);
+    inset-inline: 0;
+    max-height: min(34rem, calc(100vh - var(--sl-nav-height) - 2rem));
+    overflow: hidden;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: var(--ima-radius-md);
+    background: var(--sl-color-black);
+    box-shadow: var(--ima-shadow-md);
+  }
+
+  .search-status {
+    margin: 0;
+    padding: 0.85rem 1rem 0.55rem;
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-sm);
+  }
+
+  .search-results {
+    max-height: 29rem;
+    margin: 0;
+    padding: 0 0 0.4rem;
+    overflow-y: auto;
+    list-style: none;
+  }
+
+  .search-results :global(li + li) {
+    border-top: 1px solid var(--sl-color-hairline-light);
+  }
+
+  .search-results :global(a) {
+    display: grid;
+    gap: 0.15rem;
+    margin-inline: 0.4rem;
+    padding: 0.75rem 0.7rem;
+    border-radius: var(--ima-radius-xs);
+    color: var(--sl-color-text);
+    text-decoration: none;
+  }
+
+  .search-results :global(a:hover),
+  .search-results :global(a:focus-visible) {
+    background: var(--sl-color-accent-low);
+    color: var(--sl-color-text-accent);
+    outline: none;
+  }
+
+  .search-results :global(strong) {
+    font-size: var(--sl-text-sm);
+  }
+
+  @media (max-width: 49.99rem) {
+    agrodigital-search {
+      width: 2.65rem;
+      margin-inline-start: auto;
+    }
+
+    .search-control {
+      display: flex;
+      justify-content: center;
+      width: 2.65rem;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .search-control input,
+    .clear-search,
+    kbd[data-shortcut] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    agrodigital-search:focus-within {
+      position: fixed;
+      z-index: calc(var(--sl-z-index-navbar) + 1);
+      inset: 0.5rem;
+      width: auto;
+    }
+
+    agrodigital-search:focus-within .search-control {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      width: 100%;
+      padding-inline: 0.8rem;
+      border: 1px solid var(--sl-color-accent);
+      background: var(--sl-color-black);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
+    }
+
+    agrodigital-search:focus-within .search-control input,
+    agrodigital-search:focus-within .clear-search {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip: auto;
+    }
+
+    .search-dropdown {
+      inset-block-start: calc(100% + 0.4rem);
+    }
+  }
+</style>

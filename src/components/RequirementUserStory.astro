@@ -1,0 +1,48 @@
+---
+const entry = Astro.locals.starlightRoute.entry;
+const { docType, entityPlural } = entry.data;
+
+const acceptanceCriteria = Array.from(
+  (entry.body ?? '').matchAll(/^##\s+\d+\.\s+(.+)$/gm),
+  ([, heading]) => heading,
+)
+  .filter((heading) => heading.toLocaleLowerCase('pt-BR') !== 'critérios comuns')
+  .map((heading) => heading.charAt(0).toLocaleLowerCase('pt-BR') + heading.slice(1));
+
+const formattedCriteria = acceptanceCriteria.length > 1
+  ? `${acceptanceCriteria.slice(0, -1).join(', ')} e ${acceptanceCriteria.at(-1)}`
+  : acceptanceCriteria[0];
+
+const showUserStory = docType === 'requirement' && entityPlural && formattedCriteria;
+---
+
+{showUserStory && (
+  <blockquote class="requirement-user-story">
+    <p>
+      <strong>Eu, como</strong> usuário do sistema SIDAGRO, <strong>quero</strong>{' '}
+      {formattedCriteria} <strong>para</strong> gerenciar {entityPlural}.
+    </p>
+  </blockquote>
+)}
+
+<style>
+  .requirement-user-story {
+    width: 100%;
+    max-width: none;
+    margin: 0 0 2rem;
+    padding-inline-start: 1rem;
+    border-inline-start: 1px solid var(--sl-color-hairline);
+    color: var(--sl-color-gray-2);
+    font-size: var(--sl-text-lg);
+    line-height: 1.6;
+  }
+
+  .requirement-user-story p {
+    margin: 0;
+  }
+
+  .requirement-user-story strong {
+    color: var(--sl-color-white);
+    font-weight: 700;
+  }
+</style>

@@ -1,0 +1,131 @@
+---
+import { getCollection } from 'astro:content';
+import { systemModules } from '../config/system-modules.mjs';
+import { getDocHref, getModuleIconUrl } from '../utils/content';
+
+const collator = new Intl.Collator('pt-BR');
+const requirements = (await getCollection('docs')).filter(
+  (entry) => Boolean(entry.data.entity) && !entry.data.sidebar.hidden,
+);
+
+const modules = systemModules.map((module) => {
+  const entries = requirements
+    .filter((entry) => entry.data.module === module.slug)
+    .sort((left, right) =>
+      collator.compare(left.data.entity ?? '', right.data.entity ?? ''),
+    );
+
+  return {
+    ...module,
+    count: entries.length,
+    href: entries[0] ? getDocHref(entries[0].id) : undefined,
+  };
+});
+---
+
+<ul class="system-module-grid">
+  {
+    modules.map((module) => (
+      <li>
+        {module.href ? (
+          <a class="system-module-card" href={module.href}>
+            <span
+              class="system-module-card__icon"
+              style={`--module-icon: url('${getModuleIconUrl(module.slug)}')`}
+              aria-hidden="true"
+            />
+            <span>
+              <strong>{module.label}</strong>
+              <small>
+                {module.count} {module.count === 1 ? 'requisito' : 'requisitos'}
+              </small>
+            </span>
+            <span class="system-module-card__arrow" aria-hidden="true">→</span>
+          </a>
+        ) : (
+          <article class="system-module-card is-empty" aria-label={`${module.label}: em preparação`}>
+            <span
+              class="system-module-card__icon"
+              style={`--module-icon: url('${getModuleIconUrl(module.slug)}')`}
+              aria-hidden="true"
+            />
+            <span>
+              <strong>{module.label}</strong>
+              <small>Em preparação</small>
+            </span>
+          </article>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .system-module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    gap: 0.9rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .system-module-grid li {
+    margin: 0;
+  }
+
+  .system-module-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.8rem;
+    min-height: 5.25rem;
+    padding: 1rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: var(--ima-radius-md);
+    background: var(--sl-color-black);
+    color: var(--sl-color-text);
+    text-decoration: none;
+    box-shadow: var(--ima-shadow-sm);
+  }
+
+  a.system-module-card {
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  }
+
+  a.system-module-card:hover {
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-text);
+    box-shadow: var(--ima-shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .system-module-card.is-empty {
+    opacity: 0.62;
+  }
+
+  .system-module-card__icon {
+    width: 1.7rem;
+    height: 1.7rem;
+    background: var(--sl-color-text-accent);
+    mask: var(--module-icon) center / contain no-repeat;
+    -webkit-mask: var(--module-icon) center / contain no-repeat;
+  }
+
+  .system-module-card > span:nth-child(2) {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .system-module-card strong {
+    color: var(--sl-color-white);
+  }
+
+  .system-module-card small {
+    color: var(--sl-color-gray-3);
+  }
+
+  .system-module-card__arrow {
+    color: var(--sl-color-text-accent);
+    font-size: 1.2rem;
+  }
+</style>

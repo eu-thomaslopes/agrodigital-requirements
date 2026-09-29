@@ -1,0 +1,34 @@
+---
+title: Documentação do AgroDigital
+template: splash
+docType: landing
+hero:
+  title: Conhecimento do AgroDigital, em um só lugar
+  tagline: Requisitos navegáveis, regras rastreáveis e definições compartilhadas para apoiar implementação e manutenção.
+  actions:
+    - text: Explorar o sistema
+      link: "#módulos-do-sistema"
+      icon: right-arrow
+      variant: primary
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import SystemModuleCards from '../../components/SystemModuleCards.astro';
+
+## Módulos do sistema
+
+<SystemModuleCards />
+
+## Uma documentação feita para consulta
+
+<CardGrid>
+  <Card title="Navegação por domínio" icon="seti:folder">
+    Encontre requisitos pela estrutura do AgroDigital: módulo, entidade e funcionalidade.
+  </Card>
+  <Card title="Busca no conteúdo" icon="magnifier">
+    Pesquise nomes, campos, regras, validações e termos presentes nas especificações.
+  </Card>
+  <Card title="Fonte única" icon="puzzle">
+    Definições compartilhadas serão referenciadas, evitando cópias divergentes entre requisitos.
+  </Card>
+</CardGrid>

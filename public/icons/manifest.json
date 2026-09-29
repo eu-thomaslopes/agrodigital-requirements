@@ -1,0 +1,1431 @@
+{
+  "source": "lucide-static",
+  "version": "0.468.0",
+  "guide": "Guia-de-Marca-IMA.html",
+  "count": 177,
+  "entities": {
+    "acougue": {
+      "file": "entidades/acougue.svg",
+      "module": "geral",
+      "label": "Açougue",
+      "icon": "ham"
+    },
+    "classificacao-sanitaria-por-estado": {
+      "file": "entidades/classificacao-sanitaria-por-estado.svg",
+      "module": "geral",
+      "label": "Classificação Sanitária por Estado",
+      "icon": "shield-check"
+    },
+    "divisao-municipal": {
+      "file": "entidades/divisao-municipal.svg",
+      "module": "geral",
+      "label": "Divisão Municipal",
+      "icon": "map"
+    },
+    "estabelecimento-agropecuario": {
+      "file": "entidades/estabelecimento-agropecuario.svg",
+      "module": "geral",
+      "label": "Estabelecimento Agropecuário",
+      "icon": "briefcase-business"
+    },
+    "estabelecimento-generico": {
+      "file": "entidades/estabelecimento-generico.svg",
+      "module": "geral",
+      "label": "Estabelecimento Genérico",
+      "icon": "building2"
+    },
+    "instituicao-de-ensino-e-pesquisa": {
+      "file": "entidades/instituicao-de-ensino-e-pesquisa.svg",
+      "module": "geral",
+      "label": "Instituição de Ensino e Pesquisa",
+      "icon": "landmark"
+    },
+    "local-de-pesagem": {
+      "file": "entidades/local-de-pesagem.svg",
+      "module": "geral",
+      "label": "Local de Pesagem",
+      "icon": "weight"
+    },
+    "pessoa-fisica": {
+      "file": "entidades/pessoa-fisica.svg",
+      "module": "geral",
+      "label": "Pessoa Física",
+      "icon": "user-round"
+    },
+    "pessoa-juridica": {
+      "file": "entidades/pessoa-juridica.svg",
+      "module": "geral",
+      "label": "Pessoa Jurídica",
+      "icon": "id-card"
+    },
+    "produto": {
+      "file": "entidades/produto.svg",
+      "module": "geral",
+      "label": "Produto",
+      "icon": "shopping-cart"
+    },
+    "profissional-de-servico-oficial": {
+      "file": "entidades/profissional-de-servico-oficial.svg",
+      "module": "geral",
+      "label": "Profissional de Serviço Oficial",
+      "icon": "network"
+    },
+    "revendedora-de-produtos-agropecuarios": {
+      "file": "entidades/revendedora-de-produtos-agropecuarios.svg",
+      "module": "geral",
+      "label": "Revendedora de Produtos Agropecuários",
+      "icon": "store"
+    },
+    "unidade-administrativa": {
+      "file": "entidades/unidade-administrativa.svg",
+      "module": "geral",
+      "label": "Unidade Administrativa",
+      "icon": "warehouse"
+    },
+    "unidade-de-medida": {
+      "file": "entidades/unidade-de-medida.svg",
+      "module": "geral",
+      "label": "Unidade de Medida",
+      "icon": "ruler"
+    },
+    "unidade-de-vigilancia-agropecuaria": {
+      "file": "entidades/unidade-de-vigilancia-agropecuaria.svg",
+      "module": "geral",
+      "label": "Unidade de Vigilância Agropecuária",
+      "icon": "tower-control"
+    },
+    "venda-de-propriedade": {
+      "file": "entidades/venda-de-propriedade.svg",
+      "module": "geral",
+      "label": "Venda de Propriedade",
+      "icon": "truck"
+    },
+    "certificadora-sisbov": {
+      "file": "entidades/certificadora-sisbov.svg",
+      "module": "animal",
+      "label": "Certificadora SISBOV",
+      "icon": "badge-check"
+    },
+    "doenca": {
+      "file": "entidades/doenca.svg",
+      "module": "animal",
+      "label": "Doença",
+      "icon": "bug"
+    },
+    "especie": {
+      "file": "entidades/especie.svg",
+      "module": "animal",
+      "label": "Espécie",
+      "icon": "dna"
+    },
+    "estabelecimento-agroindustrial-poa-outras-inspecoes": {
+      "file": "entidades/estabelecimento-agroindustrial-poa-outras-inspecoes.svg",
+      "module": "animal",
+      "label": "Estabelecimento Agroindustrial POA - Outras Inspeções",
+      "icon": "factory"
+    },
+    "estabelecimento-agroindustrial-poa-sie-mg": {
+      "file": "entidades/estabelecimento-agroindustrial-poa-sie-mg.svg",
+      "module": "animal",
+      "label": "Estabelecimento Agroindustrial POA - SIE/MG",
+      "icon": "factory"
+    },
+    "estabelecimento-recinto-de-eventos-pecuarios": {
+      "file": "entidades/estabelecimento-recinto-de-eventos-pecuarios.svg",
+      "module": "animal",
+      "label": "Estabelecimento/Recinto de Eventos Pecuários",
+      "icon": "calendar-days"
+    },
+    "evento-pecuario": {
+      "file": "entidades/evento-pecuario.svg",
+      "module": "animal",
+      "label": "Evento Pecuário",
+      "icon": "calendar-check"
+    },
+    "exploracao-pecuaria": {
+      "file": "entidades/exploracao-pecuaria.svg",
+      "module": "animal",
+      "label": "Exploração Pecuária",
+      "icon": "hexagon"
+    },
+    "laboratorio": {
+      "file": "entidades/laboratorio.svg",
+      "module": "animal",
+      "label": "Laboratório",
+      "icon": "flask-conical"
+    },
+    "nucleo-de-producao": {
+      "file": "entidades/nucleo-de-producao.svg",
+      "module": "animal",
+      "label": "Núcleo de Produção",
+      "icon": "barcode"
+    },
+    "organizacao-agropecuaria": {
+      "file": "entidades/organizacao-agropecuaria.svg",
+      "module": "animal",
+      "label": "Organização Agropecuária",
+      "icon": "users-round"
+    },
+    "passaporte-equestre": {
+      "file": "entidades/passaporte-equestre.svg",
+      "module": "animal",
+      "label": "Passaporte Equestre",
+      "icon": "id-card"
+    },
+    "profissional-da-area-animal": {
+      "file": "entidades/profissional-da-area-animal.svg",
+      "module": "animal",
+      "label": "Profissional da Área Animal",
+      "icon": "stethoscope"
+    },
+    "promotora-de-eventos-pecuarios": {
+      "file": "entidades/promotora-de-eventos-pecuarios.svg",
+      "module": "animal",
+      "label": "Promotora de Eventos Pecuários",
+      "icon": "calendar-arrow-up-icon"
+    },
+    "revendedora-de-animais-vivos": {
+      "file": "entidades/revendedora-de-animais-vivos.svg",
+      "module": "animal",
+      "label": "Revendedora de Animais Vivos",
+      "icon": "store"
+    },
+    "status-animal": {
+      "file": "entidades/status-animal.svg",
+      "module": "animal",
+      "label": "Status Animal",
+      "icon": "history"
+    },
+    "cultura": {
+      "file": "entidades/cultura.svg",
+      "module": "vegetal",
+      "label": "Cultura",
+      "icon": "leaf"
+    },
+    "estabelecimento-agroindustrial-pov": {
+      "file": "entidades/estabelecimento-agroindustrial-pov.svg",
+      "module": "vegetal",
+      "label": "Estabelecimento Agroindustrial POV",
+      "icon": "factory"
+    },
+    "exploracao-agricola": {
+      "file": "entidades/exploracao-agricola.svg",
+      "module": "vegetal",
+      "label": "Exploração Agrícola",
+      "icon": "tractor"
+    },
+    "praga": {
+      "file": "entidades/praga.svg",
+      "module": "vegetal",
+      "label": "Praga",
+      "icon": "bug"
+    },
+    "profissional-vegetal": {
+      "file": "entidades/profissional-vegetal.svg",
+      "module": "vegetal",
+      "label": "Profissional Vegetal",
+      "icon": "sprout"
+    },
+    "unidade-de-consolidacao": {
+      "file": "entidades/unidade-de-consolidacao.svg",
+      "module": "vegetal",
+      "label": "Unidade de Consolidação",
+      "icon": "warehouse"
+    },
+    "ajuste-de-doses-de-vacina": {
+      "file": "entidades/ajuste-de-doses-de-vacina.svg",
+      "module": "vacinacao",
+      "label": "Ajuste de Doses de Vacina",
+      "icon": "clipboard-pen-line"
+    },
+    "declaracao-de-vacinacao": {
+      "file": "entidades/declaracao-de-vacinacao.svg",
+      "module": "vacinacao",
+      "label": "Declaração de Vacinação",
+      "icon": "file-check2"
+    },
+    "doacao-partilha-de-vacina": {
+      "file": "entidades/doacao-partilha-de-vacina.svg",
+      "module": "vacinacao",
+      "label": "Doação/Partilha de Vacina",
+      "icon": "handshake"
+    },
+    "etapa-de-vacinacao": {
+      "file": "entidades/etapa-de-vacinacao.svg",
+      "module": "vacinacao",
+      "label": "Etapa de Vacinação",
+      "icon": "list-tree"
+    },
+    "tipo-de-vacina": {
+      "file": "entidades/tipo-de-vacina.svg",
+      "module": "vacinacao",
+      "label": "Tipo de Vacina",
+      "icon": "syringe"
+    },
+    "vacinador-contra-brucelose": {
+      "file": "entidades/vacinador-contra-brucelose.svg",
+      "module": "vacinacao",
+      "label": "Vacinador Contra Brucelose",
+      "icon": "user-round-check"
+    },
+    "venda-com-entrada-de-vacina": {
+      "file": "entidades/venda-com-entrada-de-vacina.svg",
+      "module": "vacinacao",
+      "label": "Venda com Entrada de Vacina",
+      "icon": "package-plus"
+    },
+    "venda-com-saida-de-vacina": {
+      "file": "entidades/venda-com-saida-de-vacina.svg",
+      "module": "vacinacao",
+      "label": "Venda com Saída de Vacina",
+      "icon": "package-minus"
+    },
+    "ajuste-de-doses-de-insumo": {
+      "file": "entidades/ajuste-de-doses-de-insumo.svg",
+      "module": "exame",
+      "label": "Ajuste de Doses de Insumo",
+      "icon": "clipboard-pen-line"
+    },
+    "atestado-de-exame": {
+      "file": "entidades/atestado-de-exame.svg",
+      "module": "exame",
+      "label": "Atestado de Exame",
+      "icon": "clipboard-plus"
+    },
+    "local-de-realizacao-de-exame": {
+      "file": "entidades/local-de-realizacao-de-exame.svg",
+      "module": "exame",
+      "label": "Local de Realização de Exame",
+      "icon": "map-pin"
+    },
+    "tipo-de-atestado": {
+      "file": "entidades/tipo-de-atestado.svg",
+      "module": "exame",
+      "label": "Tipo de Atestado",
+      "icon": "clipboard-type"
+    },
+    "tipo-de-insumo": {
+      "file": "entidades/tipo-de-insumo.svg",
+      "module": "exame",
+      "label": "Tipo de Insumo",
+      "icon": "pill-bottle"
+    },
+    "venda-com-entrada-de-insumo": {
+      "file": "entidades/venda-com-entrada-de-insumo.svg",
+      "module": "exame",
+      "label": "Venda com Entrada de Insumo",
+      "icon": "package-plus"
+    },
+    "venda-com-saida-de-insumo": {
+      "file": "entidades/venda-com-saida-de-insumo.svg",
+      "module": "exame",
+      "label": "Venda com Saída de Insumo",
+      "icon": "package-minus"
+    },
+    "ajuste-de-rebanho": {
+      "file": "entidades/ajuste-de-rebanho.svg",
+      "module": "rebanho",
+      "label": "Ajuste de Rebanho",
+      "icon": "sliders-horizontal"
+    },
+    "atualizacao-cadastral-de-rebanho": {
+      "file": "entidades/atualizacao-cadastral-de-rebanho.svg",
+      "module": "rebanho",
+      "label": "Atualização Cadastral de Rebanho",
+      "icon": "refresh-cw"
+    },
+    "etapa-de-atualizacao-cadastral": {
+      "file": "entidades/etapa-de-atualizacao-cadastral.svg",
+      "module": "rebanho",
+      "label": "Etapa de Atualização Cadastral",
+      "icon": "clipboard-check"
+    },
+    "lancamento-de-rebanho": {
+      "file": "entidades/lancamento-de-rebanho.svg",
+      "module": "rebanho",
+      "label": "Lançamento de Rebanho",
+      "icon": "move-up-right"
+    },
+    "boletos": {
+      "file": "entidades/boletos.svg",
+      "module": "arrecadacao",
+      "label": "Boletos",
+      "icon": "credit-card"
+    },
+    "dae": {
+      "file": "entidades/dae.svg",
+      "module": "arrecadacao",
+      "label": "DAE",
+      "icon": "scan-barcode"
+    },
+    "fundo-de-arrecadacao": {
+      "file": "entidades/fundo-de-arrecadacao.svg",
+      "module": "arrecadacao",
+      "label": "Fundo de Arrecadação",
+      "icon": "wallet"
+    },
+    "indice": {
+      "file": "entidades/indice.svg",
+      "module": "arrecadacao",
+      "label": "Índice",
+      "icon": "line-chart"
+    },
+    "isencao-de-taxa-de-documento-sanitario": {
+      "file": "entidades/isencao-de-taxa-de-documento-sanitario.svg",
+      "module": "arrecadacao",
+      "label": "Isenção de Taxa de Documento Sanitário",
+      "icon": "ban"
+    },
+    "lote-de-pagamento": {
+      "file": "entidades/lote-de-pagamento.svg",
+      "module": "arrecadacao",
+      "label": "Lote de Pagamento",
+      "icon": "layers3"
+    },
+    "notificacoes-dos-estabelecimentos": {
+      "file": "entidades/notificacoes-dos-estabelecimentos.svg",
+      "module": "arrecadacao",
+      "label": "Notificações dos Estabelecimentos",
+      "icon": "bell"
+    },
+    "receita": {
+      "file": "entidades/receita.svg",
+      "module": "arrecadacao",
+      "label": "Receita",
+      "icon": "receipt-text"
+    },
+    "taxa-de-emissao-de-documento-sanitario": {
+      "file": "entidades/taxa-de-emissao-de-documento-sanitario.svg",
+      "module": "arrecadacao",
+      "label": "Taxa de Emissão de Documento Sanitário",
+      "icon": "dollar-sign"
+    },
+    "distribuicao-de-formularios-de-gta": {
+      "file": "entidades/distribuicao-de-formularios-de-gta.svg",
+      "module": "gta",
+      "label": "Distribuição de Formulários de GTA",
+      "icon": "clipboard-copy"
+    },
+    "emissao-de-ata": {
+      "file": "entidades/emissao-de-ata.svg",
+      "module": "gta",
+      "label": "Emissão de ATA",
+      "icon": "file-text"
+    },
+    "emissao-de-gta": {
+      "file": "entidades/emissao-de-gta.svg",
+      "module": "gta",
+      "label": "Emissão de GTA",
+      "icon": "file-input"
+    },
+    "finalidade-de-transito": {
+      "file": "entidades/finalidade-de-transito.svg",
+      "module": "gta",
+      "label": "Finalidade de Trânsito",
+      "icon": "route"
+    },
+    "registro-de-venda-de-gta-digital": {
+      "file": "entidades/registro-de-venda-de-gta-digital.svg",
+      "module": "gta",
+      "label": "Registro de Venda de GTA Digital",
+      "icon": "file-pen-line"
+    },
+    "registro-de-venda-de-gta-fisica": {
+      "file": "entidades/registro-de-venda-de-gta-fisica.svg",
+      "module": "gta",
+      "label": "Registro de Venda de GTA Física",
+      "icon": "file-check2"
+    },
+    "infracao": {
+      "file": "entidades/infracao.svg",
+      "module": "fiscalizacao",
+      "label": "Infração",
+      "icon": "file-warning"
+    },
+    "lista-de-verificacao": {
+      "file": "entidades/lista-de-verificacao.svg",
+      "module": "fiscalizacao",
+      "label": "Lista de Verificação",
+      "icon": "clipboard-check"
+    },
+    "modelo-de-lista-de-verificacao": {
+      "file": "entidades/modelo-de-lista-de-verificacao.svg",
+      "module": "fiscalizacao",
+      "label": "Modelo de Lista de Verificação",
+      "icon": "clipboard-list"
+    },
+    "formularios-de-solicitacao-de-servico": {
+      "file": "entidades/formularios-de-solicitacao-de-servico.svg",
+      "module": "controle",
+      "label": "Formulários de Solicitação de Serviço",
+      "icon": "file-text"
+    },
+    "papeis": {
+      "file": "entidades/papeis.svg",
+      "module": "controle",
+      "label": "Papéis",
+      "icon": "key-round"
+    },
+    "parametros-do-sistema": {
+      "file": "entidades/parametros-do-sistema.svg",
+      "module": "controle",
+      "label": "Parâmetros do Sistema",
+      "icon": "sliders-horizontal"
+    },
+    "usuarios": {
+      "file": "entidades/usuarios.svg",
+      "module": "controle",
+      "label": "Usuários",
+      "icon": "users"
+    }
+  },
+  "icons": [
+    {
+      "name": "Activity",
+      "file": "activity.svg",
+      "source": "Activity"
+    },
+    {
+      "name": "AlertCircle",
+      "file": "alert-circle.svg",
+      "source": "AlertCircle"
+    },
+    {
+      "name": "AlertTriangle",
+      "file": "alert-triangle.svg",
+      "source": "AlertTriangle"
+    },
+    {
+      "name": "AlignLeft",
+      "file": "align-left.svg",
+      "source": "AlignLeft"
+    },
+    {
+      "name": "ArrowDown",
+      "file": "arrow-down.svg",
+      "source": "ArrowDown"
+    },
+    {
+      "name": "ArrowLeft",
+      "file": "arrow-left.svg",
+      "source": "ArrowLeft"
+    },
+    {
+      "name": "ArrowRight",
+      "file": "arrow-right.svg",
+      "source": "ArrowRight"
+    },
+    {
+      "name": "ArrowUp",
+      "file": "arrow-up.svg",
+      "source": "ArrowUp"
+    },
+    {
+      "name": "ArrowUpDown",
+      "file": "arrow-up-down.svg",
+      "source": "ArrowUpDown"
+    },
+    {
+      "name": "Baby",
+      "file": "baby.svg",
+      "source": "Baby"
+    },
+    {
+      "name": "BadgeCheck",
+      "file": "badge-check.svg",
+      "source": "BadgeCheck"
+    },
+    {
+      "name": "Ban",
+      "file": "ban.svg",
+      "source": "Ban"
+    },
+    {
+      "name": "BarChart3",
+      "file": "bar-chart3.svg",
+      "source": "BarChart3"
+    },
+    {
+      "name": "Barcode",
+      "file": "barcode.svg",
+      "source": "Barcode"
+    },
+    {
+      "name": "Beef",
+      "file": "beef.svg",
+      "source": "Beef"
+    },
+    {
+      "name": "Bell",
+      "file": "bell.svg",
+      "source": "Bell"
+    },
+    {
+      "name": "BriefcaseBusiness",
+      "file": "briefcase-business.svg",
+      "source": "BriefcaseBusiness"
+    },
+    {
+      "name": "BriefcaseMedical",
+      "file": "briefcase-medical.svg",
+      "source": "BriefcaseMedical"
+    },
+    {
+      "name": "Bug",
+      "file": "bug.svg",
+      "source": "Bug"
+    },
+    {
+      "name": "Building2",
+      "file": "building2.svg",
+      "source": "Building2"
+    },
+    {
+      "name": "Calendar",
+      "file": "calendar.svg",
+      "source": "Calendar"
+    },
+    {
+      "name": "CalendarArrowUpIcon",
+      "file": "calendar-arrow-up-icon.svg",
+      "source": "CalendarArrowUp"
+    },
+    {
+      "name": "CalendarCheck",
+      "file": "calendar-check.svg",
+      "source": "CalendarCheck"
+    },
+    {
+      "name": "CalendarClock",
+      "file": "calendar-clock.svg",
+      "source": "CalendarClock"
+    },
+    {
+      "name": "CalendarDays",
+      "file": "calendar-days.svg",
+      "source": "CalendarDays"
+    },
+    {
+      "name": "CalendarPlus",
+      "file": "calendar-plus.svg",
+      "source": "CalendarPlus"
+    },
+    {
+      "name": "Camera",
+      "file": "camera.svg",
+      "source": "Camera"
+    },
+    {
+      "name": "Check",
+      "file": "check.svg",
+      "source": "Check"
+    },
+    {
+      "name": "CheckCircle2",
+      "file": "check-circle2.svg",
+      "source": "CheckCircle2"
+    },
+    {
+      "name": "CheckIcon",
+      "file": "check-icon.svg",
+      "source": "Check"
+    },
+    {
+      "name": "ChevronDown",
+      "file": "chevron-down.svg",
+      "source": "ChevronDown"
+    },
+    {
+      "name": "ChevronDownIcon",
+      "file": "chevron-down-icon.svg",
+      "source": "ChevronDown"
+    },
+    {
+      "name": "ChevronLeft",
+      "file": "chevron-left.svg",
+      "source": "ChevronLeft"
+    },
+    {
+      "name": "ChevronLeftIcon",
+      "file": "chevron-left-icon.svg",
+      "source": "ChevronLeft"
+    },
+    {
+      "name": "ChevronRight",
+      "file": "chevron-right.svg",
+      "source": "ChevronRight"
+    },
+    {
+      "name": "ChevronRightIcon",
+      "file": "chevron-right-icon.svg",
+      "source": "ChevronRight"
+    },
+    {
+      "name": "ChevronUp",
+      "file": "chevron-up.svg",
+      "source": "ChevronUp"
+    },
+    {
+      "name": "ChevronUpIcon",
+      "file": "chevron-up-icon.svg",
+      "source": "ChevronUp"
+    },
+    {
+      "name": "ChevronsUpDown",
+      "file": "chevrons-up-down.svg",
+      "source": "ChevronsUpDown"
+    },
+    {
+      "name": "CircleCheck",
+      "file": "circle-check.svg",
+      "source": "CircleCheck"
+    },
+    {
+      "name": "CircleDollarSign",
+      "file": "circle-dollar-sign.svg",
+      "source": "CircleDollarSign"
+    },
+    {
+      "name": "CircleIcon",
+      "file": "circle-icon.svg",
+      "source": "Circle"
+    },
+    {
+      "name": "ClipboardCheck",
+      "file": "clipboard-check.svg",
+      "source": "ClipboardCheck"
+    },
+    {
+      "name": "ClipboardCopy",
+      "file": "clipboard-copy.svg",
+      "source": "ClipboardCopy"
+    },
+    {
+      "name": "ClipboardList",
+      "file": "clipboard-list.svg",
+      "source": "ClipboardList"
+    },
+    {
+      "name": "ClipboardPenLine",
+      "file": "clipboard-pen-line.svg",
+      "source": "ClipboardPenLine"
+    },
+    {
+      "name": "ClipboardPlus",
+      "file": "clipboard-plus.svg",
+      "source": "ClipboardPlus"
+    },
+    {
+      "name": "ClipboardType",
+      "file": "clipboard-type.svg",
+      "source": "ClipboardType"
+    },
+    {
+      "name": "Clock",
+      "file": "clock.svg",
+      "source": "Clock"
+    },
+    {
+      "name": "Clock3",
+      "file": "clock3.svg",
+      "source": "Clock3"
+    },
+    {
+      "name": "Copy",
+      "file": "copy.svg",
+      "source": "Copy"
+    },
+    {
+      "name": "CreditCard",
+      "file": "credit-card.svg",
+      "source": "CreditCard"
+    },
+    {
+      "name": "Disc",
+      "file": "disc.svg",
+      "source": "Disc"
+    },
+    {
+      "name": "Dna",
+      "file": "dna.svg",
+      "source": "Dna"
+    },
+    {
+      "name": "Dock",
+      "file": "dock.svg",
+      "source": "Dock"
+    },
+    {
+      "name": "DollarSign",
+      "file": "dollar-sign.svg",
+      "source": "DollarSign"
+    },
+    {
+      "name": "Download",
+      "file": "download.svg",
+      "source": "Download"
+    },
+    {
+      "name": "Egg",
+      "file": "egg.svg",
+      "source": "Egg"
+    },
+    {
+      "name": "ExternalLink",
+      "file": "external-link.svg",
+      "source": "ExternalLink"
+    },
+    {
+      "name": "Eye",
+      "file": "eye.svg",
+      "source": "Eye"
+    },
+    {
+      "name": "EyeOff",
+      "file": "eye-off.svg",
+      "source": "EyeOff"
+    },
+    {
+      "name": "Factory",
+      "file": "factory.svg",
+      "source": "Factory"
+    },
+    {
+      "name": "FileCheck2",
+      "file": "file-check2.svg",
+      "source": "FileCheck2"
+    },
+    {
+      "name": "FileDown",
+      "file": "file-down.svg",
+      "source": "FileDown"
+    },
+    {
+      "name": "FileInput",
+      "file": "file-input.svg",
+      "source": "FileInput"
+    },
+    {
+      "name": "FilePenLine",
+      "file": "file-pen-line.svg",
+      "source": "FilePenLine"
+    },
+    {
+      "name": "FileSearch",
+      "file": "file-search.svg",
+      "source": "FileSearch"
+    },
+    {
+      "name": "FileText",
+      "file": "file-text.svg",
+      "source": "FileText"
+    },
+    {
+      "name": "FileWarning",
+      "file": "file-warning.svg",
+      "source": "FileWarning"
+    },
+    {
+      "name": "Fish",
+      "file": "fish.svg",
+      "source": "Fish"
+    },
+    {
+      "name": "FlaskConical",
+      "file": "flask-conical.svg",
+      "source": "FlaskConical"
+    },
+    {
+      "name": "Gavel",
+      "file": "gavel.svg",
+      "source": "Gavel"
+    },
+    {
+      "name": "Globe",
+      "file": "globe.svg",
+      "source": "Globe"
+    },
+    {
+      "name": "GripVertical",
+      "file": "grip-vertical.svg",
+      "source": "GripVertical"
+    },
+    {
+      "name": "GripVerticalIcon",
+      "file": "grip-vertical-icon.svg",
+      "source": "GripVertical"
+    },
+    {
+      "name": "Ham",
+      "file": "ham.svg",
+      "source": "Ham"
+    },
+    {
+      "name": "Handshake",
+      "file": "handshake.svg",
+      "source": "Handshake"
+    },
+    {
+      "name": "Hash",
+      "file": "hash.svg",
+      "source": "Hash"
+    },
+    {
+      "name": "Hexagon",
+      "file": "hexagon.svg",
+      "source": "Hexagon"
+    },
+    {
+      "name": "History",
+      "file": "history.svg",
+      "source": "History"
+    },
+    {
+      "name": "Home",
+      "file": "home.svg",
+      "source": "Home"
+    },
+    {
+      "name": "IdCard",
+      "file": "id-card.svg",
+      "source": "IdCard"
+    },
+    {
+      "name": "Info",
+      "file": "info.svg",
+      "source": "Info"
+    },
+    {
+      "name": "KeyRound",
+      "file": "key-round.svg",
+      "source": "KeyRound"
+    },
+    {
+      "name": "Landmark",
+      "file": "landmark.svg",
+      "source": "Landmark"
+    },
+    {
+      "name": "Laptop",
+      "file": "laptop.svg",
+      "source": "Laptop"
+    },
+    {
+      "name": "Layers",
+      "file": "layers.svg",
+      "source": "Layers"
+    },
+    {
+      "name": "Layers3",
+      "file": "layers3.svg",
+      "source": "Layers3"
+    },
+    {
+      "name": "Leaf",
+      "file": "leaf.svg",
+      "source": "Leaf"
+    },
+    {
+      "name": "LineChart",
+      "file": "line-chart.svg",
+      "source": "LineChart"
+    },
+    {
+      "name": "Link2",
+      "file": "link2.svg",
+      "source": "Link2"
+    },
+    {
+      "name": "List",
+      "file": "list.svg",
+      "source": "List"
+    },
+    {
+      "name": "ListPlus",
+      "file": "list-plus.svg",
+      "source": "ListPlus"
+    },
+    {
+      "name": "ListTree",
+      "file": "list-tree.svg",
+      "source": "ListTree"
+    },
+    {
+      "name": "Loader2",
+      "file": "loader2.svg",
+      "source": "Loader2"
+    },
+    {
+      "name": "LockKeyhole",
+      "file": "lock-keyhole.svg",
+      "source": "LockKeyhole"
+    },
+    {
+      "name": "LogOut",
+      "file": "log-out.svg",
+      "source": "LogOut"
+    },
+    {
+      "name": "Mail",
+      "file": "mail.svg",
+      "source": "Mail"
+    },
+    {
+      "name": "Map",
+      "file": "map.svg",
+      "source": "Map"
+    },
+    {
+      "name": "MapPin",
+      "file": "map-pin.svg",
+      "source": "MapPin"
+    },
+    {
+      "name": "MapPinned",
+      "file": "map-pinned.svg",
+      "source": "MapPinned"
+    },
+    {
+      "name": "Maximize2",
+      "file": "maximize2.svg",
+      "source": "Maximize2"
+    },
+    {
+      "name": "Milk",
+      "file": "milk.svg",
+      "source": "Milk"
+    },
+    {
+      "name": "Minimize2",
+      "file": "minimize2.svg",
+      "source": "Minimize2"
+    },
+    {
+      "name": "Minus",
+      "file": "minus.svg",
+      "source": "Minus"
+    },
+    {
+      "name": "MinusIcon",
+      "file": "minus-icon.svg",
+      "source": "Minus"
+    },
+    {
+      "name": "Moon",
+      "file": "moon.svg",
+      "source": "Moon"
+    },
+    {
+      "name": "MoreHorizontal",
+      "file": "more-horizontal.svg",
+      "source": "MoreHorizontal"
+    },
+    {
+      "name": "MoreHorizontalIcon",
+      "file": "more-horizontal-icon.svg",
+      "source": "MoreHorizontal"
+    },
+    {
+      "name": "MoreVertical",
+      "file": "more-vertical.svg",
+      "source": "MoreVertical"
+    },
+    {
+      "name": "MoveUpRight",
+      "file": "move-up-right.svg",
+      "source": "MoveUpRight"
+    },
+    {
+      "name": "Network",
+      "file": "network.svg",
+      "source": "Network"
+    },
+    {
+      "name": "Package",
+      "file": "package.svg",
+      "source": "Package"
+    },
+    {
+      "name": "PackageMinus",
+      "file": "package-minus.svg",
+      "source": "PackageMinus"
+    },
+    {
+      "name": "PackagePlus",
+      "file": "package-plus.svg",
+      "source": "PackagePlus"
+    },
+    {
+      "name": "PackageSearch",
+      "file": "package-search.svg",
+      "source": "PackageSearch"
+    },
+    {
+      "name": "PanelLeftIcon",
+      "file": "panel-left-icon.svg",
+      "source": "PanelLeft"
+    },
+    {
+      "name": "Paperclip",
+      "file": "paperclip.svg",
+      "source": "Paperclip"
+    },
+    {
+      "name": "PauseCircle",
+      "file": "pause-circle.svg",
+      "source": "PauseCircle"
+    },
+    {
+      "name": "Pencil",
+      "file": "pencil.svg",
+      "source": "Pencil"
+    },
+    {
+      "name": "PillBottle",
+      "file": "pill-bottle.svg",
+      "source": "PillBottle"
+    },
+    {
+      "name": "PlayCircle",
+      "file": "play-circle.svg",
+      "source": "PlayCircle"
+    },
+    {
+      "name": "Plus",
+      "file": "plus.svg",
+      "source": "Plus"
+    },
+    {
+      "name": "PlusCircle",
+      "file": "plus-circle.svg",
+      "source": "PlusCircle"
+    },
+    {
+      "name": "Power",
+      "file": "power.svg",
+      "source": "Power"
+    },
+    {
+      "name": "PowerOff",
+      "file": "power-off.svg",
+      "source": "PowerOff"
+    },
+    {
+      "name": "Printer",
+      "file": "printer.svg",
+      "source": "Printer"
+    },
+    {
+      "name": "QrCode",
+      "file": "qr-code.svg",
+      "source": "QrCode"
+    },
+    {
+      "name": "ReceiptText",
+      "file": "receipt-text.svg",
+      "source": "ReceiptText"
+    },
+    {
+      "name": "RefreshCw",
+      "file": "refresh-cw.svg",
+      "source": "RefreshCw"
+    },
+    {
+      "name": "RotateCcw",
+      "file": "rotate-ccw.svg",
+      "source": "RotateCcw"
+    },
+    {
+      "name": "Route",
+      "file": "route.svg",
+      "source": "Route"
+    },
+    {
+      "name": "Ruler",
+      "file": "ruler.svg",
+      "source": "Ruler"
+    },
+    {
+      "name": "Save",
+      "file": "save.svg",
+      "source": "Save"
+    },
+    {
+      "name": "Scale",
+      "file": "scale.svg",
+      "source": "Scale"
+    },
+    {
+      "name": "ScanBarcode",
+      "file": "scan-barcode.svg",
+      "source": "ScanBarcode"
+    },
+    {
+      "name": "ScrollText",
+      "file": "scroll-text.svg",
+      "source": "ScrollText"
+    },
+    {
+      "name": "Search",
+      "file": "search.svg",
+      "source": "Search"
+    },
+    {
+      "name": "SearchCheck",
+      "file": "search-check.svg",
+      "source": "SearchCheck"
+    },
+    {
+      "name": "SearchIcon",
+      "file": "search-icon.svg",
+      "source": "Search"
+    },
+    {
+      "name": "Settings",
+      "file": "settings.svg",
+      "source": "Settings"
+    },
+    {
+      "name": "Settings2",
+      "file": "settings2.svg",
+      "source": "Settings2"
+    },
+    {
+      "name": "Shield",
+      "file": "shield.svg",
+      "source": "Shield"
+    },
+    {
+      "name": "ShieldAlert",
+      "file": "shield-alert.svg",
+      "source": "ShieldAlert"
+    },
+    {
+      "name": "ShieldCheck",
+      "file": "shield-check.svg",
+      "source": "ShieldCheck"
+    },
+    {
+      "name": "ShoppingCart",
+      "file": "shopping-cart.svg",
+      "source": "ShoppingCart"
+    },
+    {
+      "name": "Shuffle",
+      "file": "shuffle.svg",
+      "source": "Shuffle"
+    },
+    {
+      "name": "Skull",
+      "file": "skull.svg",
+      "source": "Skull"
+    },
+    {
+      "name": "SlidersHorizontal",
+      "file": "sliders-horizontal.svg",
+      "source": "SlidersHorizontal"
+    },
+    {
+      "name": "Smartphone",
+      "file": "smartphone.svg",
+      "source": "Smartphone"
+    },
+    {
+      "name": "Sprout",
+      "file": "sprout.svg",
+      "source": "Sprout"
+    },
+    {
+      "name": "SquareArrowOutUpRight",
+      "file": "square-arrow-out-up-right.svg",
+      "source": "SquareArrowOutUpRight"
+    },
+    {
+      "name": "Stethoscope",
+      "file": "stethoscope.svg",
+      "source": "Stethoscope"
+    },
+    {
+      "name": "Store",
+      "file": "store.svg",
+      "source": "Store"
+    },
+    {
+      "name": "Sun",
+      "file": "sun.svg",
+      "source": "Sun"
+    },
+    {
+      "name": "SwitchCamera",
+      "file": "switch-camera.svg",
+      "source": "SwitchCamera"
+    },
+    {
+      "name": "Syringe",
+      "file": "syringe.svg",
+      "source": "Syringe"
+    },
+    {
+      "name": "Tags",
+      "file": "tags.svg",
+      "source": "Tags"
+    },
+    {
+      "name": "ToggleLeft",
+      "file": "toggle-left.svg",
+      "source": "ToggleLeft"
+    },
+    {
+      "name": "TowerControl",
+      "file": "tower-control.svg",
+      "source": "TowerControl"
+    },
+    {
+      "name": "Tractor",
+      "file": "tractor.svg",
+      "source": "Tractor"
+    },
+    {
+      "name": "Trash2",
+      "file": "trash2.svg",
+      "source": "Trash2"
+    },
+    {
+      "name": "TrendingUp",
+      "file": "trending-up.svg",
+      "source": "TrendingUp"
+    },
+    {
+      "name": "Truck",
+      "file": "truck.svg",
+      "source": "Truck"
+    },
+    {
+      "name": "Upload",
+      "file": "upload.svg",
+      "source": "Upload"
+    },
+    {
+      "name": "User",
+      "file": "user.svg",
+      "source": "User"
+    },
+    {
+      "name": "UserCheck",
+      "file": "user-check.svg",
+      "source": "UserCheck"
+    },
+    {
+      "name": "UserRound",
+      "file": "user-round.svg",
+      "source": "UserRound"
+    },
+    {
+      "name": "UserRoundCheck",
+      "file": "user-round-check.svg",
+      "source": "UserRoundCheck"
+    },
+    {
+      "name": "Users",
+      "file": "users.svg",
+      "source": "Users"
+    },
+    {
+      "name": "UsersRound",
+      "file": "users-round.svg",
+      "source": "UsersRound"
+    },
+    {
+      "name": "ViewIcon",
+      "file": "view-icon.svg",
+      "source": "Eye"
+    },
+    {
+      "name": "Wallet",
+      "file": "wallet.svg",
+      "source": "Wallet"
+    },
+    {
+      "name": "Warehouse",
+      "file": "warehouse.svg",
+      "source": "Warehouse"
+    },
+    {
+      "name": "Weight",
+      "file": "weight.svg",
+      "source": "Weight"
+    },
+    {
+      "name": "X",
+      "file": "x.svg",
+      "source": "X"
+    },
+    {
+      "name": "XIcon",
+      "file": "xicon.svg",
+      "source": "X"
+    }
+  ],
+  "modules": {
+    "geral": {
+      "file": "modulos/geral.svg",
+      "label": "Geral",
+      "icon": "globe",
+      "order": 10
+    },
+    "animal": {
+      "file": "modulos/animal.svg",
+      "label": "Animal",
+      "icon": "beef",
+      "order": 20
+    },
+    "vegetal": {
+      "file": "modulos/vegetal.svg",
+      "label": "Vegetal",
+      "icon": "sprout",
+      "order": 30
+    },
+    "vacinacao": {
+      "file": "modulos/vacinacao.svg",
+      "label": "Vacinação",
+      "icon": "syringe",
+      "order": 40
+    },
+    "exame": {
+      "file": "modulos/exame.svg",
+      "label": "Exame",
+      "icon": "briefcase-medical",
+      "order": 50
+    },
+    "rebanho": {
+      "file": "modulos/rebanho.svg",
+      "label": "Rebanho",
+      "icon": "refresh-cw",
+      "order": 60
+    },
+    "arrecadacao": {
+      "file": "modulos/arrecadacao.svg",
+      "label": "Arrecadação",
+      "icon": "circle-dollar-sign",
+      "order": 70
+    },
+    "gta": {
+      "file": "modulos/gta.svg",
+      "label": "GTA",
+      "icon": "truck",
+      "order": 80
+    },
+    "fiscalizacao": {
+      "file": "modulos/fiscalizacao.svg",
+      "label": "Fiscalização",
+      "icon": "clipboard-check",
+      "order": 90
+    },
+    "controle": {
+      "file": "modulos/controle.svg",
+      "label": "Controle",
+      "icon": "settings",
+      "order": 100
+    }
+  }
+}

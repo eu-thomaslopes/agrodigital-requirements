@@ -1,0 +1,74 @@
+---
+import { getCollection } from 'astro:content';
+import DefaultSidebar from '@astrojs/starlight/components/Sidebar.astro';
+import { systemModules } from '../config/system-modules.mjs';
+import { getDocHref, getEntityIconUrl, getModuleIconUrl } from '../utils/content';
+
+const documents = (await getCollection('docs'))
+  .filter((entry) => !entry.data.sidebar.hidden)
+  .map((entry) => ({
+    entry,
+    iconUrl: getEntityIconUrl(entry.data.entity, entry.data.icon),
+  }))
+  .filter((document) => Boolean(document.iconUrl));
+const documentedModules = new Set(
+  documents.map(({ entry }) => entry.data.module).filter((module) => Boolean(module)),
+);
+
+const entrySelectors = documents.map(
+  ({ entry }) => `.sidebar-content a[href='${getDocHref(entry.id)}']`,
+);
+const entryAssignments = documents
+  .map(
+    ({ entry, iconUrl }) =>
+      `.sidebar-content a[href='${getDocHref(entry.id)}'] { --sidebar-entry-icon: url('${iconUrl}'); }`,
+  )
+  .join('\n');
+
+const visibleModules = systemModules.filter((module) => documentedModules.has(module.slug));
+const moduleSelectors = visibleModules.map(
+  (module) =>
+    `.sidebar-content details:has(> ul > li > a[href^='/${module.slug}/']) > summary .group-label > .large`,
+);
+const moduleAssignments = visibleModules
+  .map(
+    (module) =>
+      `.sidebar-content details:has(> ul > li > a[href^='/${module.slug}/']) > summary .group-label > .large { --sidebar-module-icon: url('${getModuleIconUrl(module.slug)}'); }`,
+  )
+  .join('\n');
+
+const sidebarIconStyles = `
+${entryAssignments}
+${entrySelectors.join(',\n')} {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+${entrySelectors.map((selector) => `${selector}::before`).join(',\n')} {
+  content: '';
+  flex: 0 0 auto;
+  width: 1.1rem;
+  height: 1.1rem;
+  background-color: currentColor;
+  mask: var(--sidebar-entry-icon) center / contain no-repeat;
+  -webkit-mask: var(--sidebar-entry-icon) center / contain no-repeat;
+}
+${moduleAssignments}
+${moduleSelectors.join(',\n')} {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+${moduleSelectors.map((selector) => `${selector}::before`).join(',\n')} {
+  content: '';
+  flex: 0 0 auto;
+  width: 1.05rem;
+  height: 1.05rem;
+  background-color: var(--sl-color-text-accent);
+  mask: var(--sidebar-module-icon) center / contain no-repeat;
+  -webkit-mask: var(--sidebar-module-icon) center / contain no-repeat;
+}`;
+---
+
+<DefaultSidebar />
+<style is:inline set:html={sidebarIconStyles}></style>
