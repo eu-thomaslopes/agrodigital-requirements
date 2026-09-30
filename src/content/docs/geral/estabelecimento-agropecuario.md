@@ -101,11 +101,11 @@ Disponível se **Zona** = `Rural`.
 
 Aplica-se o componente **Anexos e observações**.
 
-| Grupo | Campo | Tipo | Obrigatório no item | Validações | Exemplo | Valor padrão |
-| --- | --- | --- | :---: | --- | --- | --- |
-| Anexos (zero ou mais) | Documento | Arquivo | Sim | Tipos aceitos = PNG, JPG, PDF.<br>Tamanho máximo = 50 MB. | `documento.png` | Vazio |
-| Anexos (zero ou mais) | Descrição | Texto curto | Não | Disponível se **Documento** estiver preenchido.<br>Tamanho máximo = 255 caracteres. | `Documento de identidade com foto` | Vazio |
-| Observações | Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Este estabelecimento agropecuário será usado para…` | Vazio |
+| Campo | Tipo | Obrigatório no item | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Documento | Arquivo | Sim | Tipos aceitos = PNG, JPG, PDF.<br>Tamanho máximo = 50 MB. | `documento.png` | Vazio |
+| Descrição | Texto curto | Não | Disponível se **Documento** estiver preenchido.<br>Tamanho máximo = 255 caracteres. | `Documento de identidade com foto` | Vazio |
+| Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Este estabelecimento agropecuário será usado para…` | Vazio |
 
 ### Ações e resultado
 

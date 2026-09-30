@@ -39,7 +39,7 @@ alfabética por entidade são gerados automaticamente. Não é necessário edita
 `ready` ou `published` e aparece como uma tag junto ao título do requisito.
 
 Os módulos reconhecidos estão em `src/config/system-modules.mjs`. Os 79 épicos
-identificados na Área de Trabalho do SIDAGRO e seus ícones ficam catalogados em
+identificados na Área de Trabalho do AgroDigital e seus ícones ficam catalogados em
 `src/config/entity-icons.mjs`; o campo `entity` seleciona automaticamente o SVG
 semântico em `public/icons/entidades/`.
 

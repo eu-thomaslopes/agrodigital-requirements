@@ -1,5 +1,5 @@
 /**
- * Catálogo estável dos módulos funcionais exibidos na Área de Trabalho do SIDAGRO.
+ * Catálogo estável dos módulos funcionais exibidos na Área de Trabalho do AgroDigital.
  * Os épicos não pertencem a este arquivo: eles são descobertos a partir dos
  * documentos existentes em `src/content/docs/<modulo>/`.
  */

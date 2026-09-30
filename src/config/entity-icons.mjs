@@ -1,5 +1,5 @@
 /**
- * Catálogo semântico dos épicos exibidos na Área de Trabalho do SIDAGRO.
+ * Catálogo semântico dos épicos exibidos na Área de Trabalho do AgroDigital.
  * `icon` referencia um SVG da coleção técnica em `public/icons/lucide/`.
  * O script `npm run icons:sync` materializa aliases estáveis em
  * `public/icons/entidades/<slug>.svg`.

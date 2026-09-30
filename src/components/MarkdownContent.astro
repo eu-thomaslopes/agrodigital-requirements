@@ -7,3 +7,293 @@ import RequirementUserStory from './RequirementUserStory.astro';
   <RequirementUserStory />
   <slot />
 </StarlightMarkdownContent>
+
+<script>
+  let requirementGroupSequence = 0;
+
+  const normalizeHeader = (value: string) =>
+    value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
+
+  const getHeading = (element: Element) =>
+    element.matches('h3, h4, h5, h6')
+      ? (element as HTMLHeadingElement)
+      : element.querySelector<HTMLHeadingElement>(':scope > h3, :scope > h4, :scope > h5, :scope > h6');
+
+  const getHeadingLevel = (heading: HTMLHeadingElement) => Number(heading.tagName.slice(1));
+
+  const getTableHeaders = (table: HTMLTableElement) =>
+    Array.from(table.tHead?.rows[0]?.cells ?? [], (cell) => normalizeHeader(cell.textContent ?? ''));
+
+  const isFieldTable = (table: HTMLTableElement) => {
+    const headers = getTableHeaders(table);
+
+    return (
+      headers.includes('campo') &&
+      headers.includes('tipo') &&
+      headers.some((header) => header.startsWith('obrigatorio')) &&
+      headers.includes('validacoes') &&
+      headers.includes('exemplo') &&
+      headers.includes('valor padrao')
+    );
+  };
+
+  const getCardinality = (title: string) => {
+    const match = title.toLowerCase().match(/\((zero ou mais|um ou mais|uma ou mais|zero ou um|zero ou uma)\)\s*$/);
+
+    return match?.[1];
+  };
+
+  const getRailOffset = (depth: number) => `${(depth - 1) * 0.75}rem`;
+
+  const getGroupBackground = (depths: number[]) => {
+    const depth = Math.min(depths.at(-1) ?? 1, 4);
+    const contentOffset = `calc(${getRailOffset(depth)} + var(--requirement-rail-width))`;
+
+    return `linear-gradient(to right, var(--sl-color-black) 0 ${contentOffset}, var(--requirement-group-bg-${depth}) ${contentOffset} 100%)`;
+  };
+
+  const addNestingRails = (container: HTMLElement, depths: number[]) => {
+    for (const depth of depths) {
+      const rail = document.createElement('span');
+      rail.className = 'requirement-nesting-rail';
+      rail.dataset.depth = String(depth);
+      rail.style.setProperty('--requirement-rail-offset', getRailOffset(depth));
+      rail.setAttribute('aria-hidden', 'true');
+      container.append(rail);
+    }
+  };
+
+  const createGroupRow = (headingContainer: Element, columnCount: number, groupPath: number[]) => {
+    const heading = getHeading(headingContainer);
+    if (!heading) return;
+
+    const depth = getHeadingLevel(heading) - 2;
+    const row = document.createElement('tr');
+    const cell = document.createElement('th');
+    const content = document.createElement('div');
+    const groupLabel = document.createElement('div');
+    const toggle = document.createElement('button');
+    const chips = document.createElement('div');
+    const cardinality = getCardinality(heading.textContent ?? '');
+    const groupId = `requirement-group-${++requirementGroupSequence}`;
+
+    row.className = 'requirement-group-row';
+    row.dataset.depth = String(depth);
+    row.style.setProperty('--requirement-depth', String(depth));
+    row.style.setProperty('--requirement-active-rail-offset', getRailOffset(depth));
+    cell.className = 'requirement-group-cell';
+    cell.colSpan = columnCount;
+    cell.scope = 'rowgroup';
+    cell.style.setProperty('--requirement-group-background', getGroupBackground(groupPath));
+    content.className = 'requirement-group-row__content';
+    groupLabel.className = 'requirement-group-label';
+    toggle.className = 'requirement-group-toggle';
+    toggle.type = 'button';
+    toggle.setAttribute('aria-expanded', 'true');
+    toggle.setAttribute('aria-label', `Recolher seção ${heading.textContent?.trim() ?? ''}`);
+    toggle.addEventListener('click', () => {
+      const collapsed = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!collapsed));
+      toggle.setAttribute(
+        'aria-label',
+        `${collapsed ? 'Expandir' : 'Recolher'} seção ${heading.textContent?.trim() ?? ''}`,
+      );
+
+      let sibling = row.nextElementSibling as HTMLTableRowElement | null;
+      while (sibling) {
+        if (
+          (sibling.classList.contains('requirement-group-row') ||
+            sibling.classList.contains('requirement-group-divider')) &&
+          Number(sibling.dataset.depth) <= depth
+        ) {
+          break;
+        }
+
+        const collapsedBy = new Set((sibling.dataset.collapsedBy ?? '').split(' ').filter(Boolean));
+        if (collapsed) collapsedBy.add(groupId);
+        else collapsedBy.delete(groupId);
+        sibling.dataset.collapsedBy = Array.from(collapsedBy).join(' ');
+        sibling.hidden = collapsedBy.size > 0;
+        sibling = sibling.nextElementSibling as HTMLTableRowElement | null;
+      }
+    });
+    chips.className = 'requirement-group-chips';
+
+    headingContainer.classList.add('requirement-group-row__heading');
+    groupLabel.append(toggle, headingContainer);
+    content.append(groupLabel, chips);
+
+    if (cardinality) {
+      const badge = document.createElement('span');
+      badge.className = 'requirement-cardinality';
+      badge.textContent = cardinality;
+      badge.setAttribute('aria-label', `Cardinalidade ${cardinality}`);
+      chips.append(badge);
+    }
+
+    addNestingRails(cell, groupPath);
+    cell.append(content);
+    row.append(cell);
+
+    return { row, cell, chips, depth };
+  };
+
+  const createGroupDivider = (columnCount: number, depth: number, ancestorDepths: number[]) => {
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    row.className = 'requirement-group-divider';
+    row.dataset.depth = String(depth);
+    row.setAttribute('aria-hidden', 'true');
+    cell.className = 'requirement-group-divider-cell';
+    cell.colSpan = columnCount;
+    addNestingRails(cell, ancestorDepths);
+    row.append(cell);
+    return row;
+  };
+
+  const enhanceSection = (nodes: Element[], tables: HTMLTableElement[]) => {
+    const signatures = new Set(tables.map((table) => getTableHeaders(table).join('|')));
+
+    // Tabelas com grades diferentes permanecem intactas para não alterar sua semântica.
+    if (signatures.size !== 1) return;
+
+    const target = tables[0];
+    const targetBody = target.tBodies[0];
+    const columnCount = getTableHeaders(target).length;
+    if (!targetBody || !columnCount) return;
+
+    const rowsByTable = new Map(
+      tables.map((table) => [table, Array.from(table.tBodies[0]?.rows ?? [])] as const),
+    );
+    const fragment = document.createDocumentFragment();
+    let activeGroup: ReturnType<typeof createGroupRow>;
+    let activeDepth = 1;
+    let activeGroupHasFields = false;
+    let fieldRowIndex = 0;
+    const groupDepths: number[] = [];
+
+    for (const node of nodes) {
+      const heading = getHeading(node);
+
+      if (heading) {
+        const nextDepth = getHeadingLevel(heading) - 2;
+        if (groupDepths.length > 0) {
+          fragment.append(
+            createGroupDivider(columnCount, nextDepth, groupDepths.filter((depth) => depth < nextDepth)),
+          );
+        }
+        while (groupDepths.at(-1) !== undefined && groupDepths.at(-1)! >= nextDepth) {
+          groupDepths.pop();
+        }
+        groupDepths.push(nextDepth);
+
+        activeGroup = createGroupRow(node, columnCount, groupDepths);
+        activeDepth = activeGroup?.depth ?? 1;
+        activeGroupHasFields = false;
+        if (activeGroup) {
+          fragment.append(activeGroup.row);
+        }
+        continue;
+      }
+
+      if (node.matches('p') && activeGroup && !activeGroupHasFields) {
+        const isCondition = /^(disponível|visível|exibido|obrigatório)\s+se\b/i.test(
+          node.textContent?.trim() ?? '',
+        );
+        node.classList.add(isCondition ? 'requirement-group-condition' : 'requirement-group-note');
+        activeGroup.chips.append(node);
+        continue;
+      }
+
+      if (!(node instanceof HTMLTableElement) || !rowsByTable.has(node)) continue;
+
+      for (const row of rowsByTable.get(node) ?? []) {
+        row.classList.add('requirement-field-row');
+        row.dataset.stripe = fieldRowIndex++ % 2 === 0 ? 'odd' : 'even';
+        row.dataset.depth = String(activeDepth);
+        row.style.setProperty('--requirement-depth', String(activeDepth));
+        row.style.setProperty('--requirement-active-rail-offset', getRailOffset(activeDepth));
+
+        if (row.cells[0]) addNestingRails(row.cells[0], groupDepths);
+        fragment.append(row);
+      }
+
+      activeGroupHasFields = true;
+      if (node !== target) node.remove();
+    }
+
+    targetBody.replaceChildren(fragment);
+    target.classList.add('requirement-table--hierarchical');
+    target.dataset.requirementColumns = String(columnCount);
+
+    if (!target.parentElement?.classList.contains('requirement-table-scroll')) {
+      const scrollContainer = document.createElement('div');
+      scrollContainer.className = 'requirement-table-scroll';
+      target.before(scrollContainer);
+      scrollContainer.append(target);
+    }
+  };
+
+  const enhanceRequirementTables = () => {
+    for (const content of document.querySelectorAll<HTMLElement>('.sl-markdown-content')) {
+      const children = Array.from(content.children);
+
+      for (let index = 0; index < children.length; index += 1) {
+        const heading = children[index];
+        if (!(heading instanceof HTMLHeadingElement) || heading.tagName !== 'H2') continue;
+
+        let sectionEnd = index + 1;
+        while (sectionEnd < children.length) {
+          const nextHeading = children[sectionEnd].matches('h1, h2');
+          if (nextHeading) break;
+          sectionEnd += 1;
+        }
+
+        const sectionNodes = children.slice(index + 1, sectionEnd);
+        const hasFieldTable = sectionNodes.some((node) => {
+          const tables = node instanceof HTMLTableElement
+            ? [node]
+            : Array.from(node.querySelectorAll<HTMLTableElement>('table'));
+          return tables.some(isFieldTable);
+        });
+
+        if (hasFieldTable) heading.classList.add('requirement-form-heading');
+      }
+
+      for (let index = 0; index < children.length; index += 1) {
+        const sectionHeading = getHeading(children[index]);
+        if (!sectionHeading || getHeadingLevel(sectionHeading) !== 3) continue;
+
+        let sectionEnd = index + 1;
+        while (sectionEnd < children.length) {
+          const nextHeading = getHeading(children[sectionEnd]);
+          if (nextHeading && getHeadingLevel(nextHeading) <= 3) break;
+          sectionEnd += 1;
+        }
+
+        const sectionNodes = children.slice(index, sectionEnd);
+        const tables = sectionNodes.filter(
+          (node): node is HTMLTableElement => node instanceof HTMLTableElement && isFieldTable(node),
+        );
+
+        if (tables.length > 0 && !tables[0].classList.contains('requirement-table--hierarchical')) {
+          enhanceSection(sectionNodes, tables);
+        }
+
+        index = sectionEnd - 1;
+      }
+    }
+
+    if (window.location.hash) {
+      const anchor = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+      requestAnimationFrame(() => anchor?.scrollIntoView({ block: 'start' }));
+    }
+  };
+
+  enhanceRequirementTables();
+  document.addEventListener('astro:page-load', enhanceRequirementTables);
+</script>

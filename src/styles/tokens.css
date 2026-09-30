@@ -91,6 +91,19 @@
   --sl-nav-height: 4.25rem;
   --sl-sidebar-width: 19.5rem;
   --sl-line-height: 1.7;
+
+  /* Hierarchical requirement tables derive color from depth, never business values. */
+  --requirement-section-bg: color-mix(in srgb, var(--sl-color-accent-low) 72%, var(--sl-color-black));
+  --requirement-section-border: var(--sl-color-accent);
+  --requirement-table-head-bg: color-mix(in srgb, #8293a8 22%, var(--sl-color-black));
+  --requirement-group-accent-1: var(--sl-color-accent);
+  --requirement-group-accent-2: #60a5fa;
+  --requirement-group-accent-3: #fbbf24;
+  --requirement-group-accent-4: var(--sl-color-gray-3);
+  --requirement-group-bg-1: color-mix(in srgb, var(--requirement-group-accent-1) 12%, var(--sl-color-black));
+  --requirement-group-bg-2: color-mix(in srgb, var(--requirement-group-accent-2) 12%, var(--sl-color-black));
+  --requirement-group-bg-3: color-mix(in srgb, var(--requirement-group-accent-3) 12%, var(--sl-color-black));
+  --requirement-group-bg-4: color-mix(in srgb, var(--sl-color-gray-4) 18%, var(--sl-color-black));
 }
 
 :root[data-theme='light'] {
@@ -131,6 +144,16 @@
   --sl-color-green-high: var(--ima-green-600);
   --sl-color-green: var(--ima-green-500);
   --sl-color-green-low: var(--ima-green-50);
+
+  --requirement-section-bg: #e3f0e7;
+  --requirement-section-border: var(--ima-green-500);
+  --requirement-table-head-bg: #e8edf3;
+  --requirement-group-accent-1: var(--ima-green-500);
+  --requirement-group-accent-2: #1686d9;
+  --requirement-group-accent-3: #e8a400;
+  --requirement-group-bg-1: #e8f5eb;
+  --requirement-group-bg-2: #eaf4fc;
+  --requirement-group-bg-3: #fff5dc;
 
   --ima-selection-bg: var(--ima-green-300);
   --ima-selection-text: var(--ima-ink);
@@ -194,9 +217,12 @@ header.header {
 
 .sidebar-content a:hover {
   background: color-mix(in srgb, var(--sl-color-accent-low) 58%, transparent);
+  color: var(--sl-color-text-accent);
 }
 
 .sidebar-content a[aria-current='page'] {
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-text-accent);
   box-shadow: inset 3px 0 0 var(--sl-color-accent);
 }
 
@@ -305,9 +331,12 @@ header.header {
   max-width: none;
 }
 
-.sl-markdown-content h2 {
-  padding-bottom: 0.45rem;
-  border-bottom: 1px solid var(--sl-color-hairline-light);
+.sl-markdown-content h2.requirement-form-heading {
+  border: 0;
+  border-inline-start: 0.25rem solid var(--requirement-section-border);
+  border-radius: 0 var(--ima-radius-xs) var(--ima-radius-xs) 0;
+  padding: 0.55rem 0.85rem;
+  background: var(--requirement-section-bg);
 }
 
 .sl-markdown-content a:not([class]) {
@@ -366,10 +395,25 @@ header.header {
   box-shadow: var(--ima-shadow-sm);
 }
 
+.sl-markdown-content table:not(.requirement-table--hierarchical) {
+  display: table;
+  width: 100%;
+  min-width: 100%;
+  overflow: visible;
+}
+
 .sl-markdown-content :is(th, td) {
   min-width: 6rem;
   padding: 0.85rem 1rem;
   vertical-align: top;
+}
+
+.sl-markdown-content table :is(th, td):not(:last-child) {
+  border-inline-end: 1px solid var(--sl-color-hairline-light);
+}
+
+.sl-markdown-content table tbody tr:not(:last-child) > :is(th, td) {
+  border-bottom: 1px solid var(--sl-color-hairline-light);
 }
 
 .sl-markdown-content :is(th:first-child, td:first-child) {
@@ -383,7 +427,7 @@ header.header {
 
 .sl-markdown-content th {
   border-bottom-color: var(--sl-color-accent);
-  background: var(--sl-color-accent-low);
+  background: var(--requirement-table-head-bg);
   color: var(--sl-color-white);
   font-size: var(--sl-text-sm);
   line-height: 1.4;
@@ -401,6 +445,317 @@ header.header {
 
 .sl-markdown-content tbody tr:hover {
   background: color-mix(in srgb, var(--sl-color-accent-low) 54%, transparent);
+}
+
+.sl-markdown-content .requirement-table--hierarchical .requirement-field-row[data-stripe='odd'] {
+  background: var(--sl-color-black);
+}
+
+.sl-markdown-content .requirement-table--hierarchical .requirement-field-row[data-stripe='even'] {
+  background: color-mix(in srgb, var(--sl-color-accent-low) 24%, var(--sl-color-black));
+}
+
+.sl-markdown-content .requirement-table--hierarchical .requirement-field-row:hover {
+  background: color-mix(in srgb, var(--sl-color-accent-low) 54%, var(--sl-color-black));
+}
+
+/* Progressive enhancement for field tables authored as ordinary Markdown. */
+.sl-markdown-content .requirement-table-scroll {
+  max-width: 100%;
+  margin-block: 1.5rem;
+  overflow-x: auto;
+  border-radius: var(--ima-radius-md);
+  box-shadow: var(--ima-shadow-sm);
+}
+
+.sl-markdown-content .requirement-table--hierarchical {
+  --requirement-rail-width: 0.22rem;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  min-width: 52rem;
+  margin: 0;
+  border-radius: 0.4rem;
+  box-shadow: none;
+}
+
+.sl-markdown-content .requirement-table--hierarchical thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.sl-markdown-content .requirement-group-row > .requirement-group-cell {
+  position: relative;
+  padding: 0.45rem 0.75rem;
+  border: 0;
+  background: var(--requirement-group-background, var(--requirement-group-bg-1));
+  color: var(--sl-color-white);
+  white-space: normal;
+}
+
+.sl-markdown-content .requirement-group-row {
+  --requirement-group-current-accent: var(--requirement-group-accent-1);
+  --requirement-group-current-bg: var(--requirement-group-bg-1);
+}
+
+.sl-markdown-content .requirement-group-row[data-depth='2'] {
+  --requirement-group-current-accent: var(--requirement-group-accent-2);
+  --requirement-group-current-bg: var(--requirement-group-bg-2);
+}
+
+.sl-markdown-content .requirement-group-row[data-depth='3'] {
+  --requirement-group-current-accent: var(--requirement-group-accent-3);
+  --requirement-group-current-bg: var(--requirement-group-bg-3);
+}
+
+.sl-markdown-content .requirement-group-row:is([data-depth='4'], [data-depth='5'], [data-depth='6']) {
+  --requirement-group-current-accent: var(--requirement-group-accent-4);
+  --requirement-group-current-bg: var(--requirement-group-bg-4);
+}
+
+.sl-markdown-content .requirement-group-row[hidden],
+.sl-markdown-content .requirement-field-row[hidden],
+.sl-markdown-content .requirement-group-divider[hidden] {
+  display: none;
+}
+
+.sl-markdown-content .requirement-group-divider > .requirement-group-divider-cell {
+  position: relative;
+  height: 0.55rem;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: var(--sl-color-black);
+  line-height: 0;
+}
+
+.sl-markdown-content .requirement-nesting-rail {
+  position: absolute;
+  inset-block: 0;
+  left: var(--requirement-rail-offset);
+  z-index: 0;
+  width: var(--requirement-rail-width);
+  pointer-events: none;
+  background: var(--requirement-group-accent-1);
+}
+
+.sl-markdown-content .requirement-nesting-rail[data-depth='2'] {
+  background: var(--requirement-group-accent-2);
+}
+
+.sl-markdown-content .requirement-nesting-rail[data-depth='3'] {
+  background: var(--requirement-group-accent-3);
+}
+
+.sl-markdown-content .requirement-nesting-rail[data-depth='4'] {
+  background: var(--requirement-group-accent-4);
+}
+
+.sl-markdown-content :is(.requirement-group-row, .requirement-field-row)[data-depth='1'] {
+  --requirement-guide-active: 0rem;
+}
+
+.sl-markdown-content :is(.requirement-group-row, .requirement-field-row)[data-depth='2'] {
+  --requirement-guide-active: 1rem;
+}
+
+.sl-markdown-content :is(.requirement-group-row, .requirement-field-row)[data-depth='3'] {
+  --requirement-guide-active: 2rem;
+}
+
+.sl-markdown-content :is(.requirement-group-row, .requirement-field-row)[data-depth='4'] {
+  --requirement-guide-active: 3rem;
+}
+
+.sl-markdown-content :is(.requirement-group-row, .requirement-field-row)[data-depth='5'] {
+  --requirement-guide-active: 4rem;
+}
+
+.sl-markdown-content :is(.requirement-group-row, .requirement-field-row)[data-depth='6'] {
+  --requirement-guide-active: 5rem;
+}
+
+.sl-markdown-content .requirement-group-row__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 2.25rem;
+  margin-inline-start: var(--requirement-guide-active);
+  padding: 0;
+}
+
+.sl-markdown-content .requirement-group-label {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.sl-markdown-content .requirement-group-toggle {
+  display: grid;
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  place-items: center;
+  border: 0;
+  border-radius: 0.25rem;
+  padding: 0;
+  background: transparent;
+  color: var(--requirement-group-accent-1);
+  cursor: pointer;
+}
+
+.sl-markdown-content .requirement-group-toggle:hover {
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.sl-markdown-content .requirement-group-toggle::before {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-inline-end: 2px solid currentColor;
+  border-block-end: 2px solid currentColor;
+  content: '';
+  transform: translateY(-0.1rem) rotate(45deg);
+  transition: transform 140ms ease;
+}
+
+.sl-markdown-content .requirement-group-toggle[aria-expanded='false']::before {
+  transform: translate(-0.1rem, 0) rotate(-45deg);
+}
+
+.sl-markdown-content .requirement-group-row[data-depth='2'] .requirement-group-toggle {
+  color: var(--requirement-group-accent-2);
+}
+
+.sl-markdown-content .requirement-group-row[data-depth='3'] .requirement-group-toggle {
+  color: var(--requirement-group-accent-3);
+}
+
+.sl-markdown-content
+  .requirement-group-row:is([data-depth='4'], [data-depth='5'], [data-depth='6'])
+  .requirement-group-toggle {
+  color: var(--requirement-group-accent-4);
+}
+
+.sl-markdown-content .requirement-group-row__heading {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+}
+
+.sl-markdown-content .requirement-group-row__heading :is(h3, h4, h5, h6) {
+  margin: 0;
+  color: inherit;
+  font-size: var(--sl-text-base);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  scroll-margin-top: calc(var(--sl-nav-height) + 2rem);
+}
+
+.sl-markdown-content .requirement-group-row__heading .sl-anchor-link {
+  margin-inline-start: 0.35rem;
+  color: inherit;
+}
+
+.sl-markdown-content .requirement-cardinality {
+  flex: none;
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
+  font-size: var(--sl-text-xs);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.sl-markdown-content .requirement-group-chips {
+  display: flex;
+  flex: 1;
+  align-self: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.4rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.sl-markdown-content .requirement-group-condition,
+.sl-markdown-content .requirement-group-note {
+  margin: 0;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--requirement-group-current-accent) 34%,
+    var(--sl-color-hairline-light)
+  );
+  border-radius: 999px;
+  padding: 0.16rem 0.55rem;
+  background: var(--requirement-group-current-bg);
+  color: var(--sl-color-gray-1);
+  font-size: var(--sl-text-xs);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.sl-markdown-content .requirement-field-row > :is(:first-child, :last-child) {
+  position: relative;
+}
+
+.sl-markdown-content .requirement-field-row > :is(th, td) {
+  border-bottom: 1px solid var(--sl-color-hairline-light);
+}
+
+.sl-markdown-content .requirement-field-row > :first-child {
+  border-bottom: 0;
+}
+
+.sl-markdown-content .requirement-group-row > .requirement-group-cell::after,
+.sl-markdown-content .requirement-field-row > :first-child::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: calc(var(--requirement-active-rail-offset, 0rem) + var(--requirement-rail-width));
+  height: 1px;
+  background: var(--sl-color-hairline-light);
+  pointer-events: none;
+}
+
+.sl-markdown-content .requirement-table--hierarchical thead th:first-child,
+.sl-markdown-content .requirement-table--hierarchical .requirement-field-row > :first-child {
+  padding-inline-start: calc(1.5rem + var(--requirement-guide-active, 0rem));
+}
+
+.sl-markdown-content .requirement-table--hierarchical thead th:last-child,
+.sl-markdown-content .requirement-table--hierarchical .requirement-field-row > :last-child {
+  padding-inline-end: calc(1.5rem + var(--requirement-guide-active, 0rem));
+}
+
+@media print {
+  .sl-markdown-content .requirement-table-scroll {
+    overflow: visible;
+    box-shadow: none;
+  }
+
+  .sl-markdown-content .requirement-table--hierarchical {
+    min-width: 0;
+  }
+
+  .sl-markdown-content .requirement-table--hierarchical thead th {
+    position: static;
+  }
+
+  .sl-markdown-content .requirement-group-row {
+    break-after: avoid;
+    break-inside: avoid;
+  }
 }
 
 /* Notices and pagination */
@@ -423,13 +778,85 @@ header.header {
 
 /* Field-specification tables use six columns; contact/component tables use seven. */
 .sl-markdown-content
-  table:has(thead th:nth-child(6)):not(:has(thead th:nth-child(7)))
+  table:not(.requirement-table--hierarchical):has(thead th:nth-child(6)):not(:has(thead th:nth-child(7)))
+  :is(th, td):nth-child(3),
+.sl-markdown-content
+  .requirement-table--hierarchical[data-requirement-columns='6']
+  :is(th, td):nth-child(3),
+.sl-markdown-content
+  table:not(.requirement-table--hierarchical):has(thead th:nth-child(7))
+  :is(th, td):nth-child(4),
+.sl-markdown-content
+  .requirement-table--hierarchical[data-requirement-columns='7']
+  :is(th, td):nth-child(4) {
+  width: 7.5rem;
+  min-width: 6.5rem;
+  padding-inline: 0.65rem;
+}
+
+.sl-markdown-content
+  table:not(.requirement-table--hierarchical):has(thead th:nth-child(6)):not(:has(thead th:nth-child(7)))
+  th:nth-child(3),
+.sl-markdown-content
+  .requirement-table--hierarchical[data-requirement-columns='6']
+  th:nth-child(3),
+.sl-markdown-content
+  table:not(.requirement-table--hierarchical):has(thead th:nth-child(7))
+  th:nth-child(4),
+.sl-markdown-content
+  .requirement-table--hierarchical[data-requirement-columns='7']
+  th:nth-child(4) {
+  white-space: normal;
+}
+
+.sl-markdown-content
+  table:not(.requirement-table--hierarchical):has(thead th:nth-child(6)):not(:has(thead th:nth-child(7)))
+  :is(th, td):nth-child(6),
+.sl-markdown-content
+  .requirement-table--hierarchical[data-requirement-columns='6']
+  :is(th, td):nth-child(6),
+.sl-markdown-content
+  table:not(.requirement-table--hierarchical):has(thead th:nth-child(7))
+  :is(th, td):nth-child(7),
+.sl-markdown-content
+  .requirement-table--hierarchical[data-requirement-columns='7']
+  :is(th, td):nth-child(7) {
+  width: 7.5rem;
+  min-width: 6.5rem;
+  padding-inline: 0.65rem;
+}
+
+.sl-markdown-content
+  table:not(.requirement-table--hierarchical):has(thead th:nth-child(6)):not(:has(thead th:nth-child(7)))
+  th:nth-child(6),
+.sl-markdown-content
+  .requirement-table--hierarchical[data-requirement-columns='6']
+  th:nth-child(6),
+.sl-markdown-content
+  table:not(.requirement-table--hierarchical):has(thead th:nth-child(7))
+  th:nth-child(7),
+.sl-markdown-content
+  .requirement-table--hierarchical[data-requirement-columns='7']
+  th:nth-child(7) {
+  white-space: normal;
+}
+
+.sl-markdown-content
+  table:not(.requirement-table--hierarchical):has(thead th:nth-child(6)):not(:has(thead th:nth-child(7)))
   :is(th, td):nth-child(4) {
   width: 36%;
   min-width: 18rem;
 }
 
-.sl-markdown-content table:has(thead th:nth-child(7)) :is(th, td):nth-child(5) {
+.sl-markdown-content
+  table:not(.requirement-table--hierarchical):has(thead th:nth-child(7))
+  :is(th, td):nth-child(5),
+.sl-markdown-content
+  .requirement-table--hierarchical[data-requirement-columns='6']
+  :is(th, td):nth-child(4),
+.sl-markdown-content
+  .requirement-table--hierarchical[data-requirement-columns='7']
+  :is(th, td):nth-child(5) {
   width: 36%;
   min-width: 18rem;
 }

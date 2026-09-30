@@ -119,28 +119,28 @@ Aplica-se o componente **Localização simples**, sem zona fixa.
 
 Aplica-se o componente **Contatos simples**.
 
-| Grupo | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
-| --- | --- | --- | :---: | --- | --- | --- |
-| Contato obrigatório — E-mail | Tipo de Contato | Texto | Sim | Somente leitura. | `E-mail` | `E-mail` |
-| Contato obrigatório — E-mail | E-mail | Texto curto | Sim | Formato = e-mail válido.<br>Somente leitura se o CPF já estiver vinculado a um usuário. | `joaquim@email.com` | E-mail do usuário, quando houver |
-| Contato obrigatório — E-mail | Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Meu e-mail padrão` | Vazio |
-| Contato obrigatório — Telefone | Tipo de Contato | Texto | Sim | Somente leitura. | `Telefone` | `Telefone` |
-| Contato obrigatório — Telefone | Número | Texto numérico | Sim | Tamanho = 11 dígitos.<br>Formato = `(XX) XXXXX-XXXX`. | `(35) 99999-1111` | Vazio |
-| Contato obrigatório — Telefone | Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Meu telefone` | Vazio |
-| Outros Contatos (zero ou mais) | Tipo de Contato | Seleção simples | Sim | Valores = `E-mail`, `Telefone`. | `Telefone` | `E-mail` |
-| Outros Contatos (zero ou mais) | E-mail | Texto curto | Sim | Disponível se **Tipo de Contato** = `E-mail`.<br>Formato = e-mail válido. | `joaquim@email.com` | Vazio |
-| Outros Contatos (zero ou mais) | Número | Texto numérico | Sim | Disponível se **Tipo de Contato** = `Telefone`.<br>Tamanho = 11 dígitos.<br>Formato = `(XX) XXXXX-XXXX`. | `(35) 99999-1111` | Vazio |
-| Outros Contatos (zero ou mais) | Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Telefone do filho` | Vazio |
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Tipo de Contato | Texto | Sim | Somente leitura. | `E-mail` | `E-mail` |
+| E-mail | Texto curto | Sim | Formato = e-mail válido.<br>Somente leitura se o CPF já estiver vinculado a um usuário. | `joaquim@email.com` | E-mail do usuário, quando houver |
+| Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Meu e-mail padrão` | Vazio |
+| Tipo de Contato | Texto | Sim | Somente leitura. | `Telefone` | `Telefone` |
+| Número | Texto numérico | Sim | Tamanho = 11 dígitos.<br>Formato = `(XX) XXXXX-XXXX`. | `(35) 99999-1111` | Vazio |
+| Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Meu telefone` | Vazio |
+| Tipo de Contato | Seleção simples | Sim | Valores = `E-mail`, `Telefone`. | `Telefone` | `E-mail` |
+| E-mail | Texto curto | Sim | Disponível se **Tipo de Contato** = `E-mail`.<br>Formato = e-mail válido. | `joaquim@email.com` | Vazio |
+| Número | Texto numérico | Sim | Disponível se **Tipo de Contato** = `Telefone`.<br>Tamanho = 11 dígitos.<br>Formato = `(XX) XXXXX-XXXX`. | `(35) 99999-1111` | Vazio |
+| Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Telefone do filho` | Vazio |
 
 ### Anexos e observações
 
 Aplica-se o componente **Anexos e observações**.
 
-| Grupo | Campo | Tipo | Obrigatório no item | Validações | Exemplo | Valor padrão |
-| --- | --- | --- | :---: | --- | --- | --- |
-| Anexos (zero ou mais) | Documento | Arquivo | Sim | Tipos aceitos = PNG, JPG, PDF.<br>Tamanho máximo = 50 MB. | `documento.png` | Vazio |
-| Anexos (zero ou mais) | Descrição | Texto curto | Não | Disponível se **Documento** estiver preenchido.<br>Tamanho máximo = 255 caracteres. | `Documento de identidade com foto` | Vazio |
-| Observações | Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Informações adicionais sobre a pessoa.` | Vazio |
+| Campo | Tipo | Obrigatório no item | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Documento | Arquivo | Sim | Tipos aceitos = PNG, JPG, PDF.<br>Tamanho máximo = 50 MB. | `documento.png` | Vazio |
+| Descrição | Texto curto | Não | Disponível se **Documento** estiver preenchido.<br>Tamanho máximo = 255 caracteres. | `Documento de identidade com foto` | Vazio |
+| Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Informações adicionais sobre a pessoa.` | Vazio |
 
 ### Ações e resultado
 

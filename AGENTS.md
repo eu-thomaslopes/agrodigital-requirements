@@ -32,7 +32,7 @@
 
 ## Nomenclatura
 
-- Preserve os termos oficiais do SIDAGRO nas páginas, nos títulos e nas entidades.
+- Preserve os termos oficiais do AgroDigital nas páginas, nos títulos e nas entidades.
 - Use slugs em kebab-case, sem acentos, para módulos, entidades e ícones.
 - Uma alteração de termo deve ser feita na fonte canônica e refletida pelos
   componentes; não corrija cópias isoladamente.

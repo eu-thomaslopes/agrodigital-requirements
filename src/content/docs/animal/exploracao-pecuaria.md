@@ -205,11 +205,11 @@ Disponível se **Espécie** = `Peixe Ornamental`.
 
 Aplica-se o componente **Anexos e observações**.
 
-| Grupo | Campo | Tipo | Obrigatório no item | Validações | Exemplo | Valor padrão |
-| --- | --- | --- | :---: | --- | --- | --- |
-| Anexos (zero ou mais) | Documento | Arquivo | Sim | Tipos aceitos = PNG, JPG, PDF.<br>Tamanho máximo = 50 MB. | `anexo.png` | Vazio |
-| Anexos (zero ou mais) | Descrição | Texto curto | Não | Disponível se **Documento** estiver preenchido.<br>Tamanho máximo = 255 caracteres. | `Contrato complementar` | Vazio |
-| Observações | Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Informações adicionais da exploração.` | Vazio |
+| Campo | Tipo | Obrigatório no item | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Documento | Arquivo | Sim | Tipos aceitos = PNG, JPG, PDF.<br>Tamanho máximo = 50 MB. | `anexo.png` | Vazio |
+| Descrição | Texto curto | Não | Disponível se **Documento** estiver preenchido.<br>Tamanho máximo = 255 caracteres. | `Contrato complementar` | Vazio |
+| Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Informações adicionais da exploração.` | Vazio |
 
 ### Ações e resultado
 
