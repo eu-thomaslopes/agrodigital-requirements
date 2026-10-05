@@ -1,0 +1,57 @@
+---
+import { z } from 'astro/zod';
+import { fieldTypes } from '../config/field-types';
+
+const fieldTypeValues = Object.keys(fieldTypes) as [keyof typeof fieldTypes, ...(keyof typeof fieldTypes)[]];
+const fieldSchema = z.object({
+  campo: z.string().min(1),
+  tipo: z.enum(fieldTypeValues),
+  obrigatorio: z.boolean(),
+  validacoes: z.array(z.string()),
+  exemplo: z.string(),
+  valorPadrao: z.string(),
+});
+
+const fieldsSchema = z.array(fieldSchema).min(1);
+const result = fieldsSchema.safeParse(Astro.props.fields);
+if (!result.success) {
+  throw new Error(`FieldTable recebeu dados inválidos: ${result.error.message}`);
+}
+const fields = result.data;
+const componentName = z.string().optional().parse(Astro.props.componentName);
+const componentId = z.string().optional().parse(Astro.props.componentId);
+---
+
+<table
+  class={componentId ? 'field-table component-field-table' : 'field-table'}
+  data-component-name={componentName}
+  data-component-id={componentId}
+>
+  <thead>
+    <tr>
+      <th>Campo</th>
+      <th>Tipo</th>
+      <th>Obrigatório</th>
+      <th>Validações</th>
+      <th>Exemplo</th>
+      <th>Valor padrão</th>
+    </tr>
+  </thead>
+  <tbody>
+    {fields.map((field) => (
+      <tr>
+        <td>{field.campo}</td>
+        <td>{fieldTypes[field.tipo]}</td>
+        <td>{field.obrigatorio ? 'Sim' : 'Não'}</td>
+        <td>{field.validacoes.length ? field.validacoes.join(' ') : '—'}</td>
+        <td><code>{field.exemplo}</code></td>
+        <td>{field.valorPadrao}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+<style>
+  .field-table { width: 100%; }
+  .field-table th:nth-child(3), .field-table td:nth-child(3) { text-align: center; }
+</style>

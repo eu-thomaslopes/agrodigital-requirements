@@ -1,0 +1,51 @@
+---
+import { z } from 'astro/zod';
+import { fieldTypes } from '../config/field-types';
+import { componentDefinitions, type ComponentField } from '../component-library/definitions';
+import FieldTable from './FieldTable.astro';
+
+const propsSchema = z.object({
+  name: z.string(),
+  parameters: z.string().default('{}'),
+});
+const props = propsSchema.parse(Astro.props);
+const definition = componentDefinitions[props.name];
+if (!definition) throw new Error(`Componente “${props.name}” não encontrado na biblioteca.`);
+
+// Os parâmetros chegam serializados pelo plugin MDX e são verificados contra a definição.
+let parameters: Record<string, string>;
+try {
+  parameters = z.record(z.string(), z.string()).parse(JSON.parse(props.parameters));
+} catch (error) {
+  throw new Error(`Parâmetros inválidos para “${definition.name}”: ${error instanceof Error ? error.message : error}`);
+}
+
+for (const key of Object.keys(parameters)) {
+  if (!(key in definition.parameters)) {
+    throw new Error(`Parâmetro “${key}” não existe no componente “${definition.name}”.`);
+  }
+}
+for (const [key, parameter] of Object.entries(definition.parameters)) {
+  const value = parameters[key];
+  if (parameter.required && !value) {
+    throw new Error(`O componente “${definition.name}” exige o parâmetro “${parameter.label}”.`);
+  }
+  if (value && parameter.values && !parameter.values.includes(value)) {
+    throw new Error(`Valor “${value}” inválido para “${parameter.label}” em “${definition.name}”. Valores aceitos: ${parameter.values.join(', ')}.`);
+  }
+}
+
+// A definição produz dados; este componente valida o contrato antes de renderizar a tabela.
+const fields = definition.buildFields(parameters);
+const fieldSchema = z.object({
+  campo: z.string().min(1),
+  tipo: z.enum(Object.keys(fieldTypes) as [keyof typeof fieldTypes, ...(keyof typeof fieldTypes)[]]),
+  obrigatorio: z.boolean(),
+  validacoes: z.array(z.string()),
+  exemplo: z.string(),
+  valorPadrao: z.string(),
+});
+const checkedFields = z.array(fieldSchema).min(1).parse(fields) as ComponentField[];
+---
+
+<FieldTable fields={checkedFields} componentName={definition.name} componentId={definition.id} />

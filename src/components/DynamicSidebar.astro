@@ -11,6 +11,7 @@ const documents = (await getCollection('docs'))
     iconUrl: getEntityIconUrl(entry.data.entity, entry.data.icon),
   }))
   .filter((document) => Boolean(document.iconUrl));
+// A sidebar usa apenas módulos que têm ao menos um documento visível com ícone.
 const documentedModules = new Set(
   documents.map(({ entry }) => entry.data.module).filter((module) => Boolean(module)),
 );
@@ -25,6 +26,7 @@ const entryAssignments = documents
   )
   .join('\n');
 
+// Os ícones entram como máscaras CSS em links que o Starlight já renderizou.
 const visibleModules = systemModules.filter((module) => documentedModules.has(module.slug));
 const moduleSelectors = visibleModules.map(
   (module) =>

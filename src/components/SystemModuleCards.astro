@@ -8,6 +8,7 @@ const requirements = (await getCollection('docs')).filter(
   (entry) => Boolean(entry.data.entity) && !entry.data.sidebar.hidden,
 );
 
+// Os cards partem do catálogo fixo de módulos e encontram requisitos na coleção.
 const modules = systemModules.map((module) => {
   const entries = requirements
     .filter((entry) => entry.data.module === module.slug)

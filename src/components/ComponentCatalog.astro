@@ -1,0 +1,52 @@
+---
+import { componentCatalog } from '../component-library/catalog';
+
+const categories = [...new Set(componentCatalog.map((component) => component.category))];
+---
+
+<div class="component-catalog">
+  {categories.map((category) => (
+    <section aria-labelledby={`category-${category}`}>
+      <h2 id={`category-${category}`}>{category}</h2>
+      <div class="component-catalog__grid">
+        {componentCatalog.filter((component) => component.category === category).map((component) => (
+          <article class="component-catalog__item" id={component.id}>
+            <h3>{component.name}</h3>
+            <p>Referência no documento de componentes: páginas {component.pages}.</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
+</div>
+
+<style>
+  .component-catalog section + section {
+    margin-top: 2rem;
+  }
+
+  .component-catalog__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: 0.75rem;
+  }
+
+  .component-catalog__item {
+    scroll-margin-top: calc(var(--sl-nav-height) + 1.5rem);
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: var(--ima-radius-sm);
+    padding: 0.9rem 1rem;
+    background: color-mix(in srgb, var(--sl-color-accent-low) 28%, var(--sl-color-black));
+  }
+
+  .component-catalog__item h3 {
+    margin: 0;
+    font-size: var(--sl-text-lg);
+  }
+
+  .component-catalog__item p {
+    margin: 0.35rem 0 0;
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-sm);
+  }
+</style>

@@ -1,0 +1,197 @@
+---
+title: Pessoa física
+docType: requirement
+module: geral
+entity: pessoa-fisica
+entityPlural: pessoas físicas
+lifecycle: ready
+---
+
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
+## 1. Buscar pessoa física
+
+**Dado que** estou na tela inicial para usuários autenticados  
+**Quando** acesso o menu **Pessoa Física**  
+**Então** o sistema exibe a tela de busca com os campos abaixo.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| CPF ou Nome da Pessoa Física | Texto curto | Não | Tamanho máximo = 255 caracteres | `444.009.956-40` | Vazio |
+| Estado | Seleção simples | Não | Refere-se ao endereço de correspondência.<br />Valores = lista de estados brasileiros. | `Minas Gerais` | Vazio |
+| Município | Seleção pesquisável | Não | Disponível se **Estado** estiver preenchido.<br />Refere-se ao endereço de correspondência.<br />Valores = municípios do estado selecionado. | `Esmeraldas` | Vazio |
+| Situação do Cadastro | Seleção simples | Não | Valores = `Ativo`, `Inativo`. | `Ativo` | Vazio |
+
+O sistema exibe as ações comuns das telas de busca (**AC001**): **Inicial**, **Adicionar Novo** e **Pesquisar**. Antes da primeira pesquisa, deve solicitar o preenchimento de pelo menos um campo.
+
+## 2. Listar pessoas físicas
+
+**Dado que** estou na tela de busca  
+**E** o campo de busca ou pelo menos um filtro foi preenchido corretamente  
+**Quando** realizo a ação **Pesquisar**  
+**Então** o sistema retorna os registros compatíveis.
+
+| Campo | Tipo | Ordenável | Descrição | Exemplo |
+| --- | --- | :---: | --- | --- |
+| CPF | Texto | Não | Exibe o CPF. | `444.009.956-40` |
+| Nome | Texto | Sim | Exibe o nome. | `Joaquim da Silva` |
+| Estado | Texto | Sim | Exibe o estado do endereço de correspondência. | `Minas Gerais` |
+| Município | Texto | Sim | Exibe o município do endereço de correspondência. | `Esmeraldas` |
+| Situação | Texto | Sim | Exibe a situação do cadastro. | `Ativo` |
+
+Para cada resultado, o sistema exibe as ações comuns de listagem (**AC002**): **Visualizar** e **Editar**.
+
+### Cenários alternativos
+
+- Se nenhum campo de busca ou filtro válido for preenchido, o sistema não realiza a busca, informa os problemas encontrados e destaca os campos com erro.
+- Se não houver registros compatíveis, o sistema exibe a mensagem **“Nenhum resultado foi encontrado”**.
+- Em caso de falha técnica, aplica-se **CA003 — Notificar erro ao usuário devido a falha técnica**.
+
+## 3. Cadastrar pessoa física
+
+**Dado que** estou na tela de cadastro  
+**Então** o sistema exibe o formulário descrito a seguir.
+
+Campos indicados com `*` são obrigatórios.
+
+### Informações básicas
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| CPF | CPF | Sim | Tamanho = 11 dígitos.<br />Formato = `XXX.XXX.XXX-XX`.<br />Validação de dígito verificador. | `444.009.956-40` | Vazio |
+| Nome | Texto curto | Sim | Consulta à API de CPF.<br />Somente leitura.<br />Disponível se CPF estiver preenchido.<br />Tamanho máximo = 255 caracteres. | `Joaquim da Silva` | Valor obtido pela API de CPF |
+| Apelido | Texto curto | Não | Tamanho máximo = 100 caracteres.<br />Tipo = alfanumérico. | `Joca` | Vazio |
+| Data de Nascimento | Data | Sim | Consulta à API de CPF.<br />Somente leitura.<br />Formato = `DD/MM/AAAA`.<br />Não pode ser futura. | `12/05/1952` | Valor obtido pela API de CPF |
+| Sexo | Seleção simples | Sim | Consulta à API de CPF.<br />Somente leitura.<br />Valores = `Não informado`, `Masculino`, `Feminino`, `Outro`. | `Masculino` | Valor obtido pela API de CPF |
+| Estado Civil | Seleção simples | Sim | Consulta à API de CPF.<br />Somente leitura.<br />Valores = `Casado(a)`, `Divorciado(a)`, `Solteiro(a)`, `Viúvo(a)`. | `Casado(a)` | Valor obtido pela API de CPF |
+
+### Informações de localização
+
+#### Endereço de correspondência
+
+```componente
+componente: Localização simples
+zona fixa: Urbana
+```
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| O endereço de correspondência é também o endereço de residência? | Seleção simples | Sim | Valores = `Sim`, `Não`. | `Sim` | `Sim` |
+
+#### Endereço de residência
+
+Disponível se **O endereço de correspondência é também o endereço de residência?** = `Não`.
+
+```componente
+componente: Localização simples
+```
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Observação | Texto curto | Não | Tamanho máximo = 255 caracteres. | `Endereço da fazenda` | Vazio |
+
+### Representantes legais (zero ou mais)
+
+```componente
+componente: Selecionar pessoa física
+nome do campo: Representante Legal
+```
+
+### Informações de contato
+
+```componente
+componente: Contatos simples
+email somente leitura se cpf vinculado: Sim
+```
+
+### Anexos e observações
+
+```componente
+componente: Anexos e observações
+```
+
+### Ações e resultado
+
+O cadastro usa as ações comuns **AC003** e **AC006**:
+
+- **Todas as pessoas físicas**: volta para a busca.
+- **Adicionar**: valida e salva o cadastro.
+- **Ver item**: abre o cadastro relacionado selecionado.
+- **Adicionar/Remover item**: gerencia representantes, outros contatos e anexos.
+- **Baixar documento**: baixa o documento de vínculo ou anexo.
+
+Em caso de sucesso, o sistema exibe uma mensagem e as ações **Voltar** e **Visualizar**. Em caso de erro de validação, mantém o formulário e apresenta os erros nos respectivos campos.
+
+## 4. Visualizar pessoa física
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe todos os campos do cadastro como somente leitura, com seus valores preenchidos.
+
+Além deles, exibe:
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Situação do Indivíduo | Texto | Informa, pela integração com a API de CPF, se a pessoa está `Viva` ou `Falecida`. | `Viva` |
+| Situação do Cadastro | Texto | Exibe a situação atual conforme **CAC001**. | `Ativo` |
+
+O sistema exibe as ações **Todas as pessoas físicas**, **Editar** e **Histórico de Alterações** (**AC004**), além de **Ver item** e **Baixar documento** (**AC006**).
+
+## 5. Editar pessoa física
+
+**Dado que** estou na tela de edição  
+**Então** o sistema exibe os campos do cadastro preenchidos e editáveis, exceto os campos alimentados pela API de CPF e os demais campos definidos como somente leitura. A **Situação do Indivíduo** e a **Situação do Cadastro** também são somente leitura.
+
+O sistema exibe as ações **Salvar**, **Visualizar pessoa física**, **Ativar/Inativar** e **Histórico de Alterações** (**AC005**), além das ações de formulário (**AC006**).
+
+Ao acionar **Salvar**, o sistema abre a confirmação da edição. **Cancelar** retorna à edição; **Salvar** valida os dados, persiste as alterações e retorna à visualização.
+
+## 6. Critérios comuns
+
+- **CA001 — Salvar cadastro de uma entidade**.
+- **CA002 — Ativar/Inativar cadastro de uma entidade**.
+- **CA003 — Notificar erro ao usuário devido a falha técnica**.
+
+## Regras de negócio específicas
+
+### RNE001 — Unicidade
+
+O cadastro deve ser único no sistema pelo CPF.
+
+### RNE002 — Disponibilidade da API de CPF
+
+Se a API de CPF estiver inacessível, o sistema deve impedir o cadastro da pessoa física.
+
+### RNE003 — Vínculo com usuário
+
+Se já existir um usuário com o CPF informado, a pessoa física deve ser vinculada a esse usuário e o e-mail obrigatório deve receber o e-mail do usuário.
+
+### RNE004 — Endereços
+
+O endereço de correspondência deve ser urbano. Pode ser informado um endereço de residência diferente, urbano ou rural.
+
+### RNE005 — Itens repetíveis
+
+O cadastro pode conter:
+
+- zero ou mais representantes legais, cada qual formado por **Representante Legal**, **CPF** e **Documento de Vínculo**;
+- zero ou mais outros contatos, cada qual formado por **Tipo de Contato**, **E-mail** ou **Número** e **Observação**;
+- zero ou mais anexos, cada qual formado por **Documento** e **Descrição**.
+
+## Regras comuns relacionadas
+
+- **RN001 — Situação do cadastro de uma entidade**.
+- **RN002 — Ativação/desativação de cadastros de uma entidade**.
+- **RN003 — Controle de alterações em uma entidade**.
+- **RN005 — Comportamento quando o CEP não for validado**.
+
+## Histórico das fontes
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| US042 v1.0 | 10/10/2025 | Primeira versão finalizada da história de gerenciamento. |
+| US043 v1.0 | 10/10/2025 | Primeira versão da história de busca. |
+
+## Histórias relacionadas
+
+- **US005 — Cadastro e edição de divisão municipal**.
+- **US043 — Buscar pessoa física**, consolidada nesta página.

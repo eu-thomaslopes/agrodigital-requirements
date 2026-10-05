@@ -44,6 +44,13 @@
   --ima-shadow-sm: 0 1px 2px rgb(20 40 28 / 6%), 0 6px 18px rgb(20 40 28 / 5%);
   --ima-shadow-md: 0 2px 4px rgb(20 40 28 / 5%), 0 14px 36px rgb(20 40 28 / 9%);
 
+  /* Shared interaction tokens adapt to the active light or dark theme. */
+  --ima-interactive-rest-bg: transparent;
+  --ima-interactive-hover-mix: 14%;
+  --ima-interactive-hover-bg: color-mix(in srgb, var(--sl-color-accent) 14%, var(--sl-color-black));
+  --ima-interactive-radius: var(--ima-radius-xs);
+  --ima-focus-ring: color-mix(in srgb, var(--sl-color-accent) 60%, transparent);
+
   /* Backwards-compatible project aliases. */
   --agrodigital-green-50: var(--ima-green-50);
   --agrodigital-green-100: var(--ima-green-100);
@@ -183,12 +190,13 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--sl-color-accent) 60%, transparent);
+  outline: 3px solid var(--ima-focus-ring);
   outline-offset: 3px;
 }
 
 /* Navigation shell */
 header.header {
+  z-index: 20;
   border-bottom-color: color-mix(in srgb, var(--sl-color-hairline) 82%, transparent);
   box-shadow: 0 1px 0 rgb(0 0 0 / 3%), 0 8px 24px rgb(20 40 28 / 4%);
   backdrop-filter: blur(14px);
@@ -426,7 +434,7 @@ header.header {
 }
 
 .sl-markdown-content th {
-  border-bottom-color: var(--sl-color-accent);
+  border-bottom-color: var(--sl-color-hairline-light);
   background: var(--requirement-table-head-bg);
   color: var(--sl-color-white);
   font-size: var(--sl-text-sm);
@@ -468,6 +476,11 @@ header.header {
   box-shadow: var(--ima-shadow-sm);
 }
 
+.sl-markdown-content .requirement-table-scroll--component-at-end {
+  padding-bottom: 0.4rem;
+  background: var(--sl-color-hairline-light);
+}
+
 .sl-markdown-content .requirement-table--hierarchical {
   --requirement-rail-width: 0.22rem;
   display: table;
@@ -497,11 +510,44 @@ header.header {
 .sl-markdown-content .requirement-group-row {
   --requirement-group-current-accent: var(--requirement-group-accent-1);
   --requirement-group-current-bg: var(--requirement-group-bg-1);
+  --ima-interactive-hover-bg: color-mix(
+    in srgb,
+    var(--requirement-group-current-accent) var(--ima-interactive-hover-mix),
+    var(--sl-color-black)
+  );
 }
 
 .sl-markdown-content .requirement-group-row[data-depth='2'] {
   --requirement-group-current-accent: var(--requirement-group-accent-2);
   --requirement-group-current-bg: var(--requirement-group-bg-2);
+}
+
+/* Component tags keep the original requirement groups and nesting rails intact. */
+.sl-markdown-content .requirement-component-badge {
+  flex: none;
+  border: 0;
+  border-radius: var(--ima-interactive-radius);
+  padding: 0.18rem 0.5rem;
+  background: var(--ima-interactive-rest-bg);
+  color: var(--requirement-group-current-accent);
+  font-size: var(--sl-text-xs);
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.sl-markdown-content .requirement-component-badge:hover {
+  background: var(--ima-interactive-hover-bg);
+  text-decoration: none;
+}
+
+.requirement-component-frame {
+  position: fixed;
+  z-index: 10;
+  box-sizing: border-box;
+  border: 2px dashed var(--requirement-component-frame-accent);
+  border-inline-start: 0;
+  pointer-events: none;
 }
 
 .sl-markdown-content .requirement-group-row[data-depth='3'] {
@@ -598,26 +644,27 @@ header.header {
 .sl-markdown-content .requirement-group-toggle {
   display: grid;
   flex: none;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.7rem;
+  height: 1.7rem;
   place-items: center;
   border: 0;
-  border-radius: 0.25rem;
+  border-radius: var(--ima-interactive-radius);
   padding: 0;
-  background: transparent;
+  background: var(--ima-interactive-rest-bg);
   color: var(--requirement-group-accent-1);
   cursor: pointer;
+  transition: background-color 140ms ease;
 }
 
 .sl-markdown-content .requirement-group-toggle:hover {
-  background: color-mix(in srgb, currentColor 12%, transparent);
+  background: var(--ima-interactive-hover-bg);
 }
 
 .sl-markdown-content .requirement-group-toggle::before {
-  width: 0.42rem;
-  height: 0.42rem;
-  border-inline-end: 2px solid currentColor;
-  border-block-end: 2px solid currentColor;
+  width: 0.48rem;
+  height: 0.48rem;
+  border-inline-end: 2.5px solid currentColor;
+  border-block-end: 2.5px solid currentColor;
   content: '';
   transform: translateY(-0.1rem) rotate(45deg);
   transition: transform 140ms ease;

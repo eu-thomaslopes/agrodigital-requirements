@@ -1,7 +1,11 @@
 import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
 import starlight from '@astrojs/starlight';
 import { systemModules } from './src/config/system-modules.mjs';
+import { componentCatalog } from './src/component-library/catalog.ts';
+import { componentFencePlugin } from './src/component-library/component-fence-plugin.mjs';
 
+// O Astro conecta a configuração do Starlight aos catálogos compartilhados do projeto.
 export default defineConfig({
   redirects: {
     '/geral': '/geral/pessoa-fisica/',
@@ -27,6 +31,7 @@ export default defineConfig({
         Sidebar: './src/components/DynamicSidebar.astro',
       },
       sidebar: [
+        // Módulos e componentes da navegação são derivados de suas fontes canônicas.
         { label: 'Início', link: '/' },
         {
           label: 'Sistema',
@@ -34,6 +39,13 @@ export default defineConfig({
             label: module.label,
             collapsed: module.slug !== 'geral',
             items: [{ autogenerate: { directory: module.slug } }],
+          })),
+        },
+        {
+          label: 'Componentes',
+          items: componentCatalog.map((component) => ({
+            label: component.name,
+            link: `/sobre/componentes/#${component.id}`,
           })),
         },
         {
@@ -47,5 +59,9 @@ export default defineConfig({
       },
       credits: false,
     }),
+    mdx(),
   ],
+  vite: {
+    plugins: [componentFencePlugin()],
+  },
 });

@@ -2,6 +2,13 @@
 
 Documentação funcional e técnica viva do sistema AgroDigital.
 
+## Estudar este repositório
+
+O [roteiro de estudo](docs/roteiro-de-estudo-do-projeto.md) apresenta a
+arquitetura e a ordem sugerida para percorrer o código. A instrução reutilizável
+para documentar fluxos e comentar código está em
+[`docs/skills/documentar-projeto/SKILL.md`](docs/skills/documentar-projeto/SKILL.md).
+
 ## Desenvolvimento
 
 ```bash

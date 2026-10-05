@@ -7,6 +7,8 @@ entityPlural: explorações pecuárias
 lifecycle: draft
 ---
 
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
 ## 1. Buscar exploração pecuária
 
 **Dado que** estou na tela inicial para usuários autenticados  
@@ -24,7 +26,7 @@ lifecycle: draft
 | Espécie | Seleção de entidade: espécie | Sim | Valores = espécies cadastradas no sistema. | `Bovino` | Vazio |
 | Vencendo em | Seleção simples | Não | Valores = `30 dias`, `7 dias`, `Hoje`, `Período`. | `30 dias` | Vazio |
 | Período de Vencimento — De | Data | Não | Disponível se **Vencendo em** = `Período`. | `01/01/2027` | Vazio |
-| Período de Vencimento — Até | Data | Não | Disponível se **Vencendo em** = `Período`.<br>Deve ser posterior ou igual à data inicial. | `31/12/2027` | Vazio |
+| Período de Vencimento — Até | Data | Não | Disponível se **Vencendo em** = `Período`.<br />Deve ser posterior ou igual à data inicial. | `31/12/2027` | Vazio |
 | Situação do Cadastro | Seleção simples | Não | Valores = `Ativo`, `Inativo`, `Suspenso`. | `Ativo` | Vazio |
 
 O sistema exibe as ações comuns de busca **Inicial**, **Adicionar Novo** e **Pesquisar** (**AC001**).
@@ -69,8 +71,8 @@ Disponível se **Estabelecimento Agropecuário** estiver preenchido.
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
 | Unidade de Medida da Área | Seleção simples | Sim | Valores = `Metros Quadrados`, `Hectares`. | `Hectares` | `Hectares` |
-| Área Produtiva do Estabelecimento Agropecuário | Numérico decimal | Sim | Somente leitura.<br>Corresponde ao estabelecimento selecionado.<br>Exibida na unidade escolhida. | `1000,00` | Vazio |
-| Área Útil da Exploração | Numérico decimal | Sim | Tamanho = 12 dígitos.<br>Casas decimais = 2.<br>Pode superar a área produtiva; nesse caso, exibe o alerta definido na RNE003. | `20,00` | Vazio |
+| Área Produtiva do Estabelecimento Agropecuário | Numérico decimal | Sim | Somente leitura.<br />Corresponde ao estabelecimento selecionado.<br />Exibida na unidade escolhida. | `1000,00` | Vazio |
+| Área Útil da Exploração | Numérico decimal | Sim | Tamanho = 12 dígitos.<br />Casas decimais = 2.<br />Pode superar a área produtiva; nesse caso, exibe o alerta definido na RNE003. | `20,00` | Vazio |
 
 :::note[Área compartilhada]
 Explorações diferentes podem compartilhar uma mesma área. O valor informado deve ser comparado à área produtiva disponível e às demais explorações, sem bloquear o cadastro quando houver sobreposição.
@@ -84,14 +86,13 @@ Disponível se **Estabelecimento Agropecuário** estiver preenchido. Aplica-se o
 
 Produtor principal responsável pela exploração pecuária.
 
-| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
-| --- | --- | :---: | --- | --- | --- |
-| Tipo de Produtor | Seleção simples | Sim | Valores = `Inquilino`, `Arrendatário`, `Assentado`, `Comodatário`, `Beneficiário de doação com reserva de usufruto`, `Meeiro`, `Parceiro Rural`, `Posseiro`, `Possuidor`, `Proprietário`, `Sócio`, `Usufrutuário`. | `Meeiro` | Vazio |
-| Produtor | Seleção de entidade: pessoa | Sim | Valores = pessoas físicas ou jurídicas cadastradas (US042 e US044).<br>Pesquisa por nome/razão social ou CPF/CNPJ. | `José Aarão Neto` | Vazio |
+```componente
+componente: Produtores
+```
 
 #### Outros produtores (zero ou mais)
 
-Cada item contém os mesmos campos da seção **Produtor titular**.
+Cada item contém os mesmos campos do componente **Produtores**.
 
 ### Contrato de vínculo
 
@@ -99,16 +100,16 @@ Disponível se pelo menos um produtor tiver um tipo diferente de `Proprietário`
 
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
-| Contrato de Vínculo | Arquivo | Sim | Obrigatório quando houver produtor que não seja proprietário.<br>Tipos aceitos = PNG, JPG, PDF.<br>Tamanho máximo = 50 MB. | `contrato_de_vinculo.pdf` | Vazio |
-| Possui Data de Vencimento no Contrato de Vínculo? | Seleção simples | Sim | Disponível se **Contrato de Vínculo** estiver preenchido.<br>Valores = `Sim`, `Não`. | `Sim` | `Não` |
-| Data de Vencimento | Data | Sim | Se a resposta for `Não`, somente leitura e calculada conforme RNE004.<br>Se for `Sim`, livre digitação.<br>Deve ser posterior ou igual à data atual. | `05/08/2027` | Se não houver vencimento contratual, data atual + 5 anos |
+| Contrato de Vínculo | Arquivo | Sim | Obrigatório quando houver produtor que não seja proprietário.<br />Tipos aceitos = PNG, JPG, PDF.<br />Tamanho máximo = 50 MB. | `contrato_de_vinculo.pdf` | Vazio |
+| Possui Data de Vencimento no Contrato de Vínculo? | Seleção simples | Sim | Disponível se **Contrato de Vínculo** estiver preenchido.<br />Valores = `Sim`, `Não`. | `Sim` | `Não` |
+| Data de Vencimento | Data | Sim | Se a resposta for `Não`, somente leitura e calculada conforme RNE004.<br />Se for `Sim`, livre digitação.<br />Deve ser posterior ou igual à data atual. | `05/08/2027` | Se não houver vencimento contratual, data atual + 5 anos |
 
 ### Informações da espécie explorada
 
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
 | Espécie | Seleção de entidade: espécie | Sim | Valores = espécies cadastradas no sistema. | `Peixe Redondo` | Vazio |
-| Variedade/Raça | Seleção de entidade: variedade/raça | Condicional | Disponível se a espécie possuir variedades ou raças cadastradas.<br>Obrigatório, com um ou mais itens, para peixes e abelhas.<br>Zero ou mais itens para as demais espécies.<br>Valores = variedades/raças da espécie selecionada. | `Tambacu` | Vazio |
+| Variedade/Raça | Seleção de entidade: variedade/raça | Condicional | Disponível se a espécie possuir variedades ou raças cadastradas.<br />Obrigatório, com um ou mais itens, para peixes e abelhas.<br />Zero ou mais itens para as demais espécies.<br />Valores = variedades/raças da espécie selecionada. | `Tambacu` | Vazio |
 
 ### Informações complementares por espécie
 
@@ -121,8 +122,8 @@ Disponível se **Espécie** = `Bovinos` ou `Bubalinos`.
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
 | Área de Atuação | Seleção múltipla | Sim | Valores = `Pecuária de Leite`, `Pecuária de Corte`. | `Pecuária de Leite`, `Pecuária de Corte` | Vazio |
-| Sistema de Criação | Seleção simples | Sim | Valores = `Intensivo`, `Semi-intensivo`, `Extensivo`.<br>Intensivo: animais em confinamento, com concentração em áreas menores e alta tecnologia.<br>Semi-intensivo: parte do tempo em confinamento e parte a pasto, ou pastagem com suplementação.<br>Extensivo: animais criados exclusivamente a pasto. | `Semi-intensivo` | Vazio |
-| Instalações | Seleção múltipla | Sim | Se **Área de Atuação** contiver `Pecuária de Leite`: `Curral`, `Tronco de Contenção`, `Estação de Monta`, `Embarcadouro`, `Balança`, `Ordenha Mecânica`.<br>Caso contrário, os mesmos valores sem `Ordenha Mecânica`. | `Curral`, `Tronco de Contenção` | Vazio |
+| Sistema de Criação | Seleção simples | Sim | Valores = `Intensivo`, `Semi-intensivo`, `Extensivo`.<br />Intensivo: animais em confinamento, com concentração em áreas menores e alta tecnologia.<br />Semi-intensivo: parte do tempo em confinamento e parte a pasto, ou pastagem com suplementação.<br />Extensivo: animais criados exclusivamente a pasto. | `Semi-intensivo` | Vazio |
+| Instalações | Seleção múltipla | Sim | Se **Área de Atuação** contiver `Pecuária de Leite`: `Curral`, `Tronco de Contenção`, `Estação de Monta`, `Embarcadouro`, `Balança`, `Ordenha Mecânica`.<br />Caso contrário, os mesmos valores sem `Ordenha Mecânica`. | `Curral`, `Tronco de Contenção` | Vazio |
 
 #### Caprinos ou ovinos
 
@@ -140,7 +141,7 @@ Disponível se o **Grupo da Espécie** = `Equídeos`.
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
 | Área de Atuação | Seleção simples | Sim | Valores = `Sem fins comerciais`, `Comercial`, `Reprodução`. | `Comercial` | Vazio |
-| Sistema de Criação | Seleção simples | Sim | Valores = `Intensiva`, `Semi-intensiva`, `Extensiva`.<br>Intensiva: animais em confinamento, com concentração em áreas menores e alta tecnologia.<br>Semi-intensiva: parte do tempo em confinamento e parte a pasto, ou pastagem com suplementação.<br>Extensiva: animais criados exclusivamente a pasto. | `Semi-intensiva` | Vazio |
+| Sistema de Criação | Seleção simples | Sim | Valores = `Intensiva`, `Semi-intensiva`, `Extensiva`.<br />Intensiva: animais em confinamento, com concentração em áreas menores e alta tecnologia.<br />Semi-intensiva: parte do tempo em confinamento e parte a pasto, ou pastagem com suplementação.<br />Extensiva: animais criados exclusivamente a pasto. | `Semi-intensiva` | Vazio |
 | Tipo de Exploração | Seleção múltipla | Sim | Valores = `Propriedade de Espera de Abate de Equídeos (PEAE)`, `Haras`, `Alojamento`, `Unidade Militar`, `Hospital Veterinário`, `Centro de Ensino e Pesquisa`, `Propriedades Fornecedoras de Equídeos (PFE)`, `Central de Reprodução`, `Esporte`, `Lazer`, `Equoterapia`, `Propriedade Rural Comum (Animais de Trabalho)`. | `Haras` | Vazio |
 | Instalações | Seleção múltipla | Sim | Valores = `Curral de Manejo`, `Redondel`, `Tronco de Contenção`, `Estação de Monta`, `Embarcadouro`, `Piquetes`, `Baias`. | `Curral de Manejo`, `Tronco de Contenção` | Vazio |
 
@@ -152,33 +153,33 @@ Disponível se o **Grupo da Espécie** = `Peixes`.
 
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
-| Aptidão | Texto | Sim | Somente leitura.<br>Para peixes redondos = `Corte`.<br>Para peixes ornamentais = `Ornamental`. | `Corte` | Vazio |
+| Aptidão | Texto | Sim | Somente leitura.<br />Para peixes redondos = `Corte`.<br />Para peixes ornamentais = `Ornamental`. | `Corte` | Vazio |
 | Bacia Hidrográfica | Seleção simples | Sim | Valores = `Rio São Francisco`, `Rio Grande`, `Rio Paranaíba`, `Rio Doce`, `Rio Jequitinhonha`, `Rio Pardo`, `Rio Paraíba do Sul`. | `Rio São Francisco` | Vazio |
 | Origem da Captação de Água | Seleção múltipla | Sim | Valores = `Dentro do Estabelecimento`, `Fora do Estabelecimento`. | `Fora do Estabelecimento` | Vazio |
 | Fonte da Captação de Água | Seleção múltipla | Sim | Valores = `Rede de abastecimento público`, `Água de chuva`, `Córrego`, `Rio`, `Lago`, `Reservatório`, `Açude`, `Nascente`, `Mina`, `Poço`. | `Rio` | Vazio |
-| Nome do Rio | Texto curto | Sim | Disponível se **Fonte da Captação de Água** contiver `Rio`.<br>Tamanho máximo = 255 caracteres. | `Vale Bonito` | Vazio |
-| Nome do Reservatório | Texto curto | Sim | Disponível se **Fonte da Captação de Água** contiver `Reservatório`.<br>Tamanho máximo = 255 caracteres. | `Reservatório Vale Bonito` | Vazio |
+| Nome do Rio | Texto curto | Sim | Disponível se **Fonte da Captação de Água** contiver `Rio`.<br />Tamanho máximo = 255 caracteres. | `Vale Bonito` | Vazio |
+| Nome do Reservatório | Texto curto | Sim | Disponível se **Fonte da Captação de Água** contiver `Reservatório`.<br />Tamanho máximo = 255 caracteres. | `Reservatório Vale Bonito` | Vazio |
 
 ##### Caracterização do sistema produtivo
 
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
-| Tipo de Piscicultura Ornamental | Seleção simples | Sim | Disponível se **Espécie** = `Peixe Ornamental`.<br>Valores = `Unidade de Distribuição`, `Unidade de Produção`, `Unidade de Produção de Pequeno Porte`. | `Unidade de Produção` | Vazio |
-| Finalidade de Produção | Seleção simples | Sim | Para ornamentais, disponível se o tipo de piscicultura for `Unidade de Produção` ou `Unidade de Produção de Pequeno Porte`; valores = `Ciclo Completo`, `Cria/Recria`.<br>Para os demais: `Ciclo Completo`, `Reprodução/Larvicultura`, `Cria/Recria`, `Engorda`, `Recreação`, `Quarentena`, `Subsistência`. | `Engorda` | Vazio |
+| Tipo de Piscicultura Ornamental | Seleção simples | Sim | Disponível se **Espécie** = `Peixe Ornamental`.<br />Valores = `Unidade de Distribuição`, `Unidade de Produção`, `Unidade de Produção de Pequeno Porte`. | `Unidade de Produção` | Vazio |
+| Finalidade de Produção | Seleção simples | Sim | Para ornamentais, disponível se o tipo de piscicultura for `Unidade de Produção` ou `Unidade de Produção de Pequeno Porte`; valores = `Ciclo Completo`, `Cria/Recria`.<br />Para os demais: `Ciclo Completo`, `Reprodução/Larvicultura`, `Cria/Recria`, `Engorda`, `Recreação`, `Quarentena`, `Subsistência`. | `Engorda` | Vazio |
 | Origem das Matrizes e Reprodutores | Seleção múltipla | Sim | Valores = `Nacional`, `Importação`, `Selvagem`, `Própria`. | `Nacional` | Vazio |
-| Sistema de Produção | Seleção simples | Sim | Para ornamentais: `Semifechado`, `Fechado`.<br>Para os demais: `Semiaberto`, `Semifechado`, `Fechado`. | `Semifechado` | Vazio |
-| Sistema de Produção Semifechado | Seleção múltipla | Sim | Disponível se **Sistema de Produção** = `Semifechado`.<br>Para ornamentais: `Tanque Escavado`, `Tanque Suspenso`, `Raceway`.<br>Para os demais, acrescenta `Em estufa`. | `Em estufa` | Vazio |
-| Sistema de Produção Fechado | Seleção múltipla | Sim | Disponível se **Sistema de Produção** = `Fechado`.<br>Para ornamentais: `Em estufa`, `Tanque Suspenso`, `Aquário`.<br>Para os demais: `Em estufa`, `Tanque Suspenso`. | `Em estufa` | Vazio |
-| Abastecimento | Seleção múltipla | Sim | Disponível se **Sistema de Produção** = `Semifechado` ou `Fechado`.<br>Valores = `Tubulação`, `Canal Permeável`, `Canal Impermeável`, `Independente para cada Tanque`, `Passa de um Tanque para Outro`, `Não se aplica`. | `Tubulação` | Vazio |
-| Local de Descarte de Água | Seleção múltipla | Sim | Disponível se **Sistema de Produção** = `Semifechado` ou `Fechado`.<br>Valores = `Mesmo Corpo de Captação`, `Outro Corpo d’água`, `Rede de Esgoto`, `Outra Unidade de Criação`. | `Mesmo Corpo de Captação` | Vazio |
+| Sistema de Produção | Seleção simples | Sim | Para ornamentais: `Semifechado`, `Fechado`.<br />Para os demais: `Semiaberto`, `Semifechado`, `Fechado`. | `Semifechado` | Vazio |
+| Sistema de Produção Semifechado | Seleção múltipla | Sim | Disponível se **Sistema de Produção** = `Semifechado`.<br />Para ornamentais: `Tanque Escavado`, `Tanque Suspenso`, `Raceway`.<br />Para os demais, acrescenta `Em estufa`. | `Em estufa` | Vazio |
+| Sistema de Produção Fechado | Seleção múltipla | Sim | Disponível se **Sistema de Produção** = `Fechado`.<br />Para ornamentais: `Em estufa`, `Tanque Suspenso`, `Aquário`.<br />Para os demais: `Em estufa`, `Tanque Suspenso`. | `Em estufa` | Vazio |
+| Abastecimento | Seleção múltipla | Sim | Disponível se **Sistema de Produção** = `Semifechado` ou `Fechado`.<br />Valores = `Tubulação`, `Canal Permeável`, `Canal Impermeável`, `Independente para cada Tanque`, `Passa de um Tanque para Outro`, `Não se aplica`. | `Tubulação` | Vazio |
+| Local de Descarte de Água | Seleção múltipla | Sim | Disponível se **Sistema de Produção** = `Semifechado` ou `Fechado`.<br />Valores = `Mesmo Corpo de Captação`, `Outro Corpo d’água`, `Rede de Esgoto`, `Outra Unidade de Criação`. | `Mesmo Corpo de Captação` | Vazio |
 | Realiza depuração de peixes? | Seleção simples | Sim | Valores = `Sim`, `Não`. | `Sim` | Vazio |
 
 ##### Destino dos animais
 
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
-| Tipo de Destino | Seleção múltipla | Sim | Para peixes ornamentais: `Unidade de Produção`, `Revendedora`, `Distribuidor`, `Consumidor Final`.<br>Para os demais: `Estabelecimento com inspeção SIF`, `Estabelecimento com inspeção SIE`, `Estabelecimento com inspeção SIM`, `Consumidor Final`, `Peixaria`, `Outros Estabelecimentos de Aquicultura`, `Outro`. | `Estabelecimento com inspeção SIF` | Vazio |
-| Destino | Texto curto | Sim | Disponível se **Tipo de Destino** contiver `Outro`.<br>Tamanho máximo = 255 caracteres. | `Padaria` | Vazio |
+| Tipo de Destino | Seleção múltipla | Sim | Para peixes ornamentais: `Unidade de Produção`, `Revendedora`, `Distribuidor`, `Consumidor Final`.<br />Para os demais: `Estabelecimento com inspeção SIF`, `Estabelecimento com inspeção SIE`, `Estabelecimento com inspeção SIM`, `Consumidor Final`, `Peixaria`, `Outros Estabelecimentos de Aquicultura`, `Outro`. | `Estabelecimento com inspeção SIF` | Vazio |
+| Destino | Texto curto | Sim | Disponível se **Tipo de Destino** contiver `Outro`.<br />Tamanho máximo = 255 caracteres. | `Padaria` | Vazio |
 | Escala de Comércio | Seleção múltipla | Sim | Valores = `Intramunicipal`, `Intraestadual`, `Interestadual`, `Exportação`. | `Intramunicipal` | Vazio |
 
 ##### Tratamentos
@@ -188,28 +189,24 @@ Disponível se **Espécie** = `Peixe Ornamental`.
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
 | Possui Tratamento de Afluente? | Seleção simples | Sim | Valores = `Sim`, `Não`. | `Sim` | Vazio |
-| Tratamento de Afluente | Seleção múltipla | Sim | Disponível se **Possui Tratamento de Afluente?** = `Sim`.<br>Valores = `UV`, `Cloração`, `Filtro de Areia`, `Filtro de Calcário`, `Filtro de Carvão Ativado`, `Correção de pH`, `Tanque de Decantação`, `Biológico`, `Outro`. | `UV` | Vazio |
-| Outro Tratamento de Afluente | Texto curto | Sim | Disponível se **Tratamento de Afluente** contiver `Outro`.<br>Tamanho máximo = 255 caracteres. | `Ácido X` | Vazio |
+| Tratamento de Afluente | Seleção múltipla | Sim | Disponível se **Possui Tratamento de Afluente?** = `Sim`.<br />Valores = `UV`, `Cloração`, `Filtro de Areia`, `Filtro de Calcário`, `Filtro de Carvão Ativado`, `Correção de pH`, `Tanque de Decantação`, `Biológico`, `Outro`. | `UV` | Vazio |
+| Outro Tratamento de Afluente | Texto curto | Sim | Disponível se **Tratamento de Afluente** contiver `Outro`.<br />Tamanho máximo = 255 caracteres. | `Ácido X` | Vazio |
 | Possui Tratamento de Efluente? | Seleção simples | Sim | Valores = `Sim`, `Não`. | `Sim` | Vazio |
-| Tratamento de Efluente | Seleção múltipla | Sim | Disponível se **Possui Tratamento de Efluente?** = `Sim`.<br>Valores = `UV`, `Cloração`, `Filtro de Areia`, `Filtro de Calcário`, `Filtro de Carvão Ativado`, `Correção de pH`, `Tanque de Decantação`, `Biológico`, `Outro`. | `UV` | Vazio |
-| Outro Tratamento de Efluente | Texto curto | Sim | Disponível se **Tratamento de Efluente** contiver `Outro`.<br>Tamanho máximo = 255 caracteres. | `Ácido X` | Vazio |
+| Tratamento de Efluente | Seleção múltipla | Sim | Disponível se **Possui Tratamento de Efluente?** = `Sim`.<br />Valores = `UV`, `Cloração`, `Filtro de Areia`, `Filtro de Calcário`, `Filtro de Carvão Ativado`, `Correção de pH`, `Tanque de Decantação`, `Biológico`, `Outro`. | `UV` | Vazio |
+| Outro Tratamento de Efluente | Texto curto | Sim | Disponível se **Tratamento de Efluente** contiver `Outro`.<br />Tamanho máximo = 255 caracteres. | `Ácido X` | Vazio |
 
 ### Subexploração pecuária
 
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
-| É um Subarrendamento/Subcomodato? | Seleção simples | Sim | Para casos em que a exploração é uma subalocação dentro de outra exploração pecuária.<br>Valores = `Sim`, `Não`. | `Sim` | `Não` |
-| Exploração Pecuária Vinculada | Seleção de entidade: exploração pecuária | Sim | Disponível se **É um Subarrendamento/Subcomodato?** = `Sim`.<br>Valores = explorações do mesmo estabelecimento e da mesma espécie. | `345234235670001` | Vazio |
+| É um Subarrendamento/Subcomodato? | Seleção simples | Sim | Para casos em que a exploração é uma subalocação dentro de outra exploração pecuária.<br />Valores = `Sim`, `Não`. | `Sim` | `Não` |
+| Exploração Pecuária Vinculada | Seleção de entidade: exploração pecuária | Sim | Disponível se **É um Subarrendamento/Subcomodato?** = `Sim`.<br />Valores = explorações do mesmo estabelecimento e da mesma espécie. | `345234235670001` | Vazio |
 
 ### Anexos e observações
 
-Aplica-se o componente **Anexos e observações**.
-
-| Campo | Tipo | Obrigatório no item | Validações | Exemplo | Valor padrão |
-| --- | --- | :---: | --- | --- | --- |
-| Documento | Arquivo | Sim | Tipos aceitos = PNG, JPG, PDF.<br>Tamanho máximo = 50 MB. | `anexo.png` | Vazio |
-| Descrição | Texto curto | Não | Disponível se **Documento** estiver preenchido.<br>Tamanho máximo = 255 caracteres. | `Contrato complementar` | Vazio |
-| Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Informações adicionais da exploração.` | Vazio |
+```componente
+componente: Anexos e observações
+```
 
 ### Ações e resultado
 
@@ -233,11 +230,11 @@ O sistema exibe **Todas as explorações pecuárias**, **Editar** e **Histórico
 
 | Ação | Disponibilidade e comportamento |
 | --- | --- |
-| Certificados | Disponível se o grupo da espécie for `Aves` ou `Suídeos`.<br>Abre a tela de certificados. |
-| Biosseguridade | Disponível se o grupo da espécie for `Suídeos` ou `Peixes`.<br>Abre a biosseguridade da exploração (US075). |
+| Certificados | Disponível se o grupo da espécie for `Aves` ou `Suídeos`.<br />Abre a tela de certificados. |
+| Biosseguridade | Disponível se o grupo da espécie for `Suídeos` ou `Peixes`.<br />Abre a biosseguridade da exploração (US075). |
 | Acesso ao Mercado | Abre a tela de acesso ao mercado. |
 | Rebanho | Abre a tela de rebanho. |
-| Registro da Granja | Disponível se o grupo da espécie for `Aves`.<br>Abre a tela de registro da granja. |
+| Registro da Granja | Disponível se o grupo da espécie for `Aves`.<br />Abre a tela de registro da granja. |
 
 Se houver sobreposição de áreas, a visualização deve apresentar o alerta previsto na RNE003.
 

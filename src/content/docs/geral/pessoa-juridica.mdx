@@ -1,0 +1,185 @@
+---
+title: Pessoa jurídica
+docType: requirement
+module: geral
+entity: pessoa-juridica
+entityPlural: pessoas jurídicas
+lifecycle: ready
+---
+
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
+## 1. Buscar pessoa jurídica
+
+**Dado que** estou na tela inicial para usuários autenticados  
+**Quando** acesso o menu **Pessoa Jurídica**  
+**Então** o sistema exibe a tela de busca com os campos abaixo.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| CNPJ ou Razão Social | Texto curto | Não | Tamanho máximo = 255 caracteres. | `56.338.814/0001-95` | Vazio |
+| Estado | Seleção simples | Não | Refere-se ao endereço de correspondência.<br />Valores = lista de estados brasileiros. | `Minas Gerais` | Vazio |
+| Município | Seleção pesquisável | Não | Disponível se **Estado** estiver preenchido.<br />Refere-se ao endereço de correspondência.<br />Valores = municípios do estado selecionado. | `Esmeraldas` | Vazio |
+| Situação do Cadastro | Seleção simples | Não | Valores = `Ativo`, `Inativo`. | `Ativo` | Vazio |
+
+O sistema exibe as ações comuns das telas de busca (**AC001**): **Inicial**, **Adicionar Novo** e **Pesquisar**. Antes da primeira pesquisa, deve solicitar o preenchimento de pelo menos um campo.
+
+## 2. Listar pessoas jurídicas
+
+**Dado que** estou na tela de busca  
+**E** o campo de busca ou pelo menos um filtro foi preenchido corretamente  
+**Quando** realizo a ação **Pesquisar**  
+**Então** o sistema retorna os registros compatíveis.
+
+| Campo | Tipo | Ordenável | Descrição | Exemplo |
+| --- | --- | :---: | --- | --- |
+| CNPJ | Texto | Sim | Exibe o CNPJ. | `56.338.814/0001-95` |
+| Razão Social | Texto | Sim | Exibe a razão social. | `Queijaria São José Ltda.` |
+| Estado | Texto | Sim | Exibe o estado do endereço de correspondência. | `Minas Gerais` |
+| Município | Texto | Sim | Exibe o município do endereço de correspondência. | `Esmeraldas` |
+| Situação | Texto | Não | Exibe a situação do cadastro. | `Ativo` |
+
+Para cada resultado, o sistema exibe as ações comuns de listagem (**AC002**): **Visualizar** e **Editar**.
+
+### Cenários alternativos
+
+- Se nenhum campo de busca ou filtro válido for preenchido, o sistema não realiza a busca, informa os problemas encontrados e destaca os campos com erro.
+- Se não houver registros compatíveis, o sistema exibe a mensagem **“Nenhum resultado foi encontrado”**.
+- Em caso de falha técnica, aplica-se **CA003 — Notificar erro ao usuário devido a falha técnica**.
+
+## 3. Cadastrar pessoa jurídica
+
+**Dado que** estou na tela de cadastro  
+**Então** o sistema exibe o formulário descrito a seguir.
+
+Campos indicados com `*` são obrigatórios.
+
+### Informações básicas
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| CNPJ | CNPJ | Sim | Tamanho = 14 dígitos.<br />Formato = `XX.XXX.XXX/XXXX-XX`.<br />Validação de dígito verificador. | `56.338.814/0001-95` | Vazio |
+| Razão Social | Texto curto | Sim | Consulta à API de CNPJ.<br />Tamanho máximo = 255 caracteres. | `Botica Comercial Farmacêutica Ltda.` | Valor obtido pela API de CNPJ |
+| Nome Fantasia | Texto curto | Não | Consulta à API de CNPJ.<br />Tamanho máximo = 255 caracteres. | `O Boticário` | Valor obtido pela API de CNPJ |
+
+### Representantes legais (um ou mais)
+
+```componente
+componente: Selecionar pessoa física
+nome do campo: Representante Legal
+```
+
+### Informações de localização
+
+#### Endereço de correspondência
+
+```componente
+componente: Localização simples
+zona fixa: Urbana
+```
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| O endereço de correspondência é também o endereço da sede? | Seleção simples | Sim | Valores = `Sim`, `Não`. | `Sim` | `Sim` |
+
+#### Endereço da sede
+
+Disponível se **O endereço de correspondência é também o endereço da sede?** = `Não`.
+
+```componente
+componente: Localização simples
+```
+
+### Informações de contato
+
+```componente
+componente: Contatos simples
+```
+
+### Anexos e observações
+
+```componente
+componente: Anexos e observações
+```
+
+### Ações e resultado
+
+O cadastro usa as ações comuns **AC003** e **AC006**:
+
+- **Todas as pessoas jurídicas**: volta para a busca.
+- **Adicionar**: valida e salva o cadastro.
+- **Ver item**: abre o representante legal selecionado.
+- **Adicionar/Remover item**: gerencia representantes, outros contatos e anexos.
+- **Baixar documento**: baixa o documento de vínculo ou anexo.
+
+Em caso de sucesso, o sistema exibe uma mensagem e as ações **Voltar** e **Visualizar**. Em caso de erro de validação, mantém o formulário e apresenta os erros nos respectivos campos.
+
+## 4. Visualizar pessoa jurídica
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe todos os campos do cadastro como somente leitura, com seus valores preenchidos.
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Situação do Cadastro | Texto | Exibe a situação atual conforme **CAC001**. | `Ativo` |
+
+O sistema exibe as ações **Todas as pessoas jurídicas**, **Editar** e **Histórico de Alterações** (**AC004**), além de **Ver item** e **Baixar documento** (**AC006**).
+
+## 5. Editar pessoa jurídica
+
+**Dado que** estou na tela de edição  
+**Então** o sistema exibe os campos do cadastro preenchidos e editáveis, exceto os campos da seção **Informações básicas** e os demais campos definidos como somente leitura. A **Situação do Cadastro** também é somente leitura.
+
+O sistema exibe as ações **Salvar**, **Visualizar pessoa jurídica**, **Ativar/Inativar** e **Histórico de Alterações** (**AC005**), além das ações de formulário (**AC006**).
+
+Ao acionar **Salvar**, o sistema abre a confirmação da edição. **Cancelar** retorna à edição; **Salvar** valida os dados, persiste as alterações e retorna à visualização.
+
+## 6. Critérios comuns
+
+- **CA001 — Salvar cadastro de uma entidade**.
+- **CA002 — Ativar/Inativar cadastro de uma entidade**.
+- **CA003 — Notificar erro ao usuário devido a falha técnica**.
+
+## Regras de negócio específicas
+
+### RNE001 — Unicidade
+
+O cadastro deve ser único no sistema pelo CNPJ.
+
+### RNE002 — Disponibilidade da API de CNPJ
+
+Se a API de CNPJ estiver inacessível, o sistema deve impedir o cadastro da pessoa jurídica.
+
+### RNE003 — Endereços
+
+O endereço de correspondência deve ser urbano. Pode ser informado um endereço da sede diferente, urbano ou rural.
+
+### RNE004 — Itens repetíveis
+
+O cadastro deve conter um ou mais representantes legais e pode conter outros itens repetíveis:
+
+- um ou mais representantes legais, cada qual formado por **Representante Legal**, **CPF** e **Documento de Vínculo**;
+- zero ou mais outros contatos, cada qual formado por **Tipo de Contato**, **E-mail** ou **Número** e **Observação**;
+- zero ou mais anexos, cada qual formado por **Documento** e **Descrição**.
+
+## Regras comuns relacionadas
+
+- **RN001 — Situação do cadastro de uma entidade**.
+- **RN002 — Ativação/desativação de cadastros de uma entidade**.
+- **RN003 — Controle de alterações em uma entidade**.
+- **RN005 — Comportamento quando o CEP não for validado**.
+
+## Histórico das fontes
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| US044 v2.0 | 10/02/2026 | Torna **Nome Fantasia** não obrigatório. |
+| US044 v1.0 | 10/10/2025 | Primeira versão da história de gerenciamento. |
+| US045 v2.0 | 10/02/2026 | Substitui **Nome Fantasia** por **Razão Social** na busca e nos resultados. |
+| US045 v1.0 | 10/10/2025 | Primeira versão da história de busca. |
+
+## Histórias relacionadas
+
+- **US005 — Cadastro e edição de divisão municipal**.
+- **US042 — Gerenciar pessoa física**.
+- **US045 — Buscar pessoa jurídica**, consolidada nesta página.

@@ -7,6 +7,7 @@ const lucideDirectory = new URL('lucide/', publicIcons);
 const entityDirectory = new URL('entidades/', publicIcons);
 const moduleDirectory = new URL('modulos/', publicIcons);
 
+// Garante as pastas de saída antes de copiar os SVGs derivados dos catálogos.
 await Promise.all([
   mkdir(entityDirectory, { recursive: true }),
   mkdir(moduleDirectory, { recursive: true }),
@@ -18,6 +19,7 @@ const copyIcon = async (sourceIcon, targetDirectory, targetSlug) => {
   await copyFile(source, target);
 };
 
+// Copia ícones semânticos de entidades e módulos a partir da biblioteca Lucide.
 await Promise.all([
   ...entityIcons.map((entity) => copyIcon(entity.icon, entityDirectory, entity.slug)),
   ...systemModules.map((module) => copyIcon(module.icon, moduleDirectory, module.slug)),
@@ -25,6 +27,7 @@ await Promise.all([
 
 const manifestUrl = new URL('manifest.json', publicIcons);
 const manifest = JSON.parse(await readFile(manifestUrl, 'utf8'));
+// O manifesto acompanha os arquivos gerados e expõe seus metadados em JSON.
 manifest.entities = Object.fromEntries(
   entityIcons.map(({ module, slug, label, icon }) => [
     slug,

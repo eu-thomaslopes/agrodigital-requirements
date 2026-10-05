@@ -7,75 +7,33 @@ entityPlural: estabelecimentos agropecuários
 lifecycle: ready
 ---
 
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
 ## 1. Cadastrar estabelecimento agropecuário
 
 **Dado que** estou na tela de cadastro  
 **Então** o sistema exibe o formulário descrito a seguir.
-
-Campos indicados com `*` são obrigatórios.
 
 ### Informações básicas
 
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
 | Tipo de Estabelecimento Agropecuário | Seleção simples | Sim | Valores = `Apartamento`, `Assentamento`, `Casa`, `Centro de Treinamento`, `Chácara`, `Clínica Veterinária`, `Condomínio`, `Distribuidora`, `Estância`, `Fazenda`, `Galpão`, `Gleba`, `Haras`, `Hípica`, `Hospital Veterinário`, `Instituição de Ensino`, `Lote`, `Parque de Exposições`, `Rancho`, `Residência`, `Sítio`, `Terreno`. | `Fazenda` | Vazio |
-| Nome do Estabelecimento Agropecuário | Texto curto | Sim | Disponível se **Tipo de Estabelecimento Agropecuário** estiver preenchido.<br>O tipo deve permanecer fixado no início do nome e não pode ser apagado pelo usuário.<br>Tamanho máximo = 255 caracteres. | `Fazenda Rio Verde` | Vazio |
+| Nome do Estabelecimento Agropecuário | Texto curto | Sim | Disponível se **Tipo de Estabelecimento Agropecuário** estiver preenchido.<br />O tipo deve permanecer fixado no início do nome e não pode ser apagado pelo usuário.<br />Tamanho máximo = 255 caracteres. | `Fazenda Rio Verde` | Vazio |
 | Cadastro Provisório? | Seleção simples | Sim | Valores = `Sim`, `Não`. | `Não` | `Não` |
 
 ### Proprietários (um ou mais)
 
-Aplica-se o componente **Proprietários**.
-
-| Campo | Tipo | Obrigatório no item | Validações | Exemplo | Valor padrão |
-| --- | --- | :---: | --- | --- | --- |
-| Tipo de Pessoa | Seleção simples | Sim | Valores = `Pessoa física`, `Pessoa jurídica`. | `Pessoa física` | `Pessoa física` |
-| Proprietário | Seleção de entidade | Sim | Valores = pessoas físicas ou jurídicas cadastradas (US042 e US044).<br>Pré-filtrado por **Tipo de Pessoa**.<br>Pesquisa por nome/razão social ou CPF/CNPJ. | `José Aarão Neto` | Vazio |
-| CPF/CNPJ | CPF/CNPJ | Sim | Somente leitura.<br>Disponível se **Proprietário** estiver preenchido.<br>Corresponde à pessoa selecionada. | `555.009.956-40` | Vazio |
+```componente
+componente: Proprietários
+```
 
 ### Informações de localização
 
-Aplica-se o componente **Localização simples** com o parâmetro `[Estado fixo = “Minas Gerais”]`.
-
-| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
-| --- | --- | :---: | --- | --- | --- |
-| Zona | Seleção simples | Sim | Valores = `Rural`, `Urbana`. | `Rural` | `Rural` |
-
-#### Zona rural
-
-Disponível se **Zona** = `Rural`.
-
-| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
-| --- | --- | :---: | --- | --- | --- |
-| Estado | Seleção simples | Sim | Somente leitura.<br>Valor = `Minas Gerais`. | `Minas Gerais` | `Minas Gerais` |
-| Município | Seleção pesquisável | Sim | Valores = municípios de Minas Gerais. | `Lavras` | Vazio |
-| Endereço | Texto curto | Sim | Informar nome da estrada e quilômetro de referência.<br>Tamanho máximo = 255 caracteres. | `Estrada de chão no Km 12` | Vazio |
-| Localidade | Seleção pesquisável | Não | Valores = localidades cadastradas (US005).<br>Pré-filtrado pelo município. | `Vila dos Técnicos` | Vazio |
-| Distrito | Seleção pesquisável | Não | Valores = distritos cadastrados (US005).<br>Pré-filtrado pelo município. | `Cachoeira do Vale` | Vazio |
-
-#### Zona urbana
-
-Disponível se **Zona** = `Urbana`.
-
-| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
-| --- | --- | :---: | --- | --- | --- |
-| CEP | Texto curto | Sim | Tamanho = 8 dígitos.<br>Formato = `XXXXX-XXX`.<br>Deve pertencer a Minas Gerais. | `37060-400` | Vazio |
-| Estado | Texto curto | Sim | Consulta à API de CEP.<br>Somente leitura.<br>Disponível se **CEP** estiver preenchido. | `Minas Gerais` | Valor obtido pela API de CEP |
-| Município | Texto curto | Sim | Consulta à API de CEP.<br>Somente leitura.<br>Disponível se **CEP** estiver preenchido. | `Timóteo` | Valor obtido pela API de CEP |
-| Bairro | Texto curto | Sim | Consulta à API de CEP. | `Centro` | Valor obtido pela API, quando disponível |
-| Endereço | Texto curto | Sim | Consulta à API de CEP. | `Avenida JK` | Valor obtido pela API, quando disponível |
-| Número | Texto curto | Sim | Tamanho máximo = 20 caracteres. | `10` | Vazio |
-| Complemento | Texto curto | Não | Tamanho máximo = 255 caracteres. | `Apto 02` | Vazio |
-| Distrito | Seleção pesquisável | Não | Valores = distritos cadastrados (US005).<br>Pré-filtrado pelo município. | `Cachoeira do Vale` | Vazio |
-
-#### Geolocalização
-
-Aplica-se o componente **Geolocalização**, tanto para zona rural quanto urbana.
-
-| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
-| --- | --- | :---: | --- | --- | --- |
-| Formato | Seleção simples | Sim | Valores = `DMS (graus, minutos, segundos)`, `DD (decimal)`. | `DMS (graus, minutos, segundos)` | `DMS (graus, minutos, segundos)` |
-| Latitude | Numérico | Sim | Pode ser informada manualmente ou selecionada no mapa, com consulta à API do Google Maps.<br>Pré-estimada pelos dados de endereço.<br>Máscara conforme o formato (RN010). | DMS: `19°09'56.979800000000"S`<br>DD: `-19.165827719338893` | Vazio |
-| Longitude | Numérico | Sim | Pode ser informada manualmente ou selecionada no mapa, com consulta à API do Google Maps.<br>Pré-estimada pelos dados de endereço.<br>Máscara conforme o formato (RN010). | DMS: `44°21'46.336500000000"W`<br>DD: `-44.362871253967285` | Vazio |
+```componente
+componente: Localização simples
+estado fixo: Minas Gerais
+```
 
 ### Informações complementares
 
@@ -84,8 +42,8 @@ Aplica-se o componente **Geolocalização**, tanto para zona rural quanto urbana
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
 | Unidade de Medida das Áreas | Seleção simples | Sim | Valores = `Metros Quadrados`, `Hectares`. | `Hectares` | `Hectares` |
-| Área Total | Numérico decimal | Sim | Tamanho = 12 dígitos.<br>Casas decimais = 2.<br>Deve ser maior que zero. | `1000,00` | Vazio |
-| Área Produtiva | Numérico decimal | Sim | Tamanho = 12 dígitos.<br>Casas decimais = 2.<br>Deve ser menor ou igual à **Área Total**. | `1000,00` | Vazio |
+| Área Total | Numérico decimal | Sim | Tamanho = 12 dígitos.<br />Casas decimais = 2.<br />Deve ser maior que zero. | `1000,00` | Vazio |
+| Área Produtiva | Numérico decimal | Sim | Tamanho = 12 dígitos.<br />Casas decimais = 2.<br />Deve ser menor ou igual à **Área Total**. | `1000,00` | Vazio |
 
 #### Outras informações
 
@@ -93,19 +51,15 @@ Disponível se **Zona** = `Rural`.
 
 | Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
 | --- | --- | :---: | --- | --- | --- |
-| Número do CAR | Texto curto | Não | Tamanho = 41 caracteres.<br>Tipo = alfanumérico. | `4050270008331` | Vazio |
+| Número do CAR | Texto curto | Não | Tamanho = 41 caracteres.<br />Tipo = alfanumérico. | `4050270008331` | Vazio |
 | Confrontantes | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Maria Oliveira, proprietária da Fazenda São João, com 450 hectares.` | Vazio |
 | Vias de Acesso | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Estrada Municipal da Fazenda São João, Caminho do Rio Verde.` | Vazio |
 
 ### Anexos e observações
 
-Aplica-se o componente **Anexos e observações**.
-
-| Campo | Tipo | Obrigatório no item | Validações | Exemplo | Valor padrão |
-| --- | --- | :---: | --- | --- | --- |
-| Documento | Arquivo | Sim | Tipos aceitos = PNG, JPG, PDF.<br>Tamanho máximo = 50 MB. | `documento.png` | Vazio |
-| Descrição | Texto curto | Não | Disponível se **Documento** estiver preenchido.<br>Tamanho máximo = 255 caracteres. | `Documento de identidade com foto` | Vazio |
-| Observação | Texto longo | Não | Tamanho máximo = 1.500 caracteres. | `Este estabelecimento agropecuário será usado para…` | Vazio |
+```componente
+componente: Anexos e observações
+```
 
 ### Ações e resultado
 

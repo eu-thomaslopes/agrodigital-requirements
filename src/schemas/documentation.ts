@@ -2,6 +2,7 @@ import { z } from 'astro/zod';
 import { requirementLifecycleValues } from '../config/requirement-lifecycle';
 
 export const documentationMetadataSchema = z.object({
+  // docType seleciona a regra editorial; os demais campos descrevem o requisito.
   docType: z
     .enum(['landing', 'module', 'entity', 'requirement', 'shared-definition', 'guide'])
     .default('guide'),
@@ -14,6 +15,7 @@ export const documentationMetadataSchema = z.object({
     .optional(),
   lifecycle: z.enum(requirementLifecycleValues).optional(),
 }).superRefine((metadata, context) => {
+  // Requisitos precisam de estado e entidade no plural para compor sua apresentação.
   if (metadata.docType === 'requirement' && !metadata.lifecycle) {
     context.addIssue({
       code: 'custom',

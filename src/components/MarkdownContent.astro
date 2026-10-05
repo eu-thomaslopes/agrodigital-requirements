@@ -10,6 +10,7 @@ import RequirementUserStory from './RequirementUserStory.astro';
 
 <script>
   let requirementGroupSequence = 0;
+  let requirementComponentSequence = 0;
 
   const normalizeHeader = (value: string) =>
     value
@@ -26,8 +27,20 @@ import RequirementUserStory from './RequirementUserStory.astro';
   const getHeadingLevel = (heading: HTMLHeadingElement) => Number(heading.tagName.slice(1));
 
   const getTableHeaders = (table: HTMLTableElement) =>
-    Array.from(table.tHead?.rows[0]?.cells ?? [], (cell) => normalizeHeader(cell.textContent ?? ''));
+    Array.from(table.tHead?.rows[0]?.cells ?? [], (cell) => {
+      const header = normalizeHeader(cell.textContent ?? '');
+      return header.startsWith('obrigatorio') ? 'obrigatorio' : header;
+    });
 
+  const normalizeRequirementTableHeaders = (table: HTMLTableElement) => {
+    for (const cell of Array.from(table.tHead?.rows[0]?.cells ?? [])) {
+      if (normalizeHeader(cell.textContent ?? '').startsWith('obrigatorio')) {
+        cell.textContent = 'Obrigatório';
+      }
+    }
+  };
+
+  // Reconhece tabelas pelo cabeçalho, sem exigir uma classe escrita manualmente no MDX.
   const isFieldTable = (table: HTMLTableElement) => {
     const headers = getTableHeaders(table);
 
@@ -95,7 +108,7 @@ import RequirementUserStory from './RequirementUserStory.astro';
     toggle.type = 'button';
     toggle.setAttribute('aria-expanded', 'true');
     toggle.setAttribute('aria-label', `Recolher seção ${heading.textContent?.trim() ?? ''}`);
-    toggle.addEventListener('click', () => {
+      toggle.addEventListener('click', () => {
       const collapsed = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', String(!collapsed));
       toggle.setAttribute(
@@ -120,6 +133,7 @@ import RequirementUserStory from './RequirementUserStory.astro';
         sibling.hidden = collapsedBy.size > 0;
         sibling = sibling.nextElementSibling as HTMLTableRowElement | null;
       }
+      scheduleComponentFrames();
     });
     chips.className = 'requirement-group-chips';
 
@@ -139,7 +153,7 @@ import RequirementUserStory from './RequirementUserStory.astro';
     cell.append(content);
     row.append(cell);
 
-    return { row, cell, chips, depth };
+    return { row, cell, chips, groupLabel, headingContainer, depth };
   };
 
   const createGroupDivider = (columnCount: number, depth: number, ancestorDepths: number[]) => {
@@ -155,6 +169,7 @@ import RequirementUserStory from './RequirementUserStory.astro';
     return row;
   };
 
+  // Agrupa tabelas de campos compatíveis em uma única tabela hierárquica interativa.
   const enhanceSection = (nodes: Element[], tables: HTMLTableElement[]) => {
     const signatures = new Set(tables.map((table) => getTableHeaders(table).join('|')));
 
@@ -173,6 +188,8 @@ import RequirementUserStory from './RequirementUserStory.astro';
     let activeGroup: ReturnType<typeof createGroupRow>;
     let activeDepth = 1;
     let activeGroupHasFields = false;
+    let activeGroupIsComponent = false;
+    let activeComponentFrameId: string | undefined;
     let fieldRowIndex = 0;
     const groupDepths: number[] = [];
 
@@ -194,6 +211,8 @@ import RequirementUserStory from './RequirementUserStory.astro';
         activeGroup = createGroupRow(node, columnCount, groupDepths);
         activeDepth = activeGroup?.depth ?? 1;
         activeGroupHasFields = false;
+        activeGroupIsComponent = false;
+        activeComponentFrameId = undefined;
         if (activeGroup) {
           fragment.append(activeGroup.row);
         }
@@ -211,12 +230,32 @@ import RequirementUserStory from './RequirementUserStory.astro';
 
       if (!(node instanceof HTMLTableElement) || !rowsByTable.has(node)) continue;
 
+      const isComponentTable = node.classList.contains('component-field-table');
+      const componentName = node.dataset.componentName ?? 'Componente';
+      const componentId = node.dataset.componentId;
+      if (isComponentTable && activeGroup && !activeGroupIsComponent) {
+        activeGroupIsComponent = true;
+        activeComponentFrameId = `requirement-component-frame-${++requirementComponentSequence}`;
+        activeGroup.row.classList.add('requirement-component-group');
+        activeGroup.row.dataset.componentFrame = activeComponentFrameId;
+        const badge = document.createElement('a');
+        badge.className = 'requirement-component-badge';
+        badge.textContent = `Componente · ${componentName}`;
+        badge.href = `/sobre/componentes/#${componentId ?? ''}`;
+        activeGroup.groupLabel.insertBefore(badge, activeGroup.headingContainer);
+      }
+
       for (const row of rowsByTable.get(node) ?? []) {
         row.classList.add('requirement-field-row');
         row.dataset.stripe = fieldRowIndex++ % 2 === 0 ? 'odd' : 'even';
         row.dataset.depth = String(activeDepth);
         row.style.setProperty('--requirement-depth', String(activeDepth));
         row.style.setProperty('--requirement-active-rail-offset', getRailOffset(activeDepth));
+
+        if (activeGroupIsComponent && activeComponentFrameId) {
+          row.classList.add('requirement-component-field-row');
+          row.dataset.componentFrame = activeComponentFrameId;
+        }
 
         if (row.cells[0]) addNestingRails(row.cells[0], groupDepths);
         fragment.append(row);
@@ -238,6 +277,76 @@ import RequirementUserStory from './RequirementUserStory.astro';
     }
   };
 
+  // Desenha contornos posicionados sobre as linhas pertencentes a cada componente.
+  const renderComponentFrames = () => {
+    document.querySelectorAll('.requirement-component-frame').forEach((frame) => frame.remove());
+
+    for (const container of document.querySelectorAll<HTMLElement>('.requirement-table-scroll')) {
+      const table = container.querySelector<HTMLTableElement>('.requirement-table--hierarchical');
+      if (!table) continue;
+
+      const componentRows = new Map<string, HTMLTableRowElement[]>();
+      for (const row of table.querySelectorAll<HTMLTableRowElement>('tr[data-component-frame]')) {
+        const id = row.dataset.componentFrame;
+        if (!id) continue;
+        const rows = componentRows.get(id) ?? [];
+        rows.push(row);
+        componentRows.set(id, rows);
+      }
+
+      const tableRect = table.getBoundingClientRect();
+      const finalTableRow = table.tBodies[0]?.rows.item(table.tBodies[0].rows.length - 1);
+      let componentAtTableEnd = false;
+      for (const [id, rows] of componentRows) {
+        const headingRow = rows.find((row) => row.classList.contains('requirement-component-group'));
+        if (!headingRow || rows.every((row) => row.hidden)) continue;
+
+        const isCollapsed = headingRow.querySelector('.requirement-group-toggle')?.getAttribute('aria-expanded') === 'false';
+        const firstRow = headingRow;
+        const lastRow = isCollapsed ? headingRow : rows.at(-1);
+        if (!lastRow) continue;
+
+        const firstRect = firstRow.getBoundingClientRect();
+        const lastRect = lastRow.getBoundingClientRect();
+        const depth = Number.parseInt(headingRow.dataset.depth ?? '1', 10);
+        const railWidth = getComputedStyle(table).getPropertyValue('--requirement-rail-width').trim() || '0.22rem';
+        const rootFontSize = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+        const toPixels = (value: string) => {
+          const length = Number.parseFloat(value) || 0;
+          return value.trim().endsWith('rem') ? length * rootFontSize : length;
+        };
+        const inset = toPixels(getRailOffset(depth)) + toPixels(railWidth);
+        const frameLeft = tableRect.left + inset;
+        const frame = document.createElement('div');
+        frame.className = 'requirement-component-frame';
+        frame.dataset.componentFrame = id;
+        frame.setAttribute('aria-hidden', 'true');
+        frame.style.left = `${frameLeft}px`;
+        frame.style.top = `${firstRect.top}px`;
+        frame.style.width = `${Math.max(0, tableRect.right - frameLeft)}px`;
+        frame.style.height = `${lastRect.bottom - firstRect.top}px`;
+        frame.style.setProperty(
+          '--requirement-component-frame-accent',
+          getComputedStyle(headingRow).getPropertyValue('--requirement-group-current-accent').trim(),
+        );
+        document.body.append(frame);
+        if (rows.at(-1) === finalTableRow) componentAtTableEnd = true;
+      }
+      container.classList.toggle('requirement-table-scroll--component-at-end', componentAtTableEnd);
+    }
+  };
+
+  let componentFrameRenderScheduled = false;
+  const scheduleComponentFrames = () => {
+    if (componentFrameRenderScheduled) return;
+    componentFrameRenderScheduled = true;
+    requestAnimationFrame(() => {
+      componentFrameRenderScheduled = false;
+      renderComponentFrames();
+    });
+  };
+
+  // Converte as tabelas e subtítulos do Markdown em grupos navegáveis no navegador.
   const enhanceRequirementTables = () => {
     for (const content of document.querySelectorAll<HTMLElement>('.sl-markdown-content')) {
       const children = Array.from(content.children);
@@ -268,23 +377,45 @@ import RequirementUserStory from './RequirementUserStory.astro';
         const sectionHeading = getHeading(children[index]);
         if (!sectionHeading || getHeadingLevel(sectionHeading) !== 3) continue;
 
-        let sectionEnd = index + 1;
-        while (sectionEnd < children.length) {
-          const nextHeading = getHeading(children[sectionEnd]);
-          if (nextHeading && getHeadingLevel(nextHeading) <= 3) break;
-          sectionEnd += 1;
-        }
+        const sectionNodes: Element[] = [];
+        const tables: HTMLTableElement[] = [];
+        let tableSignature: string | undefined;
+        let sectionIndex = index;
 
-        const sectionNodes = children.slice(index, sectionEnd);
-        const tables = sectionNodes.filter(
-          (node): node is HTMLTableElement => node instanceof HTMLTableElement && isFieldTable(node),
-        );
+        // Seções irmãs com a mesma estrutura compartilham a tabela, mantendo
+        // cada título como um grupo independente no mesmo nível hierárquico.
+        while (sectionIndex < children.length) {
+          const heading = getHeading(children[sectionIndex]);
+          if (!heading || getHeadingLevel(heading) !== 3) break;
+
+          let sectionEnd = sectionIndex + 1;
+          while (sectionEnd < children.length) {
+            const nextHeading = getHeading(children[sectionEnd]);
+            if (nextHeading && getHeadingLevel(nextHeading) <= 3) break;
+            sectionEnd += 1;
+          }
+
+          const nextNodes = children.slice(sectionIndex, sectionEnd);
+          const nextTables = nextNodes.filter(
+            (node): node is HTMLTableElement => node instanceof HTMLTableElement && isFieldTable(node),
+          );
+          nextTables.forEach(normalizeRequirementTableHeaders);
+          const nextSignatures = new Set(nextTables.map((table) => getTableHeaders(table).join('|')));
+          const nextSignature = nextSignatures.size === 1 ? [...nextSignatures][0] : undefined;
+
+          if (!nextSignature || (tableSignature && nextSignature !== tableSignature)) break;
+
+          tableSignature = nextSignature;
+          sectionNodes.push(...nextNodes);
+          tables.push(...nextTables);
+          sectionIndex = sectionEnd;
+        }
 
         if (tables.length > 0 && !tables[0].classList.contains('requirement-table--hierarchical')) {
           enhanceSection(sectionNodes, tables);
         }
 
-        index = sectionEnd - 1;
+        index = Math.max(index, sectionIndex - 1);
       }
     }
 
@@ -295,5 +426,11 @@ import RequirementUserStory from './RequirementUserStory.astro';
   };
 
   enhanceRequirementTables();
-  document.addEventListener('astro:page-load', enhanceRequirementTables);
+  requestAnimationFrame(renderComponentFrames);
+  window.addEventListener('resize', scheduleComponentFrames);
+  document.addEventListener('astro:page-load', () => {
+    enhanceRequirementTables();
+    scheduleComponentFrames();
+  });
+  document.addEventListener('scroll', scheduleComponentFrames, true);
 </script>

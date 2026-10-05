@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import { Icon } from '@astrojs/starlight/components';
 
+// O índice é montado no servidor; a busca no navegador trabalha só com texto normalizado.
 const normalizeSearchText = (value: string) =>
   value
     .normalize('NFD')
@@ -68,6 +69,7 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
 
   class AgroDigitalSearch extends HTMLElement {
     connectedCallback() {
+      // Evita registrar os mesmos eventos novamente após uma navegação do Starlight.
       if (this.dataset.ready === 'true') return;
       this.dataset.ready = 'true';
 
@@ -117,6 +119,7 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
         }
 
         const terms = query.split(/\s+/).filter(Boolean);
+        // Todos os termos precisam aparecer; títulos que contêm a consulta sobem no ranking.
         const matches = documents
           .filter((searchDocument) =>
             terms.every((term) => searchDocument.searchText.includes(term)),

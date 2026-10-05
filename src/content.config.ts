@@ -3,7 +3,7 @@ import { docsLoader, i18nLoader } from '@astrojs/starlight/loaders';
 import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
 import { documentationMetadataSchema } from './schemas/documentation';
 
-// Requirement pages use a compact, validated metadata model.
+// Define as coleções que o Astro carrega e valida antes de gerar as páginas.
 export const collections = {
   docs: defineCollection({
     loader: docsLoader(),
