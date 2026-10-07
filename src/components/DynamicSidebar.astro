@@ -74,3 +74,32 @@ ${moduleSelectors.map((selector) => `${selector}::before`).join(',\n')} {
 
 <DefaultSidebar />
 <style is:inline set:html={sidebarIconStyles}></style>
+
+<script>
+  const initializeSidebar = () => {
+    for (const content of document.querySelectorAll<HTMLElement>('.sidebar-content')) {
+      // Move the existing preferences so visual and keyboard order both start with the theme.
+      const preferences = content.querySelector('.mobile-preferences')?.parentElement;
+      if (preferences?.parentElement === content) content.prepend(preferences);
+
+      // Keep only the current page's ancestors open, overriding restored desktop state.
+      for (const group of content.querySelectorAll<HTMLDetailsElement>('details')) {
+        group.open = Boolean(group.querySelector('a[aria-current="page"]'));
+      }
+
+      if (!content.dataset.mobileNavigationReady) {
+        content.dataset.mobileNavigationReady = 'true';
+        content.addEventListener('click', (event) => {
+          const link = event.target instanceof Element ? event.target.closest('a[href]') : null;
+          if (link && matchMedia('(max-width: 49.99rem)').matches) {
+            const sidebar = content.closest<HTMLElement>('#starlight__sidebar');
+            if (sidebar?.matches(':popover-open')) sidebar.hidePopover();
+          }
+        });
+      }
+    }
+  };
+
+  initializeSidebar();
+  document.addEventListener('astro:page-load', initializeSidebar);
+</script>

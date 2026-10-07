@@ -1,6 +1,7 @@
 ---
 import { getEntityIconUrl } from '../utils/content';
 import { requirementLifecycleMetadata } from '../config/requirement-lifecycle';
+import RequirementPageActions from './RequirementPageActions.astro';
 
 const entry = Astro.locals.starlightRoute.entry;
 const { title, entity, icon, docType, lifecycle } = entry.data;
@@ -34,6 +35,8 @@ const lifecycleMetadata =
   )}
 </h1>
 
+{docType === 'requirement' && <RequirementPageActions />}
+
 <style>
   @layer starlight.core {
     h1 {
@@ -60,6 +63,7 @@ const lifecycleMetadata =
 
     .entity-page-title__text {
       min-width: 0;
+      overflow-wrap: anywhere;
     }
 
     .entity-page-icon {
@@ -114,6 +118,23 @@ const lifecycleMetadata =
     @media (min-width: 72rem) {
       .has-entity-icon {
         font-size: clamp(2rem, 2.65vw, 2.25rem);
+      }
+    }
+
+    @media (max-width: 49.99rem) {
+      .has-entity-icon {
+        display: grid;
+        grid-template-columns: 0.92em minmax(0, 1fr);
+        align-items: start;
+      }
+
+      .entity-page-icon {
+        margin-top: 0.15em;
+      }
+
+      .has-entity-icon .requirement-lifecycle {
+        grid-column: 2;
+        justify-self: start;
       }
     }
   }

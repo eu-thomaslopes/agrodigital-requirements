@@ -295,6 +295,7 @@ import RequirementUserStory from './RequirementUserStory.astro';
       }
 
       const tableRect = table.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
       const finalTableRow = table.tBodies[0]?.rows.item(table.tBodies[0].rows.length - 1);
       let componentAtTableEnd = false;
       for (const [id, rows] of componentRows) {
@@ -321,15 +322,16 @@ import RequirementUserStory from './RequirementUserStory.astro';
         frame.className = 'requirement-component-frame';
         frame.dataset.componentFrame = id;
         frame.setAttribute('aria-hidden', 'true');
-        frame.style.left = `${frameLeft}px`;
-        frame.style.top = `${firstRect.top}px`;
+        // Position inside the scroll container so its overflow clips the whole outline.
+        frame.style.left = `${frameLeft - containerRect.left + container.scrollLeft}px`;
+        frame.style.top = `${firstRect.top - containerRect.top + container.scrollTop}px`;
         frame.style.width = `${Math.max(0, tableRect.right - frameLeft)}px`;
         frame.style.height = `${lastRect.bottom - firstRect.top}px`;
         frame.style.setProperty(
           '--requirement-component-frame-accent',
           getComputedStyle(headingRow).getPropertyValue('--requirement-group-current-accent').trim(),
         );
-        document.body.append(frame);
+        container.append(frame);
         if (rows.at(-1) === finalTableRow) componentAtTableEnd = true;
       }
       container.classList.toggle('requirement-table-scroll--component-at-end', componentAtTableEnd);
