@@ -12,6 +12,15 @@ import RequirementUserStory from './RequirementUserStory.astro';
   let requirementGroupSequence = 0;
   let requirementComponentSequence = 0;
 
+  const wrapTable = (table: HTMLTableElement) => {
+    if (table.parentElement?.classList.contains('requirement-table-scroll')) return;
+    const container = document.createElement('div');
+    container.className = 'requirement-table-scroll';
+    if (table.classList.contains('history-source')) container.classList.add('history-source');
+    table.before(container);
+    container.append(table);
+  };
+
   const normalizeHeader = (value: string) =>
     value
       .normalize('NFD')
@@ -269,12 +278,7 @@ import RequirementUserStory from './RequirementUserStory.astro';
     target.classList.add('requirement-table--hierarchical');
     target.dataset.requirementColumns = String(columnCount);
 
-    if (!target.parentElement?.classList.contains('requirement-table-scroll')) {
-      const scrollContainer = document.createElement('div');
-      scrollContainer.className = 'requirement-table-scroll';
-      target.before(scrollContainer);
-      scrollContainer.append(target);
-    }
+    wrapTable(target);
   };
 
   // Desenha contornos posicionados sobre as linhas pertencentes a cada componente.
@@ -420,6 +424,8 @@ import RequirementUserStory from './RequirementUserStory.astro';
         index = Math.max(index, sectionIndex - 1);
       }
     }
+
+    document.querySelectorAll<HTMLTableElement>('.sl-markdown-content table').forEach(wrapTable);
 
     if (window.location.hash) {
       const anchor = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));

@@ -63,6 +63,19 @@
           timeline.append(item);
         }
         if (!timeline.children.length) return;
+
+        // Keep the original section available for printing and the panel, but hide it on screen.
+        const headingContainer = heading.closest('.sl-heading-wrapper') ?? heading;
+        headingContainer.classList.add('history-source');
+        let historyNode = headingContainer.nextElementSibling;
+        while (historyNode && !historyNode.matches('h2, .level-h2')) {
+          historyNode.classList.add('history-source');
+          historyNode = historyNode.nextElementSibling;
+        }
+        for (const link of document.querySelectorAll<HTMLAnchorElement>('.right-sidebar a, mobile-starlight-toc a')) {
+          if (decodeURIComponent(new URL(link.href).hash.slice(1)) === heading.id) link.closest('li')?.remove();
+        }
+
         trigger.hidden = false;
         trigger.addEventListener('click', () => dialog.showModal());
         dialog.addEventListener('click', (event) => {
