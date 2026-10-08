@@ -29,7 +29,9 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
 <agrodigital-search class={Astro.props.class}>
   <div class="search-anchor">
     <div class="search-control">
-      <Icon name="magnifier" />
+      <button type="button" class="search-trigger" data-search-trigger aria-label="Abrir pesquisa">
+        <Icon name="magnifier" />
+      </button>
       <label class="sr-only" for="agrodigital-search-input">Pesquisar na documentação</label>
       <input
         id="agrodigital-search-input"
@@ -74,6 +76,7 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
       this.dataset.ready = 'true';
 
       const input = this.querySelector<HTMLInputElement>('[data-search-input]');
+      const trigger = this.querySelector<HTMLButtonElement>('[data-search-trigger]');
       const clearButton = this.querySelector<HTMLButtonElement>('[data-clear-search]');
       const dropdown = this.querySelector<HTMLElement>('[data-search-dropdown]');
       const status = this.querySelector<HTMLElement>('[data-search-status]');
@@ -98,11 +101,23 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
           .trim();
 
       const openSearch = () => {
+        this.dataset.searchOpen = 'true';
         dropdown.hidden = false;
         input.setAttribute('aria-expanded', 'true');
+        updateAvailableHeight();
       };
 
+      // The visual viewport shrinks when a phone's on-screen keyboard opens.
+      const updateAvailableHeight = () => {
+        const viewport = window.visualViewport;
+        const bottom = (viewport?.offsetTop ?? 0) + (viewport?.height ?? window.innerHeight);
+        this.style.setProperty('--search-available-height', `${Math.max(0, bottom - input.getBoundingClientRect().bottom - 24)}px`);
+      };
+      window.visualViewport?.addEventListener('resize', updateAvailableHeight);
+      window.addEventListener('resize', updateAvailableHeight);
+
       const closeSearch = () => {
+        delete this.dataset.searchOpen;
         dropdown.hidden = true;
         input.setAttribute('aria-expanded', 'false');
       };
@@ -149,6 +164,7 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
       };
 
       input.addEventListener('focus', openSearch);
+      trigger?.addEventListener('click', () => input.focus());
       input.addEventListener('click', openSearch);
       input.addEventListener('input', () => {
         openSearch();
@@ -161,6 +177,27 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
         } else if (event.key === 'Escape') {
           closeSearch();
           input.blur();
+          trigger?.focus();
+        } else if (event.key === 'Enter') {
+          const firstResult = results.querySelector<HTMLAnchorElement>('a');
+          if (firstResult) {
+            event.preventDefault();
+            firstResult.click();
+          }
+        }
+      });
+
+      results.addEventListener('keydown', (event) => {
+        const links = Array.from(results.querySelectorAll<HTMLAnchorElement>('a'));
+        const index = links.indexOf(document.activeElement as HTMLAnchorElement);
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          const next = index + (event.key === 'ArrowDown' ? 1 : -1);
+          if (next < 0) input.focus();
+          else links[Math.min(next, links.length - 1)]?.focus();
+        } else if (event.key === 'Escape') {
+          closeSearch();
+          trigger?.focus();
         }
       });
 
@@ -171,7 +208,10 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
       });
 
       document.addEventListener('pointerdown', (event) => {
-        if (!this.contains(event.target as Node)) closeSearch();
+        if (!this.contains(event.target as Node)) {
+          closeSearch();
+          if (document.activeElement === input) input.blur();
+        }
       });
 
       window.addEventListener('keydown', (event) => {
@@ -229,8 +269,14 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
   }
 
-  .search-control > :global(svg) {
+  .search-trigger {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: var(--sl-color-text-accent);
+    cursor: pointer;
   }
 
   .search-control input {
@@ -280,7 +326,7 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
     z-index: calc(var(--sl-z-index-navbar) + 1);
     inset-block-start: calc(100% + 0.55rem);
     inset-inline: 0;
-    max-height: min(34rem, calc(100vh - var(--sl-nav-height) - 2rem));
+    max-height: min(34rem, var(--search-available-height, calc(100dvh - var(--sl-nav-height) - 2rem)));
     overflow: hidden;
     border: 1px solid var(--sl-color-hairline);
     border-radius: var(--ima-radius-md);
@@ -288,7 +334,14 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
     box-shadow: var(--ima-shadow-md);
   }
 
+  .search-dropdown:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+  }
+
   .search-status {
+    flex: none;
+    overflow-wrap: anywhere;
     margin: 0;
     padding: 0.85rem 1rem 0.55rem;
     color: var(--sl-color-gray-3);
@@ -296,10 +349,11 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
   }
 
   .search-results {
-    max-height: 29rem;
+    min-height: 0;
     margin: 0;
     padding: 0 0 0.4rem;
     overflow-y: auto;
+    overscroll-behavior-y: contain;
     list-style: none;
   }
 
@@ -315,6 +369,8 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
     border-radius: var(--ima-radius-xs);
     color: var(--sl-color-text);
     text-decoration: none;
+    min-height: 2.75rem;
+    overflow-wrap: anywhere;
   }
 
   .search-results :global(a:hover),
@@ -330,18 +386,33 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
 
   @media (max-width: 49.99rem) {
     agrodigital-search {
-      width: 2.65rem;
+      width: 2.75rem;
       margin-inline-start: auto;
     }
 
     .search-control {
       display: flex;
       justify-content: center;
-      width: 2.65rem;
+      width: 2.75rem;
       padding: 0;
       border: 0;
       background: transparent;
       box-shadow: none;
+    }
+
+    .search-trigger {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+
+    .search-control input {
+      font-size: 1rem;
+      min-width: 0;
+    }
+
+    agrodigital-search[data-search-open='true'] .clear-search {
+      min-width: 2.75rem;
+      min-height: 2.75rem;
     }
 
     .search-control input,
@@ -354,14 +425,14 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
       clip: rect(0, 0, 0, 0);
     }
 
-    agrodigital-search:focus-within {
+    agrodigital-search[data-search-open='true'] {
       position: fixed;
       z-index: calc(var(--sl-z-index-navbar) + 1);
-      inset: 0.5rem;
+      inset: 0.5rem 0.5rem auto;
       width: auto;
     }
 
-    agrodigital-search:focus-within .search-control {
+    agrodigital-search[data-search-open='true'] .search-control {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr) auto;
       width: 100%;
@@ -371,8 +442,8 @@ const serializedDocuments = JSON.stringify(documents).replace(/</g, '\\u003c');
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
     }
 
-    agrodigital-search:focus-within .search-control input,
-    agrodigital-search:focus-within .clear-search {
+    agrodigital-search[data-search-open='true'] .search-control input,
+    agrodigital-search[data-search-open='true'] .clear-search {
       position: static;
       width: auto;
       height: auto;

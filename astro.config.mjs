@@ -35,14 +35,16 @@ export default defineConfig({
         { label: 'Início', link: '/' },
         {
           label: 'Sistema',
+          collapsed: true,
           items: systemModules.map((module) => ({
             label: module.label,
-            collapsed: module.slug !== 'geral',
+            collapsed: true,
             items: [{ autogenerate: { directory: module.slug } }],
           })),
         },
         {
           label: 'Componentes',
+          collapsed: true,
           items: componentCatalog.map((component) => ({
             label: component.name,
             link: `/sobre/componentes/#${component.id}`,
@@ -50,6 +52,7 @@ export default defineConfig({
         },
         {
           label: 'Sobre a documentação',
+          collapsed: true,
           items: [{ slug: 'sobre/modelo-de-conteudo' }],
         },
       ],

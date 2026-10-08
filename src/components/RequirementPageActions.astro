@@ -1,0 +1,45 @@
+---
+import VersionHistory from './VersionHistory.astro';
+---
+
+<div class="requirement-page-actions">
+  <VersionHistory />
+  <button type="button" data-export-pdf>Exportar PDF</button>
+</div>
+
+<script>
+  const initializePdfExport = () => {
+    for (const button of document.querySelectorAll<HTMLButtonElement>('[data-export-pdf]')) {
+      if (button.dataset.ready) continue;
+      button.dataset.ready = 'true';
+      button.addEventListener('click', () => window.print());
+    }
+  };
+  initializePdfExport();
+  document.addEventListener('astro:page-load', initializePdfExport);
+</script>
+
+<style>
+  .requirement-page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+    margin-top: 1rem;
+  }
+  .requirement-page-actions :global(version-history) { margin-top: 0; }
+  button {
+    min-height: 2.75rem;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid var(--ima-green-500);
+    border-radius: var(--ima-radius-xs);
+    background: var(--ima-green-500);
+    color: #fff;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover { background: var(--ima-green-600); }
+  @media print { .requirement-page-actions { display: none; } }
+</style>

@@ -11,11 +11,6 @@ const documents = (await getCollection('docs'))
     iconUrl: getEntityIconUrl(entry.data.entity, entry.data.icon),
   }))
   .filter((document) => Boolean(document.iconUrl));
-// A sidebar usa apenas módulos que têm ao menos um documento visível com ícone.
-const documentedModules = new Set(
-  documents.map(({ entry }) => entry.data.module).filter((module) => Boolean(module)),
-);
-
 const entrySelectors = documents.map(
   ({ entry }) => `.sidebar-content a[href='${getDocHref(entry.id)}']`,
 );
@@ -26,18 +21,11 @@ const entryAssignments = documents
   )
   .join('\n');
 
-// Os ícones entram como máscaras CSS em links que o Starlight já renderizou.
-const visibleModules = systemModules.filter((module) => documentedModules.has(module.slug));
-const moduleSelectors = visibleModules.map(
-  (module) =>
-    `.sidebar-content details:has(> ul > li > a[href^='/${module.slug}/']) > summary .group-label > .large`,
-);
-const moduleAssignments = visibleModules
-  .map(
-    (module) =>
-      `.sidebar-content details:has(> ul > li > a[href^='/${module.slug}/']) > summary .group-label > .large { --sidebar-module-icon: url('${getModuleIconUrl(module.slug)}'); }`,
-  )
-  .join('\n');
+// O catálogo também fornece ícones para categorias ainda sem documentos.
+const moduleIcons = systemModules.map((module) => ({
+  label: module.label,
+  iconUrl: getModuleIconUrl(module.slug),
+}));
 
 const sidebarIconStyles = `
 ${entryAssignments}
@@ -55,13 +43,12 @@ ${entrySelectors.map((selector) => `${selector}::before`).join(',\n')} {
   mask: var(--sidebar-entry-icon) center / contain no-repeat;
   -webkit-mask: var(--sidebar-entry-icon) center / contain no-repeat;
 }
-${moduleAssignments}
-${moduleSelectors.join(',\n')} {
+.sidebar-content .sidebar-module-label {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
 }
-${moduleSelectors.map((selector) => `${selector}::before`).join(',\n')} {
+.sidebar-content .sidebar-module-label::before {
   content: '';
   flex: 0 0 auto;
   width: 1.05rem;
@@ -74,3 +61,44 @@ ${moduleSelectors.map((selector) => `${selector}::before`).join(',\n')} {
 
 <DefaultSidebar />
 <style is:inline set:html={sidebarIconStyles}></style>
+<script type="application/json" id="sidebar-module-icons" set:html={JSON.stringify(moduleIcons)} />
+
+<script>
+  const initializeSidebar = () => {
+    const moduleIcons: { label: string; iconUrl: string }[] = JSON.parse(
+      document.getElementById('sidebar-module-icons')?.textContent ?? '[]',
+    );
+    const iconsByLabel = new Map(moduleIcons.map((module) => [module.label, module.iconUrl]));
+    for (const content of document.querySelectorAll<HTMLElement>('.sidebar-content')) {
+      for (const label of content.querySelectorAll<HTMLElement>('details > summary .group-label > .large')) {
+        const iconUrl = iconsByLabel.get(label.textContent?.trim() ?? '');
+        if (!iconUrl) continue;
+        label.classList.add('sidebar-module-label');
+        label.style.setProperty('--sidebar-module-icon', `url('${iconUrl}')`);
+      }
+
+      // Move the existing preferences so visual and keyboard order both start with the theme.
+      const preferences = content.querySelector('.mobile-preferences')?.parentElement;
+      if (preferences?.parentElement === content) content.prepend(preferences);
+
+      // Keep only the current page's ancestors open, overriding restored desktop state.
+      for (const group of content.querySelectorAll<HTMLDetailsElement>('details')) {
+        group.open = Boolean(group.querySelector('a[aria-current="page"]'));
+      }
+
+      if (!content.dataset.mobileNavigationReady) {
+        content.dataset.mobileNavigationReady = 'true';
+        content.addEventListener('click', (event) => {
+          const link = event.target instanceof Element ? event.target.closest('a[href]') : null;
+          if (link && matchMedia('(max-width: 49.99rem)').matches) {
+            const sidebar = content.closest<HTMLElement>('#starlight__sidebar');
+            if (sidebar?.matches(':popover-open')) sidebar.hidePopover();
+          }
+        });
+      }
+    }
+  };
+
+  initializeSidebar();
+  document.addEventListener('astro:page-load', initializeSidebar);
+</script>
