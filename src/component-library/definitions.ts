@@ -30,6 +30,13 @@ type ComponentDefinition = {
 const usedComponents: Record<string, ComponentDefinition> = {
   ...herdComponentDefinitions,
   ...agroindustrialComponentDefinitions,
+  'informar-cpf': {
+    id: 'informar-cpf', name: 'Informar CPF', sourcePages: 'US009 e US011',
+    parameters: { exemplo: { label: 'Exemplo', required: false } },
+    buildFields: (parameters) => [
+      { campo: 'CPF', tipo: 'cpf', obrigatorio: true, validacoes: ['Tamanho = 11 dígitos.', 'Formato = XXX.XXX.XXX-XX.', 'Validação dos dígitos verificadores.'], exemplo: parameters.exemplo ?? '444.009.956-40', valorPadrao: 'Vazio' },
+    ],
+  },
   'localizacao-simples': {
     id: 'localizacao-simples',
     name: 'Localização simples',

@@ -17,6 +17,12 @@ com o título atual da página correspondente. Códigos ainda não cadastrados
 permanecem como texto. Exemplos de código e identificadores no histórico de
 versões preservam sua escrita original.
 
+Na seção **Histórias e referências relacionadas**, links identificados por
+códigos US são direcionados ao próprio site e recebem o título da página.
+Quando a história ainda não foi cadastrada, a referência fica como texto até
+que exista uma página com esse código. Referências sem código US, como normas
+e documentação técnica, conservam seus links externos.
+
 Uma página pode representar mais de uma história. Declare todos os seus códigos
 em uma lista no cabeçalho Markdown, mesmo quando houver somente um:
 
