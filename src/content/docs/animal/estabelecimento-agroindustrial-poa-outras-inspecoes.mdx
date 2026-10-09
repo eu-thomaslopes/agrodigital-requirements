@@ -1,0 +1,280 @@
+---
+title: Estabelecimento agroindustrial POA — Outras Inspeções
+docType: requirement
+module: animal
+entity: estabelecimento-agroindustrial-poa-outras-inspecoes
+entityPlural: estabelecimentos agroindustriais POA — Outras Inspeções
+lifecycle: draft
+usID:
+  - US071
+---
+
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
+**Eu**, como usuário do sistema, **quero** gerenciar estabelecimentos agroindustriais POA — outras inspeções, **para que** eu possa permitir a gestão eficiente dessas informações.
+
+## 1. Buscar estabelecimento agroindustrial POA — outras inspeções
+
+**Dado que** estou na tela inicial para usuários logados no sistema  
+**Quando** acesso o menu **Estabelecimento Agroindustrial POA — Outras Inspeções**  
+**Então** o sistema exibe a tela de busca, contendo os seguintes filtros: 
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Código ou Nome do Estabelecimento Agroindustrial | Texto curto | Não | Tamanho = 255 caracteres | “Estabelecimento São José” | Vazio |
+| Código da Inspeção | Texto curto | Não | Tamanho = 30 caracteres | “17126” | Vazio |
+| Tipo de Inspeção | Seleção simples | Não | Valores = “SIM”, “SIE/Outros Estados”, “SIF” | “SIM” | Vazio |
+| Proprietário | Seleção simples de entidade: proprietário | Não | Valores = pessoas físicas ou jurídicas cadastradas no sistema | “José Aarão Neto” | Vazio |
+| Responsável Técnico | Seleção simples de entidade: profissional da área animal | Não | Valores = profissionais da área animal com responsabilidade técnica de estabelecimentos agroindustriais cadastrados no sistema | “José Teixeira Sabino” | Vazio |
+
+```componente
+componente: Área de atuação POA
+```
+
+```componente
+componente: Classificação POA
+exemplo: “Abatedouro Frigorífico”
+```
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Estado | Seleção pesquisável | Não | Valores = lista dos estados brasileiros | “Minas Gerais” | Vazio |
+| Município | Seleção pesquisável | Não | Valores = lista dos municípios correspondente ao estado informado | “Lavras” | Vazio |
+| Situação | Seleção simples | Não | Valores = “Ativo”, “Inativo” | “Ativo” | Vazio |
+
+**E** exibe as seguintes ações: (Ver AC001 - Ações das telas de busca)
+
+## 2. Listar estabelecimento agroindustrial POA — outras inspeções
+
+**Dado que** estou na tela de busca  
+**E** o campo de busca e/ou pelo menos um dos filtros disponíveis foi corretamente preenchido  
+**Quando** realizo a ação “Pesquisar”   
+**E** o sistema encontrou registros compatíveis com os valores informados   
+**Então** o sistema exibe os resultados retornados, contendo os seguintes campos:  
+ 
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Código | Texto | Exibe o código do estabelecimento agroindustrial | “12345678910” |
+| Nome | Texto | Exibe o nome do estabelecimento agroindustrial | “Estabelecimento São José” |
+| Código da Inspeção | Texto | Exibe o código da inspeção do estabelecimento agroindustrial | “245” |
+| Tipo de Inspeção | Seleção | Exibe o tipo de inspeção do estabelecimento agroindustrial | “SIM” |
+| Proprietários | Texto | Exibe o CPF/CNPJ - Nome/Nome Fantasia dos proprietários do estabelecimento agroindustrial | “José Aarão Neto - 555.009.956-40, Divino de Souza Sobrinho - 444.009.956-40 …” |
+| Responsável Técnico | Texto | Exibe o CPF - Nome do responsável técnico do estabelecimento agroindustrial | “José Aarão Neto - 555.009.956-4” |
+| Área de Atuação | Texto | Exibe área de atuação do estabelecimento agroindustrial | “Carne” |
+| Classificação | Texto | Exibe classificação do estabelecimento agroindustrial | “Abatedouro Frigorífico” |
+| Município - UF | Texto | Exibe o município e a UF do estabelecimento agroindustrial | “Abadia dos Dourados - MG” |
+| Situação | Seleção | Exibe a situação do cadastro | “Ativo” |
+
+**E** exibe as seguintes ações: (Ver AC002 - Ações das telas de listagem)
+
+## 3. Adicionar estabelecimento agroindustrial POA — outras inspeções
+
+**Dado que** estou na tela de cadastro  
+**Então** o sistema exibe um formulário, contendo os seguintes campos:
+
+### Informações Básicas
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Nome Comercial do Estabelecimento Agroindustrial | Texto | Sim | Tamanho = 255 caracteres | “Estabelecimento São José” | Vazio |
+| Possui Isenção de Inscrição Estadual? | Seleção simples | Sim | Valores = “Sim”, “Não” | “Sim” | “Não” |
+
+Disponível se o campo “Possui Isenção de Inscrição Estadual?” for definido como “Não”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Número de Inscrição Estadual | Texto numérico | Sim | Tamanho = 13 caracteres | “1453705800094” | Vazio |
+
+```componente
+componente: Proprietários
+```
+
+### Inspeção
+
+### Serviço de Inspeção
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Tipo de Inspeção — Serviço de Inspeção Municipal (SIM) / Serviço de Inspeção Estadual (SIE) / Serviço de Inspeção Federal (SIF) | Seleção simples | Sim | Valores = “SIM”, “SIE/Outros Estados”, “SIF” | “SIM” | Vazio |
+| Código da Inspeção | Texto | Sim | Tamanho = 30 caracteres | “17126” | Vazio |
+
+### Caracterização da Atividade Agroindustrial
+
+```componente
+componente: Área de atuação POA
+```
+
+### Carne
+
+Disponível se o campo ”Área de Atuação” for definido SOMENTE como “Carne”.
+
+```componente
+componente: Classificação POA
+area de atuação: Carne
+exemplo: “Frigorífico”
+```
+
+### Abatedouro Frigorífico
+
+Disponível se o campo ”Classificação” for definido como “Abatedouro Frigorífico”.
+
+### Espécies Abatidas no Frigorífico (Uma ou mais)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Espécie | Seleção de entidade: espécie | Sim | Valores = espécies dos grupos Bovídeos, Aves, Suídeos, Equídeos e Outras Espécies cadastradas no sistema” | “Bovinos” | Vazio |
+
+### Leite
+
+Disponível se o campo ”Área de Atuação” for definido somente como “Leite”.
+
+```componente
+componente: Classificação POA
+area de atuação: Leite
+exemplo: "Entreposto de laticínios"
+```
+
+### Pescado
+
+Disponível se o campo ”Área de Atuação” for definido somente como “Pescado”.
+
+```componente
+componente: Classificação POA
+area de atuação: Pescado
+exemplo: “Unidade de beneficiamento de pescado e  produtos de pescado”
+```
+
+### Abatedouro Frigorífico
+
+Disponível se o campo ”Classificação” for definido como “Abatedouro frigorífico”.
+
+### Espécies Abatidas no Frigorífico (Uma ou mais)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Espécie | Seleção de entidade: espécie | Sim | Valores = espécies dos grupos Répteis e Anfíbios cadastradas no sistema” | “Bovinos” | Vazio |
+
+```componente
+componente: Localização simples
+```
+
+```componente
+componente: Contatos com proprietários
+```
+
+```componente
+componente: Anexos e observações
+```
+
+**E** exibe as seguintes ações: (Ver AC003 - Ações das telas de cadastro e AC006 - Ações de interação com o formulário)
+
+## 4. Visualizar estabelecimento agroindustrial POA — outras inspeções
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe os campos do formulário descrito no critério de aceitação 3 como somente leitura, com seus valores já preenchidos  
+**E**, além desses, exibe os seguintes campos, também como somente leitura:
+
+### Informações Básicas
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Código do Estabelecimento Agroindustrial | Texto | Código único gerado após o cadastro (ver regra de negócio para mais detalhes) | “1456” |
+
+**E** exibe as seguintes ações: (Ver AC004 - Ações das telas de visualizar)
+
+### Outras Ações
+
+| Ação | Descrição |
+| --- | --- |
+| Responsável Técnico | Vai para a tela de responsável técnico |
+
+## 5. Editar estabelecimento agroindustrial POA — outras inspeções
+
+**Dado que** estou na tela de edição  
+**Então** o sistema exibe os campos descritos no critério de aceitação 3 já preenchidos e editáveis  
+**E**, além desses, exibe os novos campos do critério de aceitação 4 como somente leitura.  
+**E** exibe as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Salvar | Vai para a tela de confirmação das edições |
+| Visualizar estabelecimento agroindustrial POA — outras inspeções | Volta para a tela de visualização |
+
+### Ações do Formulário
+
+| Ação | Descrição |
+| --- | --- |
+| Ver item | Disponível para cada item informado no cadastro que esteja relacionado a outro cadastro Vai para a tela de visualização do cadastro selecionado |
+| Adicionar/Remover item | Disponível para cada item informado no cadastro que podem ter mais de uma instância (ver título de seções na tabela e regras de negócio) Adiciona / Remover o item |
+| Baixar documento | Disponível para cada anexo informado no cadastro Baixa o documento anexado |
+| Ativar/Inativar/Suspender | Muda a situação do cadastro para “Ativo”, “Inativo” ou “Suspenso”, a depender da situação atual do cadastro (ver seção de regras de negócio). |
+
+### Caso de sucesso  
+
+**Quando** realizo a ação “Salvar”  
+**E** foi possível salvar as edições no cadastro  
+**Então** o sistema exibe as seguintes ações:
+
+| Ação | Descrição |
+| --- | --- |
+| Cancelar | Volta para a tela de edição |
+| Salvar | Valida os dados informados, salva as edições e vai para a tela de visualização |
+
+## Critérios de aceitação comuns
+
+Aplicam-se os critérios do [documento comum às histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit?usp=drivesdk):
+
+* CA001 - Salvar cadastro de uma entidade  
+* CA003 - Notificar erro ao usuário devido a falha técnica  
+* CA009 - Busca sem resultados  
+* CA010 - Uso incorreto de filtros de busca  
+* CA011 - Indicação de filtros de busca aplicados
+
+## Regras de negócio específicas
+
+### RNE001 — Unicidade a definir
+
+O cadastro deve ser único no sistema, porém, não é simples saber quando ele já existe ou não. Por hora, o cliente ainda não definiu como será feita a identificação de cadastros duplicados.
+
+### RNE002 — Geração do código
+
+Após o cadastro, deve-se gerar um código único, de 10 dígitos. O código será composto do código IBGE da Unidade Federada, de 2 dígitos, seguido de um número sequencial de 8 dígitos, conforme a RN09 do [Manual de padronização da PGA](https://sites.google.com/agro.gov.br/manual-ws-pga/p%C3%A1gina-inicial).
+
+## Histórias e referências relacionadas
+
+* [US005 - Cadastro e edição de divisão municipal](https://docs.google.com/document/u/0/d/1MU1gCgAoO2qs9IDoL6dX_-ABNKhxwE68YnHD3-3tipQ/edit)  
+* [US016 - Cadastro e edição de espécie](https://docs.google.com/document/u/0/d/1ko2WHTE8csejacA5mVNYhKAYU5OyQdukKRzopJw0WHY/edit)  
+* [US019 - Gerenciar notificações do usuário](https://docs.google.com/document/d/1XEdWCMzUpEqih2GIQzbEzkZtWSuzTmwz2CbM2FXcIF8/edit?usp=sharing)  
+* [US022 - Gerenciar produto](https://docs.google.com/document/d/19h2BVe2Q4KMOtpKlbY1REukuaQ78i26uaW0EiS-8jIM/edit?tab=t.0)  
+* [US042 - Gerenciar pessoa física](https://docs.google.com/document/u/2/d/1Dc-0vVj1HAU8_f37r9A94BEV6EmzwOB8prnP7w6I9GU/edit)  
+* [US044 - Gerenciar pessoa jurídica](https://docs.google.com/document/u/2/d/12SyAx0pJcA4s1GLWBvVVYyk8r0mf9WZWsWt4a1soefc/edit)  
+* [US050 - Gerenciar estabelecimento agropecuário](https://docs.google.com/document/u/2/d/1curRcFHfzSoTb8Y_56fHVTq-LLt4XVD-r0knkogrLQU/edit)  
+* [US052 - Gerenciar profissional da área animal](https://docs.google.com/document/u/0/d/1lCBMQYnyQAMQM9w7WijCRmVyu_QvY1DsiuuaNPsiVvE/edit)
+
+## Protótipos
+
+* [Protótipo](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=1-9&p=f&t=YkEaoNDLQOyHOefE-1&scaling=contain&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978)
+
+## Validação
+
+* Validada em reunião presencial ocorrida entre os dias 03/11/2025 e 05/01/2025, na Cidade Administrativa - Belo Horizonte/MG
+
+## Histórico da fonte
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| v1.1 | 30/09/2026 | alteração em produtos de mel |
+| v1.0 | 01/03/2026 | Primeira versão da história. |
+
+## Pendências da fonte
+
+- A identificação de cadastros duplicados ainda não foi definida na fonte (RNE001).
+- A visualização fazia referência ao critério de busca; foi vinculada ao formulário do cadastro. Os exemplos de código na fonte têm 11 ou 4 dígitos, enquanto a RNE002 exige 10; confirmar os exemplos.
+- A edição permite Suspenso, mas a busca oferece somente Ativo e Inativo. Confirmar as situações disponíveis nos filtros.
+- A classificação do filtro é obrigatória, mas a fonte só define opções para Carne, Leite e Pescado. Confirmar o comportamento para Apícola, Ovos e combinações de áreas.
+- A seleção de espécies de pescado é restrita a Répteis e Anfíbios, mas o exemplo usa Bovinos. Confirmar o exemplo.
+- O intervalo da validação foi informado como 03/11/2025 a 05/01/2025, com a data final anterior à inicial. As datas foram preservadas para conferência.
+- As referências a US028 — Produto apontam para o mesmo documento fornecido como US022; foram uniformizadas para US022.

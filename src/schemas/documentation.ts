@@ -9,6 +9,10 @@ export const documentationMetadataSchema = z.object({
   module: z.string().min(1).optional(),
   entity: z.string().min(1).optional(),
   entityPlural: z.string().min(1).optional(),
+  usID: z.array(z.string().regex(/^US\d+$/, 'Use um código no formato US seguido de números.'))
+    .min(1)
+    .refine((codes) => new Set(codes).size === codes.length, 'Não repita códigos na mesma história.')
+    .optional(),
   icon: z
     .string()
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Use o slug kebab-case de um ícone Lucide extraído.')

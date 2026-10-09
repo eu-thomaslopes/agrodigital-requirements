@@ -1,4 +1,6 @@
 import { componentCatalog } from './catalog';
+import { herdComponentDefinitions } from './herd-fields';
+import { agroindustrialComponentDefinitions } from './agroindustrial-fields';
 import type { FieldType } from '../config/field-types';
 
 export type ComponentField = {
@@ -26,6 +28,8 @@ type ComponentDefinition = {
 
 // Só componentes com definição executável entram aqui; catalog.ts também inventaria os demais.
 const usedComponents: Record<string, ComponentDefinition> = {
+  ...herdComponentDefinitions,
+  ...agroindustrialComponentDefinitions,
   'localizacao-simples': {
     id: 'localizacao-simples',
     name: 'Localização simples',

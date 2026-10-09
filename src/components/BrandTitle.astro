@@ -1,8 +1,12 @@
-<a class="ima-brand" href="/" aria-label="IMA AgroDigital — página inicial da documentação">
+---
+import { withBase } from '../utils/content';
+---
+
+<a class="ima-brand" href={withBase('/')} aria-label="IMA AgroDigital — página inicial da documentação">
   <span class="ima-brand__logo-wrap">
     <img
       class="ima-brand__logo"
-      src="/logo-ima.png"
+      src={withBase('/logo-ima.png')}
       width="210"
       height="98"
       alt="Instituto Mineiro de Agropecuária"

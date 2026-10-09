@@ -1,14 +1,17 @@
 ---
 import StarlightMarkdownContent from '@astrojs/starlight/components/MarkdownContent.astro';
 import RequirementUserStory from './RequirementUserStory.astro';
+import StoryReferences from './StoryReferences.astro';
 ---
 
 <StarlightMarkdownContent>
   <RequirementUserStory />
   <slot />
+  <StoryReferences />
 </StarlightMarkdownContent>
 
 <script>
+  import { withBase } from '../utils/content';
   let requirementGroupSequence = 0;
   let requirementComponentSequence = 0;
 
@@ -250,7 +253,7 @@ import RequirementUserStory from './RequirementUserStory.astro';
         const badge = document.createElement('a');
         badge.className = 'requirement-component-badge';
         badge.textContent = `Componente · ${componentName}`;
-        badge.href = `/sobre/componentes/#${componentId ?? ''}`;
+        badge.href = withBase(`/sobre/componentes/#${componentId ?? ''}`);
         activeGroup.groupLabel.insertBefore(badge, activeGroup.headingContainer);
       }
 

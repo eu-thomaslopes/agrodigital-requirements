@@ -6,10 +6,13 @@ import { componentCatalog } from './src/component-library/catalog.ts';
 import { componentFencePlugin } from './src/component-library/component-fence-plugin.mjs';
 
 // O Astro conecta a configuração do Starlight aos catálogos compartilhados do projeto.
+const base = '/agrodigital-requirements';
 export default defineConfig({
+  site: 'https://eu-thomaslopes.github.io',
+  base,
   redirects: {
-    '/geral': '/geral/pessoa-fisica/',
-    '/animal': '/animal/exploracao-pecuaria/',
+    '/geral': `${base}/geral/pessoa-fisica/`,
+    '/animal': `${base}/animal/exploracao-pecuaria/`,
   },
   integrations: [
     starlight({
@@ -61,6 +64,7 @@ export default defineConfig({
         maxHeadingLevel: 3,
       },
       credits: false,
+      routeMiddleware: './src/route-middleware.ts',
     }),
     mdx(),
   ],

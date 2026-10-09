@@ -23,6 +23,21 @@ npm run check
 npm run build
 ```
 
+## GitHub Pages
+
+O site é publicado em `https://eu-thomaslopes.github.io/agrodigital-requirements/`.
+O endereço e o prefixo ficam no `astro.config.mjs`; os caminhos personalizados
+são gerados pelos helpers de `src/utils/content.ts`.
+
+No repositório, selecione **Settings → Pages → Source → GitHub Actions**.
+O workflow `.github/workflows/deploy.yml` publica o resultado do build (`dist`)
+quando as alterações chegam à branch `main`. Também pode ser executado
+manualmente pela aba Actions. Não é necessário versionar a pasta `dist`.
+
+Com `npm run dev`, abra `http://localhost:4321/agrodigital-requirements/`.
+Para conferir o site gerado, execute `npm run build` e `npm run preview` e
+abra o mesmo prefixo na porta indicada pelo servidor.
+
 O conteúdo navegável fica em `src/content/docs/`. Metadados adicionais são validados pelo schema em `src/schemas/documentation.ts`.
 
 ## Adicionando um épico

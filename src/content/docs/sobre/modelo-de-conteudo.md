@@ -11,8 +11,24 @@ A documentação separa conteúdo editorial, metadados e definições reutilizá
 Sistema → Módulo → Entidade → Funcionalidade → Especificações relacionadas
 ```
 
-Os identificadores originais, como `US042`, permanecem no conteúdo quando são
-necessários para explicar a origem de uma regra e não determinam a navegação.
+Os códigos originais, como `US042`, identificam histórias pelo metadado `usID`.
+Nas referências do texto e das tabelas, códigos cadastrados aparecem como links
+com o título atual da página correspondente. Códigos ainda não cadastrados
+permanecem como texto. Exemplos de código e identificadores no histórico de
+versões preservam sua escrita original.
+
+Uma página pode representar mais de uma história. Declare todos os seus códigos
+em uma lista no cabeçalho Markdown, mesmo quando houver somente um:
+
+```yaml
+usID:
+  - US054
+  - US055
+```
+
+Todos os códigos da lista levam à mesma página. Cada código deve ser único em
+toda a documentação; códigos duplicados impedem a construção do site. O título
+e o endereço dos links são derivados da coleção, sem manter um catálogo manual.
 
 ## Metadados disponíveis
 
