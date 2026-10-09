@@ -1,0 +1,151 @@
+---
+title: Ajuste de rebanho
+docType: requirement
+module: rebanho
+entity: ajuste-de-rebanho
+entityPlural: ajustes de rebanho
+lifecycle: draft
+usID:
+  - US086
+---
+
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
+**Eu**, como usuário do sistema, **quero** gerenciar ajustes de rebanho, **para que** eu possa permitir a gestão eficiente dessas informações.
+
+## 1. Buscar ajuste de rebanho
+
+**Dado que** estou na tela inicial para usuários logados no sistema  
+**Quando** acesso o menu **Ajuste de Rebanho** (Ver RNC007 - Permissões de Acesso)  
+**Então** o sistema exibe a tela de busca, contendo os seguintes filtros:
+
+```componente
+componente: Filtros de entidade do rebanho
+```
+
+| Campo | Tipo | Obrigatório | Validações |
+| --- | --- | :---: | --- |
+| Espécie | Seleção simples de entidade: espécie | Não | Valores = espécies cadastradas no sistema |
+| Período - De: | Data | Não | Deve ser menor ou igual a data atual |
+| Período - Até: | Data | Não | Deve ser maior ou igual à data informada no campo “Período - De:” e menor ou igual a data atual |
+| Situação | Seleção simples | Não | Valores =  “Ativo”, “Inativo” |
+
+O sistema exibe **Inicial**, **Adicionar Novo** e **Pesquisar** (**AC001**).
+
+## 2. Listar ajuste de rebanho
+
+**Dado que** estou na tela de busca  
+**E** o campo de busca e/ou pelo menos um dos filtros disponíveis foi corretamente preenchido  
+**Quando** realizo a ação “Pesquisar”   
+**E** o sistema encontrou registros compatíveis com os valores informados   
+**Então** o sistema exibe os resultados retornados, contendo os seguintes campos:  
+ 
+
+| Campo | Tipo | Descrição |
+| --- | --- | --- |
+| Tipo de Entidade | Texto | Exibe o tipo de entidade |
+| Estabelecimento | Texto | Exibe o “CPF/CNPJ - Nome/Razão Social” do estabelecimento em questão |
+| Espécie | Texto | Exibe o “Nome” da espécie |
+| Machos Lançados | Texto | Exibe a faixa etária e a quantidade de animais machos lançados naquela faixa |
+| Fêmeas Lançadas | Texto | Exibe a faixa etária e a quantidade de animais fêmeas lançados naquela faixa |
+| Data de Lançamento | Texto | Exibe a data de lançamento |
+| Situação | Texto | Exibe a situação |
+
+Para cada resultado, o sistema exibe **Visualizar** e **Editar** (**AC002**).
+
+## 3. Ajustar rebanho
+
+**Dado que** estou na tela de ajuste de rebanho de uma exploração/núcleo  
+**Então** o sistema exibe um formulário, contendo os seguintes campos:
+
+```componente
+componente: Identificação da entidade do rebanho
+```
+
+### Ajuste
+
+### Faixa Etária
+
+| Campo | Tipo | Obrigatório | Editável | Validações |
+| --- | --- | :---: | :---: | --- |
+| Faixas Etárias | Texto | Sim |  | Somente leitura. Valores pré-definidos: faixas etárias cadastradas para a espécie em questão (ver US016) |
+
+### Machos / Fêmeas
+
+| Campo | Tipo | Obrigatório | Editável | Validações |
+| --- | --- | :---: | :---: | --- |
+| Existentes | Texto | - |  | Somente leitura Exibe os valores atuais |
+| Ajuste | Inteiro | Não |  | - |
+
+### Justificativa
+
+| Campo | Tipo | Obrigatório | Editável | Validações |
+| --- | --- | :---: | :---: | --- |
+| Justificativa — Informe por que foi necessário o ajuste de rebanho | Texto | Sim |  | Alfanumérico, máximo 1500 caracteres |
+| Documento Comprobatório  — Anexe o documento da fiscalização | Arquivo | Sim |  | Neste campo, será exibido ao usuário o nome do arquivo anexado O arquivo deve ser imagem (PNG, JPG) ou PDF O arquivo deve conter, no máximo, 50MB |
+| Descrição | Texto | Não |  | Alfanumérico, máximo 255 caracteres |
+
+O sistema exibe **Todos os ajustes de rebanho** e **Adicionar** (**AC003**).  
+**E** as seguintes ações específicas:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Reiniciar | Reinicia todos os valores digitados para os valores padrão |
+
+## 4. Visualizar ajuste de rebanho
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe os campos do formulário descrito no critério de aceitação 3 como somente leitura, com seus valores já preenchidos  
+**E**, além desses, exibe os seguintes campos, também como somente leitura:
+
+### Situação
+
+| Campo | Tipo | Obrigatório | Editável | Validações |
+| --- | --- | :---: | :---: | --- |
+| Situação | Seleção simples | Sim | Não | Valores = “Ativo”, “Inativo” |
+
+O sistema exibe **Todos os ajustes de rebanho**, **Editar** e **Histórico de Alterações** (**AC004**), além das ações de formulário aplicáveis (**AC006**).
+
+## 5. Editar ajuste de rebanho
+
+**Dado que** estou na tela de edição  
+**Então** o sistema exibe todos os campos descritos nos critérios de aceitação 3 e 4, com seus valores já preenchidos  
+**E** permite editar **todos** os campos passíveis de edição (EDT = Sim)  
+**E** exibe as seguintes ações: (Ver **AC005 - Ações das telas de edição** e **AC006 - Ações de interação com formulários**)  
+**E** exibe as seguintes ações específicas:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Inativar | Muda a situação do cadastro para “Inativo” e reverte as alterações do ajuste no rebanho. Só é permitido inativar um ajuste caso não haja outra movimentação do rebanho.  Quando o cadastro tem sua situação mudada para “Inativo”, ela não pode voltar para a situação “Ativo” novamente. |
+
+## Regras de negócio específicas
+
+### RNE001 — Sobrescrita dos valores existentes
+
+O valor de animais lançados deve sobrepor o valor dos animais existentes.  
+
+### RNE002 — Alerta e notificação
+
+Após o cadastro, o sistema deve emitir um alerta para a entidade e enviar uma notificação à chefia imediata do escritório seccional correspondente informando o ajuste.    
+
+### RNE003 — Restrição de inativação
+
+Um ajuste de rebanho só pode ser inativado caso não exista qualquer atualização posterior do rebanho, independentemente da origem, incluindo GTA, atualização cadastral, lançamentos ou outros ajustes.  
+
+### RNE004 — Reversão do ajuste
+
+Se o ajuste de rebanho for inativado, as alterações no rebanho causadas por ele devem ser revertidas.
+
+## Histórico da fonte
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| v1.0 | xx/xx/2026 | Primeira versão da história. |
+
+## Pendências da fonte
+
+Os títulos de visualização e edição da fonte mencionam “ajuste de doses de insumo”; foram adequados para Ajuste de Rebanho. A ação Inativar menciona “reverter a declaração da vacina”; aplica-se aqui a reversão do ajuste prevista na RNE004. Os campos de ajuste e justificativa não possuem indicação de editabilidade (EDT) na fonte; confirmar quais podem ser alterados após o cadastro. O filtro de Evento Pecuário faz referência a “Tipo de Destino”; foi uniformizado para o campo existente, Tipo de Entidade.

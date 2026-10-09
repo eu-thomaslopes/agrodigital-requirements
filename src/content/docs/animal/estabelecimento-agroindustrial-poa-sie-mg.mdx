@@ -1,0 +1,568 @@
+---
+title: Estabelecimento agroindustrial POA — SIE/MG
+docType: requirement
+module: animal
+entity: estabelecimento-agroindustrial-poa-sie-mg
+entityPlural: estabelecimentos agroindustriais POA — SIE/MG
+lifecycle: draft
+usID:
+  - US070
+---
+
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
+**Eu**, como usuário do sistema, **quero** gerenciar estabelecimentos agroindustriais POA — SIE/MG, **para que** eu possa permitir a gestão eficiente dessas informações.
+
+## 1. Buscar estabelecimento agroindustrial POA — SIE/MG
+
+**Dado que** estou na tela inicial para usuários logados no sistema  
+**Quando** acesso o menu **Estabelecimento Agroindustrial POA — SIE/MG**  
+**Então** o sistema exibe a tela de busca, contendo os seguintes filtros: 
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Código ou Nome do Estabelecimento Agroindustrial | Texto curto | Não | Tamanho = 255 caracteres | “Estabelecimento São José” | Vazio |
+| Código SIE/MG | Texto curto | Não | Tamanho = 30 caracteres | “17126” | Vazio |
+| Proprietário | Seleção simples de entidade: proprietário | Não | Valores = pessoas físicas ou jurídicas cadastradas no sistema | “José Aarão Neto” | Vazio |
+| Responsável Técnico | Seleção simples de entidade: profissional da área animal | Não | Valores = profissionais da área animal com responsabilidade técnica de estabelecimentos agroindustriais cadastrados no sistema | “José Teixeira Sabino” | Vazio |
+
+```componente
+componente: Área de atuação POA
+```
+
+```componente
+componente: Classificação POA
+exemplo: “Abatedouro Frigorífico”
+```
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Município | Seleção pesquisável | Não | Valores = lista dos municípios do MG | “Lavras” | Vazio |
+| Situação | Seleção simples | Não | Valores = “Ativo”, “Inativo” | “Ativo” | Vazio |
+
+**E** exibe as seguintes ações: (Ver AC001 - Ações das telas de busca)
+
+## 2. Listar estabelecimento agroindustrial POA — SIE/MG
+
+**Dado que** estou na tela de busca  
+**E** o campo de busca e/ou pelo menos um dos filtros disponíveis foi corretamente preenchido  
+**Quando** realizo a ação “Pesquisar”   
+**E** o sistema encontrou registros compatíveis com os valores informados   
+**Então** o sistema exibe os resultados retornados, contendo os seguintes campos:  
+ 
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Código | Texto | Exibe o código do estabelecimento agroindustrial | “12345678910” |
+| Nome | Texto | Exibe o nome do estabelecimento agroindustrial | “Estabelecimento São José” |
+| Código SIE | Texto | Exibe o código SIE do estabelecimento agroindustrial | “245” |
+| Proprietários | Texto | Exibe o CPF/CNPJ - Nome/Nome Fantasia dos proprietários do estabelecimento agroindustrial | “José Aarão Neto - 555.009.956-40, Divino de Souza Sobrinho - 444.009.956-40 …” |
+| Responsável Técnico | Texto | Exibe o CPF - Nome do responsável técnico do estabelecimento agroindustrial | “José Aarão Neto - 555.009.956-4” |
+| Área de Atuação | Texto | Exibe área de atuação do estabelecimento agroindustrial | “Carne” |
+| Classificação | Texto | Exibe classificação do estabelecimento agroindustrial | “Abatedouro Frigorífico” |
+| Município - UF | Texto | Exibe o município e a UF do estabelecimento agroindustrial | “Abadia dos Dourados - MG” |
+| Situação | Seleção | Exibe a situação do cadastro | “Ativo” |
+
+**E** exibe as seguintes ações: (Ver AC002 - Ações das telas de listagem)
+
+## 3. Adicionar estabelecimento agroindustrial POA — SIE/MG
+
+**Dado que** estou na tela de cadastro  
+**Então** o sistema exibe um formulário, contendo os seguintes campos:
+
+### Informações Básicas
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Nome Comercial do Estabelecimento Agroindustrial | Texto | Sim | Tamanho = 255 caracteres | “Estabelecimento São José” | Vazio |
+| Possui Isenção de Inscrição Estadual? | Seleção simples | Sim | Valores = “Sim”, “Não” | “Sim” | “Não” |
+
+Disponível se o campo “Possui Isenção de Inscrição Estadual?” for definido como “Não”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Número de Inscrição Estadual | Texto | Sim | Tamanho = 13 caracteres | “1453705800094” | Vazio |
+
+```componente
+componente: Proprietários
+```
+
+### Estabelecimento Agroindustrial de Pequeno Porte (EAPP)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| É EAPP? — Estabelecimento Agroindustrial de Pequeno Porte (EAPP) | Seleção simples | Sim | Valores = “Sim”, “Não” | “Sim” | “Não” |
+
+Disponível se o campo “É EAPP?” for definido como “Sim”.
+
+### Tipo de EAPP
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Tipo de EAPP | Seleção simples | Sim | Valores = “Agricultura Familiar”, “Produtor Rural” | “Sim” | Vazio |
+
+Disponível se o campo ”Tipo de EAPP” for definido como “Agricultura Familiar”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Número CAF — Número do Cadastro de Agricultor Familiar | Texto | Sim | Tamanho = 30 caracteres | “SDW0055486566191812190651” | Vazio |
+| Data de Validade do CAF | Data | Sim | Deve ser futura | 01/01/2025 | Vazio |
+| Comprovante do CAF | Arquivo | Sim | - | “comprovante.pdf” | Vazio |
+
+Disponível se o campo ”Tipo de EAPP” for definido como “Produtor Rural”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Comprovante | Arquivo | Sim | - | “comprovante.pdf” | Vazio |
+
+### Situação da Habilitação de EAPP
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Situação da Habilitação de EAPP | Seleção simples | Sim | Valores = “Cadastro”, “Registro” | “Cadastro” | Vazio |
+
+Disponível se o campo “Situação da habilitação de EAPP” for definido como “Cadastro”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Data de Validade do Cadastro de EAPP | Data | Sim | Deve ser futura | “01/08/2028” | Vazio |
+
+### Última Comprovação de EAPP
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Data da Última Comprovação de EAPP | Data | Sim | Não deve ser futura | “01/01/2025” | Vazio |
+| Data de Vencimento da Comprovação de EAPP — A comprovação de EAPP é anual, com prazo até 30/06. Assim, a data de vencimento será 01/07 do mesmo ano, se a última comprovação ocorreu até 30/06, ou 01/07 do ano seguinte, se ocorreu após essa data. | Data | Sim | Somente Leitura Disponível quando o campo “Data da Última Comprovação EAPP” for preenchido Ver seção de regras de negócio específicas | “01/07/2025” | Vazio |
+
+### Inspeção
+
+### Serviço de Inspeção Estadual de Minas Gerais (SIE/MG)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Código SIE/MG — Serviço de Inspeção Estadual de Minas Gerais | Texto | Sim | Tamanho = 30 caracteres | “17126” | Vazio |
+| Data de Habilitação do SIE | Data | Sim | Não deve ser futura | 01/01/2025 | Vazio |
+
+### Caracterização da Atividade Agroindustrial
+
+```componente
+componente: Área de atuação POA
+```
+
+### Carne
+
+Disponível se o campo ”Área de Atuação” for definido SOMENTE como “Carne”.
+
+```componente
+componente: Classificação POA
+area de atuação: Carne
+somente sem eapp: Sim
+exemplo: “Abatedouro Frigorífico”
+```
+
+### Abatedouro Frigorífico
+
+Disponível se o campo ”Classificação” for definido como “Abatedouro Frigorífico”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Atividade Desenvolvida | Seleção múltipla | Não | Valores = “Desossa”, “Industrialização”, “Distribuição de Produtos de Origem Animal (POA) de terceiros” | “Desossa” | Vazio |
+
+### Espécies Abatidas no Frigorífico (Uma ou mais)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Espécie | Seleção de entidade: espécie | Sim | Valores = espécies dos grupos Bovídeos, Aves, Suídeos, Equídeos e Outras Espécies cadastradas no sistema” | “Bovino” | Vazio |
+| Capacidade Diária de Abate da Espécie | Decimal | Sim | - | “100” | Vazio |
+| Unidade de Medida | Seleção de entidade: unidade de medida | Sim | Valores = unidades de medida cadastradas no sistema com “Tipo de Unidade de Medida” = “Animal” | “Cabeças” | Vazio |
+
+### Unidade de Beneficiamento de Carne e Produtos Cárneos
+
+Disponível se o campo ”Classificação” for definido como “Unidade de beneficiamento de carne e produtos cárneos”) OU (Disponível se o campo “É EAPP?” for definido como “Sim”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Atividade Desenvolvida | Seleção múltipla | Não | Valores = “Desossa”, “Industrialização”, “Distribuição de produtos de origem animal (POA) de terceiros” | “Industrialização” | Vazio |
+
+### Leite
+
+Disponível se o campo ”Área de Atuação” for definido SOMENTE como “Leite”.
+
+```componente
+componente: Classificação POA
+area de atuação: Leite
+somente sem eapp: Sim
+exemplo: "Entreposto de laticínios"
+```
+
+### Entreposto de Laticínios
+
+Disponível se o campo ”Classificação” for definido como “Entreposto de laticínios”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Atividade Desenvolvida | Seleção múltipla | Não | Valores = “Distribuição de produtos de origem animal (POA) de terceiros” | “Distribuição de produtos de origem animal (POA) de terceiros” | Vazio |
+
+### Queijarias Parceiras (Um ou mais)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Recebe Produtos de Queijarias de Outras Inspeções? | Seleção múltipla | Sim | Valores = “Sim”, “Não” | “Sim” | “Não” |
+
+Disponível se o campo “Recebe Produtos de Queijarias de Outras Inspeções?” for definido como “Sim") (Um ou mais.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Queijaria | Seleção de entidade: estabelecimentos agroindustriais POA — Outras Inspeções | Sim | Valores = estabelecimentos agroindustriais POA — Outras Inspeções que sejam queijarias cadastrados no sistema | “Entreposto ABC” | Vazio |
+
+### Queijaria
+
+Disponível se o campo ”Classificação” for definido como “Queijaria”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Atividade Desenvolvida | Seleção múltipla | Sim | Valores = “Finalização da produção de queijos na própria queijaria”, “Finalização da produção de queijos em entreposto parceiro” | “Finalização da produção de queijos na própria queijaria” | Vazio |
+
+### Entrepostos Parceiros
+
+Disponível se o campo “Atividade desenvolvida” INCLUIR a opção “Finalização da produção de queijos em entreposto parceiro") (Um ou mais.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Entreposto | Seleção de entidade: estabelecimentos agroindustriais POA — SIE/MG + Outras Inspeções | Sim | Valores = estabelecimentos agroindustriais POA — SIE/MG ou estabelecimentos agroindustriais POA — Outras Inspeções que sejam entrepostos cadastrados no sistema | “Entreposto ABC” | Vazio |
+
+### Unidade de Beneficiamento de Leite e Derivados
+
+Disponível se o campo ”Classificação” for definido como “Unidade de beneficiamento de leite e derivados”) OU (Disponível se o campo “É EAPP?” for definido como “Sim”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Atividade Desenvolvida | Seleção múltipla | Não | Valores = “Beneficiamento de leite para consumo direto", "Industrialização" | “Industrialização” | Vazio |
+
+### Produção de Produtos Derivados de Leite 
+
+Disponível se o campo ”Classificação” for definido como “Posto de refrigeração”, “Queijaria” ou “Unidade de beneficiamento de leite e derivados”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Fonte de Produção | Seleção múltipla | Sim | Valores = “Possui produção própria”, “Possui fornecedor” | “Possui fornecedor” | Vazio |
+
+Disponível se campo “Fonte de Produção” INCLUIR a opção “Possui Fornecedor”) (Um ou mais.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Exploração Pecuária Fornecedora | Seleção de entidade: exploração pecuária | Sim | Valores = explorações pecuárias de espécies do grupo Bovídeos cadastradas no sistema” | “345234235670001” | Vazio |
+
+### Apícola
+
+Disponível se o campo ”Área de Atuação” for definido SOMENTE como “Apícola”.
+
+### Unidade de Beneficiamento de Produtos de Abelhas
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Atividade Desenvolvida | Seleção múltipla | Não | Valores = “Distribuição de produtos de origem animal (POA) de terceiros” | “Distribuição de produtos de origem animal (POA) de terceiros” | Vazio |
+
+### Produção de Produtos Derivados de Abelhas
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Fonte de Produção | Seleção múltipla | Sim | Valores = “Possui produção própria”, “Possui fornecedor” | “Possui fornecedor” | Vazio |
+
+Disponível se campo “Fonte de Produção” INCLUIR a opção “Possui Fornecedor”) (Um ou mais.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Exploração Pecuária Fornecedora | Seleção de entidade: exploração pecuária | Sim | Valores = explorações pecuárias de espécies do grupo Abelhas cadastradas no sistema | “345234235670001” | Vazio |
+
+### Ovos
+
+Disponível se o campo ”Área de Atuação” for definido SOMENTE como “Ovos”.
+
+### Unidade de Beneficiamento de Ovos e Derivados
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Atividade Desenvolvida | Seleção múltipla | Não | Valores = “Industrialização”, “Distribuição de produtos de origem animal (POA) de terceiros” | “Industrialização” | Vazio |
+
+### Produção de Produtos Derivados de Ovos
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Fonte de Produção | Seleção múltipla | Sim | Valores = “Possui produção própria”, “Possui fornecedor” | “Possui fornecedor” | Vazio |
+
+Disponível se campo “Fonte de Produção” inclui a opção “Possui Fornecedor”) (Um ou mais.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Exploração Pecuária Fornecedora | Seleção de entidade: exploração pecuária | Sim | Valores = explorações pecuárias de espécies do grupo Aves cadastradas no sistema | “345234235670001” | Vazio |
+
+### Pescado
+
+Disponível se o campo ”Área de Atuação” for definido SOMENTE como “Pescado”.
+
+```componente
+componente: Classificação POA
+area de atuação: Pescado
+somente sem eapp: Sim
+exemplo: “Abatedouro frigorífico”
+```
+
+### Abatedouro Frigorífico
+
+Disponível se o campo ”Classificação” for definido como “Abatedouro frigorífico”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Atividade Desenvolvida | Seleção múltipla | Não | Valores = “Desossa”, “Industrialização”, “Distribuição de produtos de origem animal (POA) de terceiros” | “Industrialização” | Vazio |
+
+### Espécies Abatidas no Frigorífico (Uma ou mais)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Espécie | Seleção de entidade: espécie | Sim | Valores = espécies dos grupos Répteis e Anfíbios cadastradas no sistema” | “Bovinos” | Vazio |
+| Capacidade Diária de Abate da Espécie | Decimal | Sim | - | “100” | Vazio |
+| Unidade de Medida | Seleção de entidade: unidade de medida | Sim | Valores = unidades de medida cadastradas no sistema com “Tipo de Unidade de Medida” = “Animal” | “Cabeças” | Vazio |
+
+### Unidade de Beneficiamento de Pescado e Produtos de Pescado
+
+Disponível se o campo ”Classificação” for definido como “Unidade de beneficiamento de pescado e produtos de pescado”) OU (Disponível se o campo “É EAPP?” for definido como “Sim”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Atividade Desenvolvida | Seleção múltipla | Não | Valores = “Industrialização”, “Distribuição de produtos de origem animal (POA) de terceiros” | “Industrialização” | Vazio |
+| Recebe Pescado com GTA? | Seleção simples | Sim | Valores = “Sim”, “Não” | Sim | Vazio |
+
+### Mista
+
+Disponível se o campo ”Área de Atuação” for definido com MAIS de uma opção.
+
+### Unidade de Beneficiamento de Produtos Mistos
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Atividade Desenvolvida | Seleção múltipla | Não | Disponível se NENHUMA das opções de área de atuação mista for “Carne” ou “Pescado”: Valores = “Industrialização”, “Distribuição de produtos de origem animal (POA) de terceiros” Disponível se PELO MENOS uma das opções de área de atuação mista for “Carne” ou “Pescado”: Valores = “Desossa”, “Industrialização”, “Distribuição de produtos de origem animal (POA) de terceiros” | “Industrialização” | Vazio |
+
+### Capacidades
+
+### Recepção diária (Um ou mais)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Produto | Seleção de entidade: produto | Sim | Valores = produtos de origem animal cadastrados no sistema Deve ser pré-filtrado de acordo com o campo “Área de Atuação” do produto, de modo que apenas produtos que incluem a(s) área(s) de atuação informada(s) na agroindústria sejam listados. Exemplo: uma agroindústria de carne não pode incluir produtos da aŕea “leite”. Deve ser pré filtrado de acordo com o campo “Classificação Produtiva” do produto, de modo que apenas produtos que incluem a classificação “matéria-prima” sejam listados | “Ovo” | Vazio |
+
+Disponível quando o campo “Produto” for preenchido.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Quantidade Máxima | Inteiro | Sim | - | “100” | Vazio |
+| Unidade de Medida | Seleção de entidade: unidade de medida | Sim | Somente leitura.  Deve corresponder ao cadastro informado no campo “Produto” | “Unidades” | Vazio |
+
+### Produção diária (Um ou mais)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Produto | Seleção de entidade: produto | Sim | Valores = produtos de origem animal cadastrados no sistema Deve ser pré-filtrado de acordo com o campo “Área de Atuação” do produto, de modo que apenas produtos que incluem a(s) área(s) de atuação informada(s) na agroindústria sejam listados. Exemplo: uma agroindústria de carne não pode incluir produtos da aŕea “leite”. Deve ser pré filtrado de acordo com o campo “Classificação Produtiva” do produto, de modo que apenas produtos que incluem a classificação “produtos finais” sejam listados Deve ser possível pesquisar por “Nome do Produto” | “Ovo” | Vazio |
+
+Disponível quando o campo “Produto” for preenchido.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Quantidade Máxima | Inteiro | Sim | - | “100” | Vazio |
+| Unidade de Medida | Seleção de entidade: unidade de medida | Sim | Somente leitura.  Deve corresponder ao cadastro informado no campo “Produto” | “Unidades” | Vazio |
+
+### Selos 
+
+Disponível se o campo “´É EAPP?” for definido como “Sim” E o campo “Situação de Habilitação de EAPP” for definido como “Registro”) OU (Disponível se o campo “´É EAPP?” for definido como “Não”.
+
+### Sistema Brasileiro de Inspeção (SISBI)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| É Integrado ao SISBI? — Sistema Brasileiro de Inspeção (SISBI) | Seleção simples | Sim | Valores = “Sim”, “Não” | “Sim” | Vazio |
+
+Disponível se o campo “É Integrado ao SISBI?” for definido como “Sim”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Data de Integração ao SISBI | Data | Sim | Não deve ser futura | 01/01/2025 | Vazio |
+
+### Selo Arte
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Possui Selo Arte? | Seleção simples | Sim | Valores = “Sim”, “Não” | “Sim” | Vazio |
+
+Disponível se o campo “Possui Selo Arte?” for definido como “Sim”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Produtos | Seleção múltipla de entidade: produto | Sim | Valores = Produtos informados na capacidade de “Produção Diária” do estabelecimento | “Iogurte” | Vazio |
+
+Disponível para cada item informado.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Número do Selo | Texto | Sim | Tamanho = 30 caracteres | “ARTE/MG/001/2026” | Vazio |
+
+### Selo de Queijo Artesanal
+
+Disponível se o campo ”Classificação” for definido como “Queijaria”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Possui Selo de Queijo Artesanal? | Seleção simples | Sim | Valores = “Sim”, “Não” | “Sim” | Vazio |
+
+### Produtos
+
+Disponível se o campo “Possui Selo de Queijo Artesanal?” for definido como “Sim”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Produtos | Seleção múltipla de entidade: produto | Sim | Valores = Produtos informados na capacidade de “Produção Diária” do estabelecimento | “Queijo Minas” | Vazio |
+
+Disponível para cada item informado.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Número do Selo | Texto | Sim | Tamanho = 30 caracteres | “ ” | Vazio |
+
+```componente
+componente: Localização com estabelecimento
+estado fixo: Minas Gerais
+```
+
+```componente
+componente: Contatos com proprietários
+```
+
+```componente
+componente: Anexos e observações
+```
+
+**E** exibe as seguintes ações: (Ver AC003 - Ações das telas de cadastro e AC006 - Ações de interação com o formulário)
+
+## 4. Visualizar estabelecimento agroindustrial POA — SIE/MG
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe os campos do formulário descrito no critério de aceitação 3 como somente leitura, com seus valores já preenchidos  
+**E**, além desses, exibe os seguintes campos, também como somente leitura:
+
+### Informações Básicas
+
+Disponível se o campo “Situação da Habilitação de EAPP” for definido como “Registro” ou se o campo “É EAPP?” for definido como “Não”.
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Número de Registro do Estabelecimento Agroindustrial | Texto | Código único gerado após o cadastro (ver regra de negócio para mais detalhes) | “” |
+
+Disponível se o campo “Situação da Habilitação de EAPP” for definido como “Cadastro”.
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Número de Cadastro do Estabelecimento Agroindustrial | Texto | Código único gerado após o cadastro (ver regra de negócio para mais detalhes) | “” |
+
+**E** exibe as seguintes ações: (Ver AC004 - Ações das telas de visualizar)
+
+### Outras Ações
+
+| Ação | Descrição |
+| --- | --- |
+| Responsável Técnico | Vai para a tela de responsável técnico |
+
+## 5. Editar estabelecimento agroindustrial POA — SIE/MG
+
+**Dado que** estou na tela de edição  
+**Então** o sistema exibe todos os campos descritos nos critérios de aceitação 3 e 4, com seus valores já preenchidos  
+**E** permite editar **todos** os campos, **exceto: “Código do Estabelecimento Agroindustrial”**  
+**E** exibe as seguintes ações: (Ver AC005 - Ações das telas de edição e AC006 - Ações de interação com o formulário)
+
+## Regras de negócio específicas
+
+### RNE001 — Unicidade a definir
+
+O cadastro deve ser único no sistema, porém, não é simples saber quando ele já existe ou não. Por hora, o cliente ainda não definiu como será feita a identificação de cadastros duplicados.
+
+### RNE002 — Geração do código
+
+Após o cadastro, deve-se gerar um código único, de 10 dígitos. O código será composto do código IBGE da Unidade Federada, de 2 dígitos, seguido de um número sequencial de 8 dígitos, conforme a RN09 do [Manual de padronização da PGA](https://sites.google.com/agro.gov.br/manual-ws-pga/p%C3%A1gina-inicial)
+
+### RNE003 — Validade do CAF e do cadastro de EAPP
+
+O cadastro de um estabelecimento agroindustrial POA — SIE/MG pode possuir uma “Data de Validade do CAF” e/ou uma “Data de Validade do Cadastro de EAPP”, definidas da seguinte forma:
+
+  * O campo “Data de Validade do CAF” e  “Data de Validade do Cadastro de EAPP” devem ser preenchidos manualmente. 
+
+  * Próximo às datas de vencimento, o sistema deve enviar notificações da seguinte forma:
+
+    * Todas as pessoas físicas ou representantes legais de pessoas jurídicas proprietárias do cadastro devem ser notificadas por e-mail e pelo sistema de notificações (ver US019).
+
+    * A notificação deve informar que a data de vencimento está próxima e deve incluir: código do estabelecimento agroindustrial POA — SIE/MG, nome do estabelecimento, código SIE/MG e data de vencimento.
+
+    * As notificações devem ser enviadas com antecedência de 30, 7 e 1 dia do vencimento, ou até que o cadastro seja atualizado com uma nova data de vencimento.
+
+  * Quando a data de vencimento expirar, o sistema deve alterar a situação do cadastro para “Suspenso” e gerar um alerta informando sobre o vencimento. O cadastro permanecerá nessa condição até que a situação seja regularizada.
+
+### RNE004 — Comprovação anual de EAPP
+
+O cadastro de um estabelecimento agroindustrial POA — SIE/MG pode possuir uma “Data de Vencimento da Comprovação de EAPP”, definida da seguinte forma:
+
+  * A comprovação de enquadramento como EAPP deve ser realizada anualmente, com data limite em 30 de junho de cada ano. 
+
+  * Assim, essa data deve ser calculada automaticamente pelo sistema. Para isso, o campo “Data de Vencimento da Comprovação de EAPP” deve ser preenchido com 01/07 do ano subsequente ao ano informado no campo “Data da Última Comprovação EAPP”, desde que o ano corrente seja superior ao ano da última comprovação. Por exemplo, se a última comprovação foi realizada em 01/02/2022, o vencimento será em 01/07/2022. Porém, se a última comprovação foi realizada em 01/08/2022, o vencimento será em 01/07/2023.
+
+  * Próximo à data de vencimento, o sistema deve enviar notificações da seguinte forma:
+
+    * Todas as pessoas físicas ou representantes legais de pessoas jurídicas proprietárias do cadastro devem ser notificadas por e-mail e pelo sistema de notificações (ver US019).
+
+    * A notificação deve informar que a data de vencimento está próxima e deve incluir: código do estabelecimento agroindustrial POA — SIE/MG, nome do estabelecimento, data da última comprovação de EAPP e data de vencimento.
+
+    * As notificações devem ser enviadas com antecedência de 30, 7 e 1 dia do vencimento, ou até que o cadastro seja atualizado com uma nova data de vencimento.
+
+  * Quando a data de vencimento expirar, o sistema deve alterar a situação do cadastro para “Suspenso” e gerar um alerta informando sobre o vencimento. O cadastro permanecerá nessa condição até que a situação seja regularizada.
+
+## Histórias e referências relacionadas
+
+* [US005 - Gerenciar divisão municipal](https://docs.google.com/document/u/0/d/1MU1gCgAoO2qs9IDoL6dX_-ABNKhxwE68YnHD3-3tipQ/edit)  
+* [US016 - Gerenciar espécie](https://docs.google.com/document/u/0/d/1ko2WHTE8csejacA5mVNYhKAYU5OyQdukKRzopJw0WHY/edit)  
+* [US019 - Gerenciar notificações do usuário](https://docs.google.com/document/d/1XEdWCMzUpEqih2GIQzbEzkZtWSuzTmwz2CbM2FXcIF8/edit?usp=sharing)  
+* [US022 - Gerenciar produto](https://docs.google.com/document/u/0/d/19h2BVe2Q4KMOtpKlbY1REukuaQ78i26uaW0EiS-8jIM/edit)  
+* [US042 - Gerenciar pessoa física](https://docs.google.com/document/u/2/d/1Dc-0vVj1HAU8_f37r9A94BEV6EmzwOB8prnP7w6I9GU/edit)  
+* [US044 - Gerenciar pessoa jurídica](https://docs.google.com/document/u/2/d/12SyAx0pJcA4s1GLWBvVVYyk8r0mf9WZWsWt4a1soefc/edit)  
+* [US048 - Gerenciar unidade de medida](https://docs.google.com/document/u/0/d/1hbte0jNF1IPn9YRiDzKu7i0qzCClqqPifvxF7huYnao/edit)  
+* [US050 - Gerenciar estabelecimento agropecuário](https://docs.google.com/document/u/2/d/1curRcFHfzSoTb8Y_56fHVTq-LLt4XVD-r0knkogrLQU/edit)  
+* [US052 - Gerenciar profissional da área animal](https://docs.google.com/document/u/0/d/1lCBMQYnyQAMQM9w7WijCRmVyu_QvY1DsiuuaNPsiVvE/edit)  
+* [US060 - Gerenciar exploração pecuária](https://docs.google.com/document/u/0/d/1f9kKkY_CeNIatNbdBJNzVo1X2LdEoZLcAmzH7zJO8_U/edit)  
+* [US071 - Gerenciar estabelecimento agroindustrial POA — Outras Inspeções](https://docs.google.com/document/u/0/d/1QTddRlUoJC5loYg3tM_SK0VzMbkEz5fo7mSNfMNV-J0/edit)
+
+## Referências
+
+* [Documentação comum a várias histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit?usp=sharing)  
+* [Componentes](https://docs.google.com/document/d/1FsKpUb2RN-2kHn-Pd557tVJJA-aN637U-ZgQ0UG-nd8/edit?tab=t.0)   
+* [Vinculações de cadastros](https://docs.google.com/document/d/1doO2qrF4kuDnN0NZxnfpljmfAPE_qChJr2W9tbwFqlY/edit?tab=t.0)  
+* [Manual de padronização da PGA](https://sites.google.com/agro.gov.br/manual-ws-pga/p%C3%A1gina-inicial)
+
+## Protótipos
+
+* [Protótipo](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=1-9&p=f&t=YkEaoNDLQOyHOefE-1&scaling=contain&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978)
+
+## Validação
+
+* Validada em reunião presencial ocorrida entre os dias 08/12/2025 e 11/12/2025, na Cidade Administrativa - Belo Horizonte/MG
+
+## Histórico da fonte
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| v1.2 | 30/09/2026 | alteração em produtos de mel |
+| v1.1 | 03/06/2026 | Melhorias após homologação. |
+| v1.0 | 22/12/2025 | Primeira versão da história. |
+
+## Pendências da fonte
+
+- A identificação de cadastros duplicados ainda não foi definida na fonte (RNE001).
+- A descrição do vencimento anual da comprovação de EAPP na RNE004 não coincide integralmente com a ajuda do campo e com os exemplos. A ajuda estabelece 01/07 do mesmo ano quando a comprovação ocorre até 30/06 e 01/07 do ano seguinte quando ocorre depois; a regra menciona ano subsequente e uma condição baseada no ano corrente. Confirmar o cálculo.
+- A RNE003 e a RNE004 preveem suspensão, mas a busca oferece somente Ativo e Inativo. Confirmar as situações disponíveis nos filtros.
+- A visualização fazia referência ao critério de busca; foi vinculada ao formulário do cadastro. A edição cita Código do Estabelecimento Agroindustrial, enquanto a visualização descreve Número de Registro e Número de Cadastro. Confirmar a relação entre esses identificadores e o código de 10 dígitos da RNE002.
+- A classificação do filtro é obrigatória, mas a fonte só define opções para Carne, Leite e Pescado. Confirmar o comportamento para Apícola, Ovos e combinações de áreas.
+- Exemplos da fonte não atendem às regras: Tipo de EAPP usa Sim; Data de Validade do CAF usa uma data passada; Espécie de abate de pescado usa Bovinos. Os exemplos inconsistentes foram mantidos para conferência.

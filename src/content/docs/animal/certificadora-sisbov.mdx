@@ -1,0 +1,208 @@
+---
+title: Certificadora SISBOV
+docType: requirement
+module: animal
+entity: certificadora-sisbov
+entityPlural: certificadoras SISBOV
+lifecycle: draft
+usID: 
+    - US054
+    - US055
+---
+
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
+## 1. Buscar certificadora SISBOV
+
+**Dado que** estou na tela inicial para usuários autenticados  
+**Quando** acesso o menu **Certificadora SISBOV**, observadas as permissões de acesso  
+**Então** o sistema exibe a tela de busca.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Nome da Certificadora SISBOV | Texto curto | Não | Alfanumérico.<br />Tamanho máximo = 255 caracteres. | `Certificadora Condão` | Vazio |
+| Proprietário (Nome Fantasia) | Seleção de entidade: pessoa jurídica | Não | Valores = pessoas jurídicas cadastradas no sistema (US044).<br />Pesquisa por nome fantasia ou CNPJ. | `Rastro de Boi Certificação - 72.375.545/0001-93` | Vazio |
+| Responsável Técnico (Nome) | Seleção de entidade: profissional da área animal | Não | Valores = profissionais da área animal cadastrados no sistema (US052).<br />Pesquisa por nome ou CPF. | `Gustavo de Souza Sobrinho - 555.009.956-40` | Vazio |
+| Status da Certificadora | Seleção simples | Não | Valores definidos na seção **Status da certificadora**. | `Regular` | Vazio |
+| Estado | Seleção simples | Sim | Valores = todos os estados brasileiros. | `Minas Gerais` | `Minas Gerais` |
+| Município | Seleção pesquisável | Não | Disponível se **Estado** estiver preenchido.<br />Valores = municípios brasileiros do estado selecionado. | `Lavras` | Vazio |
+| Situação | Seleção simples | Não | Valores = `Ativo`, `Inativo`. | `Ativo` | Vazio |
+
+O sistema solicita que o usuário selecione pelo menos um filtro e/ou utilize o campo de busca para visualizar os resultados.
+
+| Ação | Comportamento |
+| --- | --- |
+| Adicionar Nova | Abre a tela de cadastro. |
+| Pesquisar | Realiza a busca utilizando o campo de busca e os filtros. |
+| Inicial | Retorna à tela inicial para usuários autenticados. |
+
+## 2. Listar certificadoras SISBOV
+
+**Dado que** estou na tela de busca  
+**E** o campo de busca e/ou pelo menos um filtro foi preenchido corretamente  
+**Quando** realizo a ação **Pesquisar**  
+**E** existem registros compatíveis  
+**Então** o sistema exibe:
+
+| Campo | Tipo | Ordenável | Descrição | Exemplo |
+| --- | --- | :---: | --- | --- |
+| Nome da Certificadora SISBOV | Texto | Sim | Nome da certificadora SISBOV. | `Rastro de Boi` |
+| Proprietário | Texto | Não | CNPJ e nome fantasia do proprietário. | `72.375.545/0001-93 - Rastro de Boi Certificação` |
+| Responsável Técnico | Texto | Não | CPF e nome do responsável técnico. | `555.009.956-40 - Gustavo de Souza Sobrinho` |
+| Status da Certificadora | Texto | Sim | Status da certificadora SISBOV. | `Regular` |
+| Município — UF | Texto | Sim | Município e UF da certificadora SISBOV. | `Lavras - MG` |
+| Situação | Texto | Sim | Situação do cadastro. | `Ativo` |
+
+Para cada resultado, o sistema exibe **Visualizar** e **Editar**, que abrem as respectivas telas do cadastro selecionado.
+
+## 3. Cadastrar certificadora SISBOV
+
+**Dado que** estou na tela de cadastro  
+**Então** o sistema exibe o formulário descrito a seguir, indicando os campos obrigatórios.
+
+### Informações básicas
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Nome da Certificadora SISBOV | Texto curto | Sim | Nome comercial de identificação da certificadora SISBOV.<br />Alfanumérico.<br />Tamanho máximo = 255 caracteres. | `Certificadora Condão` | Vazio |
+
+### Proprietário
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Proprietário (Nome Fantasia) | Seleção de entidade: pessoa jurídica | Sim | Valores = pessoas jurídicas cadastradas no sistema (US044).<br />Pesquisa por nome fantasia ou CNPJ. | `Rastro de Boi Certificação` | Vazio |
+| CNPJ | Texto | Sim | Disponível se **Proprietário** estiver preenchido.<br />Somente leitura.<br />Corresponde à pessoa jurídica selecionada. | `72.375.545/0001-93` | Vazio |
+
+### Responsável técnico
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Responsável Técnico (Nome) | Seleção de entidade: profissional da área animal | Sim | Valores = profissionais da área animal cadastrados no sistema (US052).<br />Pesquisa por nome ou CPF. | `Gustavo de Souza Sobrinho` | Vazio |
+| CPF | Texto | Sim | Disponível se **Responsável Técnico** estiver preenchido.<br />Somente leitura.<br />Corresponde ao profissional selecionado. | `555.009.956-40` | Vazio |
+
+### Informações complementares
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Credenciamento pela IN17_2006 | Texto numérico | Sim | Somente caracteres numéricos.<br />Tamanho máximo = 255 caracteres. | `34871` | Vazio |
+| Status da Certificadora | Seleção simples | Sim | Valores definidos na seção **Status da certificadora**. | `Regular` | Vazio |
+| Possui Certificadora do Escritório? | Seleção simples | Sim | Valores = `Sim`, `Não`. | `Não` | `Não` |
+| Certificadora do Escritório | Seleção de entidade: certificadora SISBOV | Sim | Disponível se **Possui Certificadora do Escritório?** = `Sim`.<br />Valores = certificadoras SISBOV cadastradas no sistema. | `Certificadora São Cristóvão` | Vazio |
+
+### Anexos e observações
+
+```componente
+componente: Anexos e observações
+```
+
+Os anexos admitem zero ou mais itens, cada um com **Documento** e **Descrição**. O sistema exibe o nome do arquivo anexado. A observação permite registrar informações adicionais pertinentes ao cadastro.
+
+### Ações e resultado
+
+| Ação | Disponibilidade e comportamento |
+| --- | --- |
+| Adicionar | Valida os dados informados e salva o cadastro. |
+| Todas as certificadoras SISBOV | Retorna à tela de busca. |
+| Ver item | Disponível para itens relacionados a outro cadastro.<br />Abre a visualização do cadastro selecionado. |
+| Adicionar/Remover item | Disponível para anexos, conforme RNE003.<br />Adiciona ou remove o item. |
+| Baixar documento | Disponível para cada anexo.<br />Baixa o documento anexado. |
+
+Em caso de sucesso, o sistema exibe uma mensagem de sucesso e as ações **Voltar**, que retorna à busca, e **Visualizar**, que abre a visualização do cadastro.
+
+## 4. Visualizar certificadora SISBOV
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe todos os campos do cadastro preenchidos e como somente leitura e acrescenta:
+
+| Seção | Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- | --- |
+| Situação do Cadastro | Situação | Texto | Situação atual do cadastro. | `Ativo` |
+| Alterações do Cadastro | Usuário | Texto | Usuário que efetuou a última alteração. | `Lucas Pedro Conte` |
+| Alterações do Cadastro | Data e Hora da Última Modificação | Data e hora | Data e hora da última alteração. | `14/04/2012 07:29` |
+
+O sistema exibe **Editar** e **Todas as certificadoras SISBOV**, além de **Ver item** e **Baixar documento** quando aplicáveis, com os comportamentos descritos no cadastro.
+
+## 5. Editar certificadora SISBOV
+
+**Dado que** estou na tela de edição  
+**Então** o sistema exibe os campos do cadastro preenchidos e editáveis, preservando os campos definidos como somente leitura. Os campos **Situação**, **Usuário** e **Data e Hora da Última Modificação**, descritos na visualização, também são exibidos como somente leitura.
+
+| Ação | Disponibilidade e comportamento |
+| --- | --- |
+| Salvar | Abre a confirmação das edições. |
+| Ativar/Inativar | Alterna a situação do cadastro entre `Ativo` e `Inativo`, conforme RN008. |
+| Visualizar certificadora SISBOV | Retorna à tela de visualização. |
+
+O sistema também exibe **Ver item**, **Adicionar/Remover item** e **Baixar documento** quando aplicáveis, com os comportamentos descritos no cadastro.
+
+Na confirmação da edição, **Cancelar** retorna à edição; **Salvar** valida os dados, persiste as alterações e retorna à visualização.
+
+## Regras de negócio específicas
+
+### RNE001 — Unicidade
+
+O cadastro deve ser único no sistema pelo CNPJ do proprietário.
+
+### RNE002 — Geração do código
+
+Após o cadastro, o sistema deve gerar um código único, inteiro e incremental.
+
+### RNE003 — Múltiplos anexos
+
+O cadastro pode conter mais de um anexo. Cada item agrupa os campos **Documento** e **Descrição**.
+
+### Status da certificadora
+
+O campo **Status da Certificadora**, tanto na busca quanto no cadastro, utiliza as seguintes opções:
+
+- `Regular`.
+- `Suspensa em decorrência de não atualização de cadastro determinados no Ofício Circular da Coordenação de Sistemas de Rastreabilidade 019 de 27 de setembro de 2007`.
+- `Descredenciada em decorrência de não fornecimento das informações solicitadas pelo Ofício Circular da Coordenação de Sistemas de Rastreabilidade 003 de 16 de março de 2007`.
+- `Escritório suspenso faltando informação sobre anotação de responsabilidade técnica do médico veterinário`.
+- `Bloqueada`.
+- `Acesso regular via liminar`.
+- `Suspensão da inserção de novas propriedades até conclusão de procedimento administrativo`.
+- `Escritório fechado por iniciativa da certificadora em 01/11/2007`.
+- `Descredenciada a pedido`.
+
+## Critérios de aceitação e regras comuns
+
+Aplicam-se os critérios e regras do [documento comum às histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit):
+
+- **CA001 — Salvar cadastro de uma entidade**.
+- **CA003 — Notificar erro ao usuário devido a falha técnica**.
+- **CA009 — Busca sem resultados**.
+- **CA010 — Uso incorreto de filtros de busca**.
+- **CA011 — Indicação de filtros de busca aplicados**.
+- **RN003 — Controle de alterações em uma entidade**.
+- **RN007 — Permissões de acesso**.
+- **RN008 — Situação do cadastro de uma entidade sem opção de suspensão**.
+
+## Recursos relacionados
+
+- Fiscalizações.
+
+## Histórico da fonte
+
+| História | Versão | Data | Alteração |
+| --- | --- | --- | --- |
+| US055 — Buscar certificadora SISBOV | v1.0 | xx/11/2025 | Data incompleta na fonte; alteração não informada. |
+| US054 — Gerenciar certificadora SISBOV | v1.0 | 10/11/2025 | Primeira versão da história. |
+
+## Histórias e referências relacionadas
+
+- [US055 — Buscar certificadora SISBOV](https://docs.google.com/document/d/14m7ibSRSGeUBs9w3EmCyfytbhIP8NxJij7YgEgp8CDU/edit), consolidada neste documento.
+- [US054 — Gerenciar certificadora SISBOV](https://docs.google.com/document/d/12ropTXSuseAUYUeOMu8yfa1sQ5kFUQHpac2b8jJ-6uw/edit), consolidada neste documento.
+- [US044 — Gerenciar pessoa jurídica](https://docs.google.com/document/d/12SyAx0pJcA4s1GLWBvVVYyk8r0mf9WZWsWt4a1soefc/edit).
+- [US052 — Gerenciar profissional da área animal](https://docs.google.com/document/d/1lCBMQYnyQAMQM9w7WijCRmVyu_QvY1DsiuuaNPsiVvE/edit).
+- [Requisitos não funcionais e técnicos](https://docs.google.com/document/d/17IcCYOYvCMBbeJWeu7iPQepMjhCJAykMgbgh4IIetPg/edit).
+- [Portaria IMA nº 2324, de 23 de agosto de 2024](https://drive.google.com/file/d/1y8v-NXMYHtV5mSpEHqVpfnJqrY7SQ0LD/view).
+- [Documentação técnica da API de Municípios do IBGE](https://servicodados.ibge.gov.br/api/docs/localidades#api-Municipios-municipiosGet).
+- [Documentação técnica da API de CEP](https://www.gov.br/conecta/catalogo/apis/cep-codigo-de-enderecamento-postal).
+
+## Protótipos
+
+- [Buscar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=18666-52501&starting-point-node-id=2131%3A11978&t=H7jZR1UEIQHQkpCF-1).
+- [Cadastrar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=18666-52985&starting-point-node-id=2131%3A11978&t=H7jZR1UEIQHQkpCF-1).
+- [Visualizar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=18666-53136&starting-point-node-id=2131%3A11978&t=H7jZR1UEIQHQkpCF-1).
+- [Editar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=18666-53289&starting-point-node-id=2131%3A11978&t=H7jZR1UEIQHQkpCF-1).

@@ -1,0 +1,187 @@
+---
+title: Etapa de atualização cadastral
+docType: requirement
+module: rebanho
+entity: etapa-de-atualizacao-cadastral
+entityPlural: etapas de atualização cadastral
+lifecycle: draft
+usID:
+  - US080
+---
+
+## 1. Buscar etapa de atualização cadastral
+
+**Dado que** estou na tela inicial para usuários autenticados  
+**Quando** acesso o menu **Etapa de Atualização Cadastral**, observadas as permissões de acesso (**RNC007**)  
+**Então** o sistema exibe a tela de busca.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Código | Texto numérico | Não | Tamanho = 7 caracteres, incluindo o separador.<br />Formato = ano da etapa (4 dígitos) + `/` + sequencial de 2 dígitos. | `2026/01` | Vazio |
+| Ano | Inteiro | Não | Tamanho = 4 dígitos. | `2026` | Vazio |
+| Situação | Seleção simples | Não | Valores definidos na RNE001. | `Criada` | Vazio |
+
+O sistema exibe as ações comuns de busca **Inicial**, **Adicionar Novo** e **Pesquisar** (**AC001**).
+
+## 2. Listar etapas de atualização cadastral
+
+**Dado que** estou na tela de busca  
+**E** pelo menos um campo foi preenchido corretamente  
+**Quando** realizo a ação **Pesquisar**  
+**E** existem registros compatíveis  
+**Então** o sistema exibe:
+
+| Campo | Tipo | Ordenável | Descrição | Exemplo |
+| --- | --- | :---: | --- | --- |
+| Código | Texto | Sim | Código da etapa. | `2026/01` |
+| Ano | Texto | Sim | Ano da etapa. | `2026` |
+| Data do Início | Texto | Sim | Data de início da etapa. | `11/02/2026` |
+| Data do Fim | Texto | Sim | Data de fim da etapa. | `12/02/2026` |
+| Situação | Texto | Sim | Situação da etapa de atualização cadastral. | `Criada` |
+
+Para cada resultado, o sistema exibe **Visualizar** e **Editar** (**AC002**).
+
+## 3. Cadastrar etapa de atualização cadastral
+
+**Dado que** estou na tela de cadastro de uma nova etapa de atualização cadastral  
+**Então** o sistema exibe o formulário descrito a seguir.
+
+### Informações gerais
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Código | Texto numérico | Sim | Somente leitura.<br />Calculado automaticamente.<br />Composto pelo ano da etapa (4 dígitos) e um sequencial de 2 dígitos.<br />Formato de apresentação pendente de confirmação, conforme nota abaixo. | `202601` (exemplo da fonte) | Vazio |
+| Ano | Inteiro | Sim | Somente leitura.<br />Exibe o ano atual. | `2026` | Vazio |
+| Data do Início | Data | Sim | Nenhuma validação adicional informada na fonte. | `01/01/2026` | Vazio |
+| Data do Fim | Data | Sim | Deve ser posterior à **Data do Início**. | `31/12/2026` | Vazio |
+
+:::note[Formato do código a confirmar]
+A fonte define 7 caracteres e o exemplo `2026/01` na busca. No cadastro, informa 6 dígitos e o exemplo `202601`, mas também descreve o formato com `/`. Deve ser confirmado se o separador faz parte apenas da apresentação ou também do valor do código. A referência da fonte à RNE001 para o cálculo do código também precisa ser revista, pois essa regra descreve o ciclo de vida da etapa.
+:::
+
+### Espécies da atualização cadastral
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Espécies | Seleção múltipla de entidade: espécie | Sim | Uma ou mais espécies.<br />Valores = espécies cadastradas no sistema (US016). | `Javali`, `Suíno` | Vazio |
+
+Para cada espécie selecionada, o sistema exibe:
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Espécie | Texto | Sim | Exibe o nome da espécie selecionada. | `Javali` | Vazio |
+
+### Etapas de vacinação da atualização cadastral
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Etapas de Vacinação | Seleção múltipla de entidade: etapa de vacinação | Não | Valores = etapas de vacinação correspondentes ao ano da etapa de atualização cadastral. | `2026/02` | Vazio |
+
+Para cada etapa de vacinação selecionada, o sistema exibe:
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Etapa de Vacinação | Texto | Não | Exibe a etapa de vacinação selecionada. | `2026/02` | Vazio |
+| Situação | Texto | Não | Exibe a situação da etapa de vacinação selecionada. | `Aberta` | Vazio |
+| Doenças | Texto | Não | Exibe a lista de doenças da etapa de vacinação selecionada. | `Brucelose`, `Raiva dos Herbívoros` | Vazio |
+
+### Ações
+
+O sistema exibe as ações comuns de cadastro **Todas as etapas de atualização cadastral** e **Adicionar** (**AC003**).
+
+## 4. Visualizar etapa de atualização cadastral
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe todos os campos do cadastro preenchidos e como somente leitura e acrescenta:
+
+| Seção | Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- | --- |
+| Situação do Cadastro | Situação | Texto | Situação atual da etapa, conforme RNE001. | `Executando Abertura` |
+| Situação do Cadastro | Progresso da abertura | Decimal | Disponível se **Situação** = `Executando Abertura`.<br />Porcentagem calculada por **(Atualizações abertas / Total a ser criado) × 100**. | `66,6%` |
+
+O sistema exibe **Todas as etapas de atualização cadastral**, **Editar** e **Histórico de Alterações** (**AC004**).
+
+## 5. Editar etapa de atualização cadastral
+
+**Dado que** estou na tela de edição  
+**Então** o sistema exibe todos os campos do cadastro e da visualização preenchidos.
+
+| Condição | Campos editáveis |
+| --- | --- |
+| Situação = `Criada`, antes da Data do Início | Campos do cadastro, exceto **Código** e **Ano**. |
+| Situação diferente de `Criada`, após o início da abertura | Apenas **Data do Fim**, para possibilitar a prorrogação do prazo de encerramento. |
+
+**Situação** e **Progresso da abertura** permanecem como somente leitura. Aplicam-se as restrições da RNE004.
+
+O sistema exibe as ações comuns de edição (**AC005**).
+
+## Regras de negócio específicas
+
+### RNE001 — Ciclo de vida da etapa
+
+| Situação | Atribuição e significado |
+| --- | --- |
+| Criada | Atribuída automaticamente assim que o cadastro da etapa é salvo. |
+| Executando Abertura | Atribuída automaticamente às 00:00 da **Data do Início**.<br />Indica o início do processamento de geração das atualizações pendentes. |
+| Abertura Incompleta | Atribuída quando o processamento termina com sucesso parcial.<br />Erros identificados durante o processamento impediram a criação de algumas atualizações pendentes. |
+| Aberta | Atribuída quando o processamento termina com sucesso total.<br />Todas as atualizações pendentes previstas foram criadas. |
+| Fechada | Atribuída automaticamente às 00:00 do dia seguinte à **Data do Fim**. |
+
+### RNE002 — Geração das atualizações pendentes
+
+Ao atingir a **Data do Início**, o sistema deve abrir uma atualização cadastral pendente para cada combinação de produtor titular e estabelecimento agropecuário que possua explorações pecuárias e/ou núcleos de produção ativos com as espécies informadas na etapa.
+
+| Cenário | Resultado |
+| --- | --- |
+| Mesmo produtor titular, mesmo estabelecimento, múltiplas explorações e/ou núcleos | Uma única atualização pendente para o produtor naquele estabelecimento. |
+| Mesmo estabelecimento, produtores titulares diferentes | Uma atualização pendente distinta para cada produtor titular, com suas respectivas explorações e/ou núcleos. |
+| Mesmo produtor titular, estabelecimentos diferentes | Uma atualização pendente distinta para cada estabelecimento. |
+
+Dentro de cada atualização cadastral, os itens pendentes são definidos da seguinte forma:
+
+| Condição | Itens pendentes |
+| --- | --- |
+| Exploração pecuária sem núcleos de produção | A própria exploração representa um item pendente. |
+| Exploração pecuária com núcleos de produção | Cada núcleo representa um item pendente, observadas as isenções abaixo.<br />A exploração não é incluída como item pendente, pois seu rebanho é a soma dos rebanhos dos núcleos. |
+
+Núcleos de produção das espécies **Aves** e **Suínos** não devem ser incluídos quando atenderem aos critérios de isenção definidos para cada espécie:
+
+| Espécie | Critérios de isenção informados na fonte |
+| --- | --- |
+| Aves | Classificadas como comerciais.<br />Possuem Responsável Técnico (RT) ou Habilitado Responsáveis. |
+| Suínos | Classificados como tecnificados.<br />Possuem Responsável Técnico (RT) ou Habilitado Responsáveis. |
+
+:::note[Critérios de isenção a confirmar]
+A fonte lista os critérios de classificação e de presença de responsáveis separadamente, sem explicitar se devem ser atendidos em conjunto ou se cada um concede isenção independentemente. Essa combinação deve ser confirmada antes da implementação.
+:::
+
+### RNE003 — Disponibilidade durante a abertura
+
+Durante a situação `Executando Abertura`, o sistema deve disponibilizar as atualizações pendentes à medida que são criadas, permitindo o lançamento das informações antes da conclusão do processamento.
+
+### RNE004 — Restrições de edição
+
+A etapa pode ser editada antes de atingir a **Data do Início**, respeitando os campos somente leitura. A partir do início do processamento de abertura, apenas a **Data do Fim** pode ser editada, para possibilitar a prorrogação do prazo de encerramento.
+
+## Histórico da fonte
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| v1.1 | 27/04/2026 | Atualizações após sanar dúvidas levantadas na planning. |
+| v1.0 | 27/04/2026 | Primeira versão da história. |
+
+## Histórias e referências relacionadas
+
+- **US080 — Etapa de atualização cadastral**, convertida neste documento.
+- [US016 — Gerenciar espécie](https://docs.google.com/document/u/1/d/1ko2WHTE8csejacA5mVNYhKAYU5OyQdukKRzopJw0WHY/edit).
+- [US0V4 — Gerenciar doença](https://docs.google.com/document/u/1/d/1VQkaKDDGYmGuTafuW3YHkXyWus6YjPrq7nKj5qNcBdQ/edit), código mantido conforme a fonte.
+- [Documentação comum a várias histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit?usp=sharing): **RNC007 — Permissões de Acesso** e ações comuns **AC001** a **AC005**.
+- [Componentes](https://docs.google.com/document/d/1FsKpUb2RN-2kHn-Pd557tVJJA-aN637U-ZgQ0UG-nd8/edit?usp=sharing).
+- [Portaria nº 2227, de 29 de abril de 2023](https://www.ima.mg.gov.br/index.php?preview=1&option=com_dropfiles&format=&task=frontfile.download&catid=1843&id=19636&Itemid=1000000000000).
+
+## Protótipos
+
+- [Listar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=34894-71055&p=f&t=TKOyszXGQ16Lo7E8-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978).
+- [Cadastrar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=34894-71390&p=f&t=TKOyszXGQ16Lo7E8-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978).
+- [Visualizar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=34949-76674&p=f&t=TKOyszXGQ16Lo7E8-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978).
+- [Editar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=34949-76438&p=f&t=TKOyszXGQ16Lo7E8-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978).

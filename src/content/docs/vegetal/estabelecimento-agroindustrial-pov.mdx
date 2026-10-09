@@ -1,0 +1,312 @@
+---
+title: Estabelecimento agroindustrial POV
+docType: requirement
+module: vegetal
+entity: estabelecimento-agroindustrial-pov
+entityPlural: estabelecimentos agroindustriais POV
+lifecycle: draft
+usID:
+  - US065
+---
+
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
+**Eu**, como usuário do sistema, **quero** gerenciar estabelecimentos agroindustriais vegetais, **para que** eu possa permitir a gestão eficiente dessas informações.
+
+## 1. Buscar estabelecimento agroindustrial POV
+
+**Dado que** estou na tela inicial para usuários logados no sistema  
+**Quando** acesso o menu **Estabelecimento Agroindustrial POV**  (Ver RNC007 - Permissões de Acesso)  
+**Então** o sistema exibe a tela de busca com o campo **Código ou Nome do Estabelecimento Agroindustrial** e os filtros descritos a seguir.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Código ou Nome do Estabelecimento Agroindustrial | Texto | Não | Alfanumérico, máximo de 255 caracteres | “Estabelecimento São José” | Vazio |
+| Número de Registro Federal | Texto | Sim | Alfanumérico, máximo de 30 caracteres | “17126” | Vazio |
+| Tipo de Pessoa | Seleção | Sim | Valores pré-definidos: “Pessoa física”, “Pessoa jurídica” | “Pessoa física” | “Pessoa física” |
+| Proprietário  (“Nome”/”Nome Fantasia”) | Seleção pesquisável | Sim | Valores pré-definidos: pessoas físicas ou jurídicas que são proprietárias de estabelecimentos/recintos de evento cadastradas no sistema (ver US042 e US044) Deve ser pré-filtrado de acordo com o valor informado em “Tipo de Pessoa” Deve ser possível buscar por “Nome/Nome Fantasia” ou “CPF/CNPJ” | “José Aarão Neto - 555.009.956-40” | Vazio |
+| Município | Seleção pesquisável | Não | Lista dos municípios brasileiros correspondentes ao estado de Minas Gerais | “Lavras” | Vazio |
+| Situação | Seleção | Não | Valores pré-definidos: “Ativo”, “Inativo” | “Ativo” | Vazio |
+
+**E** exibe uma mensagem solicitando que o usuário selecione pelo menos um filtro e/ou utilize o campo de busca para visualizar os resultados  
+**E** exibe as seguintes ações:
+
+| Ação | Descrição |
+| --- | --- |
+| Adicionar Novo | Vai para a tela de cadastro |
+| Pesquisar | Realiza a busca utilizando o campo de busca e os filtros |
+| Inicial | Volta para a tela inicial para usuários logados no sistema |
+
+## 2. Listar estabelecimento agroindustrial POV
+
+**Dado que** estou na tela de busca  
+**E** o campo de busca e/ou pelo menos um dos filtros disponíveis foi corretamente preenchido  
+**Quando** acesso a opção “Pesquisar”  
+**E** o sistema encontrou registros compatíveis com os valores informados   
+**Então** o sistema exibe os resultados retornados, contendo os seguintes campos:  
+ 
+
+| Campo | Tipo | Ordenável | Descrição | Exemplo |
+| --- | --- | :---: | --- | --- |
+| Código | Texto | Não | Exibe o código do estabelecimento agroindustrial | “12345678910” |
+| Nome | Texto | Sim | Exibe o nome do estabelecimento agroindustrial | “Estabelecimento São José” |
+| Número de Registro Federal | Texto | Não | Exibe o número de registro federal do estabelecimento agroindustrial | “245” |
+| Proprietários | Texto | Não | Exibe o CPF/CNPJ - Nome/Nome Fantasia dos proprietários do estabelecimento agroindustrial | “José Aarão Neto - 555.009.956-40, Divino de Souza Sobrinho - 444.009.956-40 …” |
+| Município - UF | Texto | Sim | Exibe o município e a UF do estabelecimento agroindustrial | “Abadia dos Dourados - MG” |
+| Situação | Seleção | Sim | Exibe a situação do cadastro | “Ativo” |
+
+**E** exibe as seguintes ações para cada registro retornado:
+
+| Ação | Descrição |
+| --- | --- |
+| Visualizar | Vai para a tela de visualização do item selecionado |
+| Editar | Vai para a tela de edição do item selecionado |
+
+## 3. Cadastrar estabelecimento agroindustrial POV
+
+**Dado que** estou na tela de cadastro  
+**Então** o sistema exibe um formulário, contendo os seguintes campos:
+
+Os campos obrigatórios devem ser identificados no formulário.
+
+### Informações Básicas
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Nome Comercial do Estabelecimento Agroindustrial | Texto | Sim | Alfanumérico, máximo de 255 caracteres | “Estabelecimento São José” | Vazio |
+| Possui Isenção de Inscrição Estadual? | Seleção | Sim | Valores pré-definidos: “Sim”, “Não” | “Sim” | “Não” |
+
+Disponível se o campo “Possui Isenção de Inscrição Estadual?” for definido como “Não”.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Número de Inscrição Estadual | Texto | Sim | Numérico, máximo de 13 caracteres | “1453705800094” | Vazio |
+
+```componente
+componente: Proprietários
+```
+
+### Inspeção
+
+### Serviço de Inspeção
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Número de Registro Federal | Texto | Sim | Alfanumérico, máximo de 30 caracteres | “17126” | Vazio |
+| Data de Vencimento do Registro | Data | Sim | Numérico, 8 dígitos, máscara MM/DD/AAAA Data deve ser futura | 12/05/2026 | Vazio |
+
+### Atividade Desenvolvida
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Atividade Desenvolvida | Seleção múltipla | Sim | Valores pré-definidos:  “Produtor ou Fabricante”, “Padronizador”, “Envasilhador ou Engarrafador”, “Atacadista”, “Exportador” “Importador” “Comércio” “Outro” | “Produtor ou Fabricante” | Vazio |
+
+### Produtos (Zero ou mais)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Produto  (“Nome”) | Texto | Sim | Valores pré-definidos: produtos de origem vegetal cadastrados no sistema (ver US022) Deve ser possível pesquisar por “Nome do Produto” | “Açaí” | Vazio |
+
+### Responsável Técnico (Zero ou um)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Responsável Técnico | Seleção Pesquisável | Sim | Valores pré-definidos: profissionais da área vegetal cadastrados no sistema (ver US038) Deve ser possível buscar por “Nome” ou “CPF” | “Joaquim da Silva” | Vazio |
+| CPF | Texto | Sim | Somente leitura. Disponível quando o campo ”Responsável Técnico” for preenchido. Deve corresponder ao cadastro informado no campo “Responsável Técnico” | “444.009.956-40” | Vazio |
+
+```componente
+componente: Localização com estabelecimento
+estado fixo: Minas Gerais
+```
+
+```componente
+componente: Contatos com proprietários
+```
+
+```componente
+componente: Anexos e observações
+```
+
+**E** as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Adicionar | Valida os dados informados, salva o cadastro e vai para a tela de sucesso do cadastro |
+| Todos os estabelecimentos agroindustriais POV | Volta para a tela de busca |
+
+### Ações de Formulário
+
+| Ação | Descrição |
+| --- | --- |
+| Ver item | Disponível para cada item informado no cadastro que esteja relacionado a outro cadastro Vai para a tela de visualização do cadastro selecionado |
+| Adicionar/Remover item | Disponível para cada item informado no cadastro que podem ter mais de uma instância (ver título de seções na tabela e regras de negócio) Adiciona / Remover o item |
+| Baixar documento | Disponível para cada anexo informado no cadastro Baixa o documento anexado |
+
+### Caso de sucesso  
+
+**Quando** realizo a ação “Adicionar”  
+**E** todas os campos e regras de negócio foram validados corretamente  
+**Então** o sistema exibe uma mensagem de sucesso de cadastro   
+**E** exibe as seguintes ações:
+
+| Ação | Descrição |
+| --- | --- |
+| Voltar | Volta para a tela de busca |
+| Visualizar | Vai para tela de visualização |
+
+## 4. Visualizar estabelecimento agroindustrial POV
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe os campos do formulário descrito no critério de aceitação 3 como somente leitura, com seus valores já preenchidos  
+**E**, além desses, exibe os seguintes campos, também como somente leitura:
+
+### Informações Básicas
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Código do Estabelecimento Agroindustrial | Texto | Código único gerado após o cadastro (ver regra de negócio para mais detalhes) | “1456” |
+
+### Situação do Cadastro
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Situação | Texto | Exibe a situação do cadastro | “Ativo” |
+
+### Alterações do Cadastro
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Usuário | Texto | Exibe o usuário que efetuou a última alteração no cadastro | “Lucas Pedro Conte” |
+| Data e Hora da Modificação | Data | Exibe a data/hora em que isso ocorreu | “14/04/2012 07:29” |
+
+**E** exibe as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Editar | Vai para a tela de edição |
+| Todos os estabelecimentos agroindustriais POV | Volta para a tela de busca |
+
+### Ações do Formulário
+
+| Ação | Descrição |
+| --- | --- |
+| Ver item | Disponível para cada item informado no cadastro que esteja relacionado a outro cadastro Vai para a tela de visualização do cadastro selecionado |
+| Baixar documento | Disponível para cada anexo informado no cadastro Baixa o documento anexado |
+
+## 5. Editar estabelecimento agroindustrial POV
+
+**Dado que** estou na tela de edição  
+**Então** o sistema exibe os campos descritos no critério de aceitação 3 já preenchidos e editáveis  
+**E**, além desses, exibe os novos campos do critério de aceitação 4 como somente leitura.  
+**E** exibe as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Salvar | Vai para a tela de confirmação das edições |
+| Visualizar estabelecimento agroindustrial POV | Volta para a tela de visualização |
+
+### Ações do Formulário
+
+| Ação | Descrição |
+| --- | --- |
+| Ver item | Disponível para cada item informado no cadastro que esteja relacionado a outro cadastro Vai para a tela de visualização do cadastro selecionado |
+| Adicionar/Remover item | Disponível para cada item informado no cadastro que podem ter mais de uma instância (ver título de seções na tabela e regras de negócio) Adiciona / Remover o item |
+| Baixar documento | Disponível para cada anexo informado no cadastro Baixa o documento anexado |
+| Ativar/Inativar/Suspender | Muda a situação do cadastro para “Ativo”, “Inativo” ou “Suspenso”, a depender da situação atual do cadastro |
+
+### Caso de sucesso  
+
+**Quando** realizo a ação “Salvar”  
+**E** foi possível salvar as edições no cadastro  
+**Então** o sistema exibe as seguintes ações:
+
+| Ação | Descrição |
+| --- | --- |
+| Cancelar | Volta para a tela de edição |
+| Salvar | Valida os dados informados, salva as edições e vai para a tela de visualização |
+
+## Critérios de aceitação comuns
+
+Aplicam-se os critérios do [documento comum às histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit?usp=drivesdk):
+
+* CA001 - Salvar cadastro de uma entidade  
+* CA003 - Notificar erro ao usuário devido a falha técnica  
+* CA009 - Busca sem resultados  
+* CA010 - Uso incorreto de filtros de busca  
+* CA011 - Indicação de filtros de busca aplicados
+
+## Regras de negócio específicas
+
+### RNE001 — Unicidade a definir
+
+O cadastro deve ser único no sistema, porém, não é simples saber quando ele já existe ou não. Por hora, o cliente ainda não definiu como será feita a identificação de cadastros duplicados.
+
+### RNE002 — Geração do código
+
+Após o cadastro, deve-se gerar um código único, de 10 dígitos. O código será composto do código IBGE da Unidade Federada, de 2 dígitos, seguido de um número sequencial de 8 dígitos, conforme a RN09 do [Manual de padronização da PGA](https://sites.google.com/agro.gov.br/manual-ws-pga/p%C3%A1gina-inicial)
+
+### Vencimento do registro
+
+O cadastro de um estabelecimento agroindustrial POV possui uma “Data de Vencimento do Registro”, definida da seguinte forma:
+
+  * Durante o cadastro, essa data deve ser informada manualmente pelo usuário.
+
+  * Próximo à data de vencimento, o sistema deve enviar notificações da seguinte forma:
+
+    * Todas as pessoas físicas ou representantes legais de pessoas jurídicas proprietárias do cadastro e o serviço de inspeção devem ser notificados por e-mail e pelo sistema de notificações (ver US019).
+
+    * A notificação deve informar que a data de vencimento está próxima e deve incluir: código do estabelecimento agroindustrial POV, nome do estabelecimento, código SIE, data de habilitação e data de vencimento.
+
+    * As notificações devem ser enviadas com antecedência de 180, 30, 7 e 1 dia do vencimento, ou até que o cadastro seja atualizado com uma nova data de vencimento.
+
+  * Quando a data de vencimento expirar, o sistema deve alterar a situação do cadastro para “Suspenso” e gerar um alerta informando sobre o vencimento. O cadastro permanecerá nessa condição até que a situação seja regularizada.
+
+## Histórias e referências relacionadas
+
+* [US019 - Gerenciar notificações do usuário](https://docs.google.com/document/d/1XEdWCMzUpEqih2GIQzbEzkZtWSuzTmwz2CbM2FXcIF8/edit?usp=sharing)  
+* [US022 - Gerenciar produto](https://docs.google.com/document/d/19h2BVe2Q4KMOtpKlbY1REukuaQ78i26uaW0EiS-8jIM/edit?tab=t.0)  
+* [US042 - Gerenciar pessoa física](https://docs.google.com/document/u/2/d/1Dc-0vVj1HAU8_f37r9A94BEV6EmzwOB8prnP7w6I9GU/edit)  
+* [US044 - Gerenciar pessoa jurídica](https://docs.google.com/document/u/2/d/12SyAx0pJcA4s1GLWBvVVYyk8r0mf9WZWsWt4a1soefc/edit)  
+* [US050 - Gerenciar estabelecimento agropecuário](https://docs.google.com/document/u/2/d/1curRcFHfzSoTb8Y_56fHVTq-LLt4XVD-r0knkogrLQU/edit)  
+* [US038 - Gerenciar profissional da área vegetal](https://docs.google.com/document/u/0/d/1wH9v56vyW88M1-dWbYMZiOJRT81_VEOdGp4KKxkk-eQ/edit)
+
+## Referências
+
+* [Documentação comum a várias histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit?usp=sharing)  
+* [Vinculações de cadastros](https://docs.google.com/document/d/1doO2qrF4kuDnN0NZxnfpljmfAPE_qChJr2W9tbwFqlY/edit?tab=t.0)  
+* [Manual de padronização da PGA](https://sites.google.com/agro.gov.br/manual-ws-pga/p%C3%A1gina-inicial)
+
+## Protótipos
+
+* [Buscar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=6859-32313&t=feRFdsTIDgXC3thh-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978&show-proto-sidebar=1)  
+* [Listar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=6859-32313&t=feRFdsTIDgXC3thh-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978&show-proto-sidebar=1)  
+* [Cadastrar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=6859-32835&t=toQU4rI5Pbb4tc1N-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978&show-proto-sidebar=1)  
+* [Visualizar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=6859-33134&t=toQU4rI5Pbb4tc1N-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978&show-proto-sidebar=1)  
+* [Editar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=6859-33296&t=toQU4rI5Pbb4tc1N-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978&show-proto-sidebar=1)
+
+## Validação
+
+* Validada em reunião presencial ocorrida entre os dias 03/11/2025 e 05/11/2025, na Cidade Administrativa - Belo Horizonte/MG
+
+## Histórico da fonte
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| v1.1 | 27/01/2026 | Correções após a homologação. |
+| v1.0 | 27/01/2026 | Primeira versão da história. |
+
+## Pendências da fonte
+
+- A identificação de cadastros duplicados ainda não foi definida na fonte (RNE001).
+- O campo Código ou Nome do Estabelecimento Agroindustrial aparecia duas vezes na busca; foi mantido uma única vez.
+- O filtro de proprietário se refere a proprietários de estabelecimentos/recintos de evento. Confirmar se esse universo deve ser o dos estabelecimentos agroindustriais POV.
+- A busca oferece somente Ativo e Inativo, enquanto a edição e a regra de vencimento incluem Suspenso. Confirmar as situações disponíveis nos filtros.
+- A regra de notificação menciona código SIE e data de habilitação, campos ausentes do cadastro POV, que possui Número de Registro Federal e Data de Vencimento do Registro. Confirmar o conteúdo da notificação.
+- A máscara de vencimento foi informada como MM/DD/AAAA, mas os demais documentos usam dia/mês/ano. A fonte também utiliza exemplos de código com 11 ou 4 dígitos, enquanto a RNE002 exige 10; confirmar esses formatos.
+- As referências a US028 — Produto apontam para o mesmo documento fornecido como US022; foram uniformizadas para US022.

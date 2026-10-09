@@ -1,0 +1,243 @@
+---
+title: Lançamento de rebanho
+docType: requirement
+module: rebanho
+entity: lancamento-de-rebanho
+entityPlural: lançamentos de rebanho
+lifecycle: draft
+usID:
+  - US085
+---
+
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
+**Eu**, como usuário do sistema, **quero** gerenciar lançamentos de rebanho, **para que** eu possa permitir a gestão eficiente dessas informações.
+
+## 1. Buscar lançamento de rebanho
+
+**Dado que** estou na tela inicial para usuários logados no sistema  
+**Quando** acesso o menu **Lançamento de Rebanho** (Ver RNC007 - Permissões de Acesso)  
+**Então** o sistema exibe a tela de busca, contendo os seguintes filtros:
+
+```componente
+componente: Filtros de entidade do rebanho
+```
+
+| Campo | Tipo | Obrigatório | Validações |
+| --- | --- | :---: | --- |
+| Espécie | Seleção simples de entidade: espécie | Não | Valores = espécies cadastradas no sistema |
+| Tipo de Lançamento | Seleção simples | Não | Valores = “Mortalidade”, “Nascimento”, “Evolução”, “Roubo/Extravio”, “Descarte”, “Adição”, “Venda” |
+| Período - De: | Data | Não | Deve ser menor ou igual a data atual |
+| Período - Até: | Data | Não | Deve ser maior ou igual à data informada no campo “Período - De:” e menor ou igual a data atual |
+| Situação | Seleção simples | Não | Valores =  “Ativo”, “Inativo” |
+
+O sistema exibe **Inicial**, **Adicionar Novo** e **Pesquisar** (**AC001**).
+
+## 2. Listar lançamento de rebanho
+
+**Dado que** estou na tela de busca  
+**E** o campo de busca e/ou pelo menos um dos filtros disponíveis foi corretamente preenchido  
+**Quando** realizo a ação “Pesquisar”   
+**E** o sistema encontrou registros compatíveis com os valores informados   
+**Então** o sistema exibe os resultados retornados, contendo os seguintes campos:  
+ 
+
+| Campo | Tipo | Descrição |
+| --- | --- | --- |
+| Tipo de Entidade | Texto | Exibe o tipo de entidade |
+| Estabelecimento | Texto | Exibe o “CPF/CNPJ - Nome/Razão Social” do estabelecimento em questão |
+| Espécie | Texto | Exibe o “Nome” da espécie |
+| Tipo de Lançamento | Texto | Exibe o “Tipo de lançamento” |
+| Machos Lançados | Texto | Exibe a faixa etária e a quantidade de animais machos lançados naquela faixa |
+| Fêmeas Lançadas | Texto | Exibe a faixa etária e a quantidade de animais fêmeas lançados naquela faixa |
+| Data de Lançamento | Texto | Exibe a data de lançamento |
+| Situação | Texto | Exibe a situação |
+
+Para cada resultado, o sistema exibe **Visualizar** e **Editar** (**AC002**).
+
+## 3. Cadastrar lançamento de rebanho
+
+**Dado que** estou na tela de lançamento de rebanho de uma exploração/núcleo  
+**Então** o sistema exibe um formulário, contendo os seguintes campos:
+
+```componente
+componente: Identificação da entidade do rebanho
+```
+
+### Informações de Lançamento
+
+| Campo | Tipo | Obrigatório | Editável | Validações |
+| --- | --- | :---: | :---: | --- |
+| Tipo de Lançamento | Seleção múltipla | Sim | Não | Valores = ”Mortalidade”, “Nascimento”, “Evolução de Rebanho”, “Roubo/Extravio” Se a “Espécie” = “Aves”, possui um valor a mais Valor a mais = “Descarte”, “Adição”  Se o “Tipo de Entidade” = “Revendedora de Animais Vivos”, possui um valor a mais Valor a mais = “Venda” |
+
+### Mortalidade / Nascimento / Evolução / Roubo/Extravio / Descarte / Adição / Venda
+
+### Faixa Etária
+
+| Campo | Tipo | Obrigatório | Editável | Validações |
+| --- | --- | :---: | :---: | --- |
+| Faixa Etária | Texto | - | Não | Somente leitura Valores = faixas etárias cadastradas para a espécie em questão, pré-filtrados da seguinte forma:  Mortalidade: Todas as faixas Nascimento: Primeira faixa Evolução: Todas as faixas Roubo/Extravio: Todas as faixas Evolução: Todas as faixas Descarte: Todas as faixas Adição: Todas as faixas Venda: Todas as faixas |
+
+### Machos
+
+| Campo | Tipo | Obrigatório | Editável | Validações |
+| --- | --- | :---: | :---: | --- |
+| Existentes | Texto | - | Não | Somente leitura Exibe os valores atuais |
+| Valor informado (Mortalidade, Nascimento, Evolução, Roubo/Extravio, Descarte, Adição, Venda) | Inteiro | Não | Não | - |
+| Resultado | Texto | - | Não | Somente leitura Deve ser calculado conforme RNE008 |
+
+### Fêmeas
+
+Mesmos campos da seção “Machos”.
+
+### Justificativa de Mortalidade Irregular
+
+Disponível se a taxa de mortalidade não estiver na normalidade (ver RNE001.
+
+| Campo | Tipo | Obrigatório | Editável | Validações |
+| --- | --- | :---: | :---: | --- |
+| Justificativa — Informe o porquê a atualização do rebanho está fora dos padrões estabelecidos pela portaria vigente | Texto longo | Não | Não | - |
+
+### Documentos Comprobatórios (Zero ou mais)
+
+| Campo | Tipo | Obrigatório | Editável | Validações |
+| --- | --- | :---: | :---: | --- |
+| Documento Comprobatório  — Documentos que justifiquem o problema. Exemplo: boletim de ocorrência, atestado, foto, etc. | Arquivo | Não | Não | - |
+
+### Justificativa de Roubo / Extravio
+
+Disponível se “Tipo de Lançamento” for definido como “Roubo/Extravio”.
+
+| Campo | Tipo | Obrigatório | Editável | Validações |
+| --- | --- | :---: | :---: | --- |
+| Justificativa — Informe detalhes sobre a situação ocorrida. | Texto longo | Não | Não | - |
+| Documento Comprobatório  — Anexe um documento comprobatório do caso, como um Boletim de Ocorrência. | Arquivo | Não | Não | - |
+
+O sistema exibe **Todos os lançamentos de rebanho** e **Adicionar** (**AC003**).  
+**E** as seguintes ações específicas:
+
+### Ações Específicas
+
+| Ação | Descrição |
+| --- | --- |
+| Reiniciar valores | Reinicia todos os valores digitados na tabela para os valores padrão |
+
+## 4. Visualizar lançamento de rebanho
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe os campos do formulário descrito no critério de aceitação 3 como somente leitura, com seus valores já preenchidos  
+**E**, além desses, exibe os seguintes campos, também como somente leitura:
+
+### Situação
+
+| Campo | Tipo | Obrigatório | Editável | Validações |
+| --- | --- | :---: | :---: | --- |
+| Situação | Seleção simples | Sim | Não | Valores = “Ativo”, “Inativo” |
+
+O sistema exibe **Todos os lançamentos de rebanho**, **Editar** e **Histórico de Alterações** (**AC004**), além das ações de formulário aplicáveis (**AC006**).
+
+## 5. Editar lançamento de rebanho
+
+**Dado que** estou na tela de edição  
+**Então** o sistema exibe todos os campos descritos nos critérios de aceitação 3 e 4, com seus valores já preenchidos  
+**E** permite editar **todos** os campos passíveis de edição (EDT = Sim)  
+**E** exibe as seguintes ações: (Ver **AC005 - Ações das telas de edição** e **AC006 - Ações de interação com formulários**)  
+**E** exibe as seguintes ações específicas:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Inativar | Muda a situação do cadastro para “Inativo” e reverte as alterações do lançamento no rebanho. Só é permitido inativar um lançamento caso não haja outra movimentação do rebanho.  Quando o cadastro tem sua situação mudada para “Inativo”, ela não pode voltar para a situação “Ativo” novamente. |
+
+## Regras de negócio específicas
+
+### RNE001 — Mortalidade
+
+O valor de mortalidade de bovinos e bubalinos deve ser menor ou igual ao percentual indicado no Anexo I da Portaria nº 2227, de 29 de abril de 2023. Caso o valor informado ultrapasse esse limite, o sistema deve emitir um alerta informando a anormalidade e enviar uma notificação ao produtor, indicando que o estabelecimento está sujeito à fiscalização.
+
+### RNE002 — Evolução entre faixas etárias
+
+A evolução do rebanho só pode ocorrer entre faixas etárias subsequentes. Ao aumentar a quantidade em uma faixa etária, o sistema deve automaticamente debitar o mesmo valor da faixa etária imediatamente anterior. Para que isso ocorra, o valor informado deve ser menor ou igual à “Quantidade de animais existentes” da faixa etária anterior. Como consequência, a faixa etária inicial deve permanecer bloqueada para edição, e o usuário não pode reduzir o valor de uma faixa etária, apenas aumentar o da faixa seguinte.
+
+### RNE003 — Idade dos animais nascidos
+
+Apenas animais com idade entre 0 e 12 meses podem ser registrados como nascidos.
+
+### RNE004 — Limite de natalidade
+
+O número de animais nascidos deve ser compatível com a quantidade de fêmeas em idade reprodutiva existente na exploração. Caso a taxa de natalidade ultrapasse 100%, o sistema deve impedir a conclusão do cadastro.
+
+### RNE005 — Restrição de inativação
+
+Um lançamento de rebanho só pode ser inativado caso não exista qualquer atualização posterior do rebanho, independentemente da origem, incluindo GTA, atualização cadastral, lançamentos ou outros ajustes.
+
+### RNE006 — Reversão do lançamento
+
+Se o lançamento de rebanho for inativado, as alterações no rebanho causadas por ele devem ser revertidas.
+
+### RNE007 — Aplicação dos lançamentos
+
+Depois da atualização, o rebanho deve ser alterado de acordo com o tipo de lançamento. Se for nascimento ou adição, soma o valor digitado à quantidade de animais existentes. Se for mortalidade, roubo/extravio ou descarte, o valor deve ser subtraído. Se for evolução, o valor deve ser somado na faixa atual e subtraído da faixa etária imediatamente anterior.
+
+### RNE008 — Cálculo dos resultados
+
+A coluna resultado deve calcular os valores automaticamente para cada faixa etária (linha), conforme as regras abaixo:
+
+  * Mortalidade:
+
+    * **Resultado = Existente − Mortalidade**
+
+  * Evolução
+
+    * Para primeira linha:
+
+      * Não possui faixa etária anterior, portanto não há soma de evolução vinda da faixa anterior.
+
+      * **Resultado = Existente − Evolução da linha atual**
+
+    * Da segunda linha até a penúltima:
+
+      * O cálculo depende da relação entre linhas consecutivas, considerando os valores de evolução entre faixas etárias
+
+      * **Resultado = Existente + Evolução da linha anterior − Evolução da linha atual**
+
+    * Para a última linha: 
+
+      * Não possui faixa etária seguinte, portanto não há subtração de evolução para faixa seguinte
+
+      * **Resultado = Existente + Evolução da linha atual** 
+
+  * Nascimento:
+
+    * **Resultado = Existente + Nascimento**
+
+  * Roubo/Extravio:
+
+    * **Resultado = Existente − Roubo/Extravio**
+
+  * Descarte:
+
+    * **Resultado = Existente − Descarte**
+
+  * Adição:
+
+    * **Resultado = Existente + Adição**
+
+  * Venda:
+
+    * **Resultado = Existente - Venda**
+
+### RNE009 — Atualização do rebanho
+
+Após conclusão da atualização, o rebanho deve ser atualizado de acordo com os lançamentos realizados, somando ou subtraindo os valores conforme descrito acima.
+
+## Histórico da fonte
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| v1.0 | 27/04/2026 | Primeira versão da história. |
+
+## Pendências da fonte
+
+Os títulos de visualização e edição da fonte mencionam “ajuste de doses de insumo”; foram adequados para Lançamento de Rebanho. A ação Inativar menciona “reverter a declaração da vacina”; aplica-se aqui a reversão do lançamento prevista na RNE006. Todos os campos do cadastro estão marcados EDT = Não, embora o critério de edição permita os campos EDT = Sim; confirmar o escopo de edição. A RNE008 descreve a evolução como saída da linha atual e entrada da anterior, enquanto RNE002 e RNE007 descrevem a informação como entrada na faixa seguinte. A fórmula da última linha também utiliza a evolução da linha atual; confirmar a convenção antes da implementação. O filtro de Evento Pecuário faz referência a “Tipo de Destino”; foi uniformizado para Tipo de Entidade. A opção do formulário “Evolução de Rebanho” corresponde à seção “Evolução” na fonte.

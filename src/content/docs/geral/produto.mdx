@@ -1,0 +1,236 @@
+---
+title: Produto
+docType: requirement
+module: geral
+entity: produto
+entityPlural: produtos
+lifecycle: draft
+usID:
+  - US022
+---
+
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
+**Eu**, como usuário do sistema SIDAGRO, **quero** cadastrar, editar e visualizar produtos, **para que** eu possa permitir a gestão eficiente dessas informações.
+
+## 1. Buscar produto
+
+**Dado que** estou na tela inicial para usuários logados no sistema  
+**Quando** acesso o menu **Produto**  (Ver RNC007 - Permissões de Acesso)  
+**Então** o sistema exibe a tela de busca, contendo o seguinte campo de busca:
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Nome do produto | Texto | Não | Alfanumérico, máximo de 255 caracteres | “Cachaça” | Vazio |
+
+**E** exibe os seguintes filtros: 
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Tipo do produto | Seleção | Não | Valores pré-definidos: “Animal”, “Vegetal” | “Vegetal” | Vazio |
+| Situação | Seleção | Não | Valores pré-definidos: “Ativo”, “Inativo” | “Ativo” | Vazio |
+
+**E** exibe a mensagem “Busque por produtos utilizando o campo de busca e os filtros acima”   
+**E** exibe as seguintes ações:
+
+| Ação | Descrição |
+| --- | --- |
+| Adicionar Novo | Vai para a tela de cadastro |
+| Pesquisar | Realiza a busca utilizando o campo de busca e os filtros |
+| Inicial | Volta para a tela inicial para usuários logados no sistema |
+
+## 2. Listar produtos
+
+**Dado que** estou na tela de busca de produto 
+
+### Caso de sucesso  
+
+**E** todos os campos obrigatórios estão corretamente preenchidos  
+**Quando** acesso a opção “Pesquisar”  
+**E** o sistema retornou registros compatíveis com os valores informados   
+**Então** o sistema realiza a busca exibe os resultados, contendo os seguintes campos:  
+ 
+
+| Campo | Tipo | Ordenável | Descrição | Exemplo |
+| --- | --- | :---: | --- | --- |
+| Nome do produto | Texto | Sim, padrão, ascendente | Exibe o nome do produto | Exemplo: “Cachaça” |
+| Tipo | Texto | Sim | Exibe o tipo do produto | “Vegetal” |
+| Situação | Texto | Sim | Exibe a situação do cadastro | “Ativo” |
+
+**E** exibe as seguintes ações para cada registro retornado:
+
+| Ação | Descrição |
+| --- | --- |
+| Visualizar | Vai para a tela de visualização do item selecionado |
+| Editar | Vai para a tela de edição do item selecionado |
+
+## 3. Cadastrar produto
+
+**Dado que** estou na tela de cadastro  
+**Então** o sistema exibe um formulário, contendo os seguintes campos:
+
+### Informações Básicas
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Nome do Produto | Texto | Sim | Alfanumérico, máximo de 255 caracteres | “Cachaça” | Vazio |
+| Tipo do Produto | Seleção | Sim | Valores pré-definidos: “Animal”, “Vegetal” | “Vegetal” | Vazio |
+| Unidade de Medida  (“Unidade de Medida”) | Seleção pesquisável | Sim | Valores pré-definidos: unidades de medida cadastradas no sistema (ver US048) Deve ser pré -filtrado de acordo com o valor informado em “Tipo de Produto”, de modo que produtos animais/vegetais só possam receber unidades de medida correspondentes. Deve ser possível buscar por “Unidade de Medida” | “L” | Vazio |
+
+Disponível se o campo “Tipo do Produto” for definido como “Animal”.
+
+```componente
+componente: Área de atuação POA
+```
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Classificação Produtiva | Seleção múltipla | Sim | Valores pré-definidos:  “Matéria Prima”, “Produto Final” | “Matéria Prima” | Vazio |
+
+**E** as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Adicionar | Valida os dados informados, salva o cadastro e vai para a tela de sucesso do cadastro |
+| Todos os produtos | Volta para a tela de busca |
+
+### Ações do Formulário
+
+| Ação | Descrição |
+| --- | --- |
+| Ver item | Disponível para cada item informado no cadastro que esteja relacionado a outro cadastro Vai para a tela de visualização do cadastro selecionado |
+| Adicionar/Remover item | Disponível para cada item informado no cadastro que podem ter mais de uma instância Adiciona / Remover o item |
+| Baixar documento | Disponível para cada anexo informado no cadastro Baixa o documento anexado |
+
+### Caso de sucesso  
+
+**Quando** realizo a ação “Adicionar”  
+**E** todas os campos e regras de negócio foram validados corretamente  
+**Então** o sistema exibe uma mensagem de sucesso de cadastro   
+**E** exibe as seguintes ações:
+
+| Ação | Descrição |
+| --- | --- |
+| Voltar | Volta para a tela de busca |
+| Visualizar | Vai para tela de visualização |
+
+## 4. Visualizar produto
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe os campos do formulário descrito no critério de aceitação 3 como somente leitura, com seus valores já preenchidos  
+**E**, além desses, exibe os seguintes campos, também como somente leitura:
+
+### Situação do Cadastro
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Situação | Texto | Exibe a situação do cadastro | “Ativo” |
+
+**E** exibe as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Editar | Vai para a tela de edição |
+| Todos os produtos | Volta para a tela de busca |
+
+### Ações do Formulário
+
+| Ação | Descrição |
+| --- | --- |
+| Ver item | Disponível para cada item informado no cadastro que esteja relacionado a outro cadastro Vai para a tela de visualização do cadastro selecionado |
+| Baixar documento | Disponível para cada anexo informado no cadastro Baixa o documento anexado |
+
+### Outras
+
+| Ação | Descrição |
+| --- | --- |
+| Cadastro | Vai para a tela de visualização do cadastro |
+| Vinculações | Vai para a aba de vinculações do cadastro |
+
+## 5. Editar produto
+
+**Dado que** estou na tela de edição  
+**Então** o sistema exibe os campos descritos no critério de aceitação 3 já preenchidos e editáveis  
+**E**, além desses, exibe os novos campos do critério de aceitação 4 como somente leitura  
+**E** exibe as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Salvar | Vai para a tela de confirmação das edições |
+| Visualizar produto | Volta para a tela de visualização |
+
+### Ações do Formulário
+
+| Ação | Descrição |
+| --- | --- |
+| Ver item | Disponível para cada item informado no cadastro que esteja relacionado a outro cadastro Vai para a tela de visualização do cadastro selecionado |
+| Adicionar/Remover item | Disponível para cada item informado no cadastro que podem ter mais de uma instância  Adiciona / Remover o item |
+| Baixar documento | Disponível para cada anexo informado no cadastro Baixa o documento anexado |
+| Ativar/Inativar | Muda a situação do cadastro para “Ativo” ou “Inativo”, a depender da situação atual do cadastro (Ver RNC008 - Situação do cadastro de uma entidade sem opção de suspensão). |
+
+### Caso de sucesso  
+
+**Quando** realizo a ação “Salvar”  
+**E** foi possível salvar as edições no cadastro  
+**Então** o sistema exibe as seguintes ações:
+
+| Ação | Descrição |
+| --- | --- |
+| Cancelar | Volta para a tela de edição |
+| Salvar | Valida os dados informados, salva as edições e vai para a tela de visualização |
+
+## Critérios de aceitação comuns
+
+Aplicam-se os critérios do [documento comum às histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit?usp=drivesdk):
+
+* CA001 - Salvar cadastro de uma entidade  
+* CA003 - Notificar erro ao usuário devido a falha técnica  
+* CA009 - Busca sem resultados  
+* CA010 - Uso incorreto de filtros de busca  
+* CA011 - Indicação de filtros de busca aplicados
+
+## Regras de negócio específicas
+
+### RNE001 — Unicidade pelo nome
+
+O cadastro de um produto deve ser único no sistema. Para garantir essa unicidade, deve-se utilizar dados do nome do produto.
+
+## Histórias e referências relacionadas
+
+* [US048 - Gerenciar unidade de medida](https://docs.google.com/document/d/1hbte0jNF1IPn9YRiDzKu7i0qzCClqqPifvxF7huYnao/edit?tab=t.0)
+
+## Referências
+
+* [Documentação comum a várias histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit?usp=sharing)  
+* [Vinculações de cadastros](https://docs.google.com/document/d/1doO2qrF4kuDnN0NZxnfpljmfAPE_qChJr2W9tbwFqlY/edit?tab=t.0)  
+* [Manual de padronização da PGA](https://sites.google.com/agro.gov.br/manual-ws-pga/p%C3%A1gina-inicial)
+
+## Protótipos
+
+* [Buscar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=6863-54284&starting-point-node-id=2131%3A11978)  
+* [Listar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=6863-54284&starting-point-node-id=2131%3A11978)  
+* [Adicionar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=6863-54796&starting-point-node-id=2131%3A11978&t=AFD2ZE528gbwEluI-1)  
+* [Visualizar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=6863-54854&starting-point-node-id=2131%3A11978&t=AFD2ZE528gbwEluI-1)  
+* [Editar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=6863-54930&starting-point-node-id=2131%3A11978&t=AFD2ZE528gbwEluI-1)
+
+## Histórico da fonte
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| v1.3 | 30/09/3036 | alteração de mel para apícola |
+| v1.2 | 23/12/2025 | alterações para atender à agroindústria |
+| v1.1 | 13/11/2025 | alteração da unidade de medida |
+| v1.0 | 16/06/2025 | primeira versão da história |
+
+## Pendências da fonte
+
+- O histórico informa a data 30/09/3036 na versão v1.3. A data foi preservada e precisa ser confirmada.
+- O critério de edição repetia o número 3; foi renumerado como 5. As ações de navegação que mencionavam revendedoras de animais vivos foram adequadas para Produto.
+- A fonte cita o sistema SIDAGRO na descrição; confirmar se essa identificação histórica deve ser mantida no requisito do AgroDigital.
+- A fonte inclui ações de anexos e de itens múltiplos, mas o formulário não define anexos nem grupos de itens repetíveis. Essas ações permanecem condicionadas à existência dos respectivos itens.

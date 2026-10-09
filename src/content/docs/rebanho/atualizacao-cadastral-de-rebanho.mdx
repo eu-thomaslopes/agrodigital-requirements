@@ -1,0 +1,384 @@
+---
+title: Atualização cadastral de rebanho
+docType: requirement
+module: rebanho
+entity: atualizacao-cadastral-de-rebanho
+entityPlural: atualizações cadastrais de rebanho
+lifecycle: draft
+usID:
+  - US084
+---
+
+**Eu**, como usuário do sistema, **quero** gerenciar atualizações cadastrais de rebanho, **para que** eu possa permitir a gestão eficiente dessas informações.
+
+## 1. Buscar atualização cadastral de rebanho
+
+**Dado que** estou na tela de busca  
+**Então** o sistema exibe os seguintes campos:
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Produtor Titular | Seleção simples de entidade: produtor | Sim | Apenas visualização  se o papel do usuário = Produtor Valor = o próprio produtor senão  Valores = pessoas físicas ou jurídicas que são produtoras cadastradas no sistema | “Divino de Souza Sobrinho” | Vazio |
+
+Disponível quando o campo “Produtor Titular” for informado.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Estabelecimento Agropecuário | Seleção simples de entidade: estabelecimento agropecuário | Não | Valores = estabelecimentos agropecuários que possuem explorações nas quais o produtor informado é o titular | “Fazenda Santa Clara” | Vazio |
+| Etapa de Atualização Cadastral | Texto numérico | Não | Tamanho = 7 caracteres Formato = Ano da etapa (4 dígitos) + / + 2 dígitos sequenciais | “2026/01” | Vazio |
+| Situação | Seleção simples | Não | Valores = “Atualizado Regular”, “Atualizado com Atraso”, “Pendente”, “Inadimplente Não Iniciado”, “Inadimplente Não Concluído” | “Atualizado Regular” | Vazio |
+
+**E** exibe as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Inicial | Volta para a tela inicial para usuários logados no sistema |
+| Pesquisar | Realiza a busca utilizando os filtros |
+
+## 2. Listar atualização cadastral de rebanho
+
+**Dado que** estou na tela de busca  
+**E** pelo menos um campo de busca foi corretamente preenchido  
+**Quando** realizo a ação “Pesquisar”   
+**E** o sistema encontrou registros compatíveis com os valores informados   
+**Então** o sistema exibe os resultados retornados, contendo os seguintes campos somente leitura:
+
+### Dados da atualização
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Produtor Titular | Texto | Exibe o Nome - CPF do produtor titular | Divino de Souza Sobrinho 685.784.465-89 |
+
+### Resultados (zero ou mais)
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Etapa de Atualização Cadastral | Texto | Exibe a etapa de atualização cadastral | 2026/01 |
+| Estabelecimento Agropecuário | Texto | Exibe o Nome - Código do estabelecimento agropecuário | Fazenda Santa Clara 31234567891 |
+| Situação | Texto | Exibe a situação da atualização cadastral para a etapa em questão | “Atualizado Regular” |
+
+**E** exibe as seguintes ações para cada registro retornado:
+
+### Ações do Formulário
+
+| Ação | Descrição |
+| --- | --- |
+| Visualizar item | Pode levar a 2 caminhos (ver RNE011):  Se ainda não há validação confirmada dos dados do produtor: Vai para a tela de validação dos dados do produtor Se já houver validação confirmada dos dados do produtor:  Vai para a tela de visualização das explorações pecuárias e/ou núcleos de produção presentes no estabelecimento agropecuário em questão, pendentes para atualização |
+
+## 3. Validar dados do produtor
+
+**Dado que** estou na tela de validação de dados do produtor  
+**Então** o sistema exibe o formulário com os dados de contato obrigatórios e adicionais do produtor para validação  
+**E** exibe as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Acessar Cadastro para Editar | Vai para a tela de edição da pessoa física/pessoa jurídica que represente o produtor em questão |
+| Confirmar dados | Habilita o botão de avançar |
+| Cancelar / Fechar | Volta para a tela de listagem |
+| Salvar | Confirma a validade dos dados, salva a confirmação para não solicitar novamente e vai para a tela de visualização da atualização cadastral |
+
+## 4. Visualizar atualização cadastral
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe os seguintes campos como somente leitura:
+
+### Dados da atualização
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Estabelecimento Agropecuário | Texto | Exibe o Nome - Código do estabelecimento agropecuário | Fazenda Santa Clara 31234567891 |
+| Etapa de Atualização Cadastral | Texto | Exibe a etapa atual de atualização cadastral | 2026/01 |
+| Produtor Titular | Texto | Exibe o Nome - CPF do produtor titular | Divino de Souza Sobrinho 685.784.465-89 |
+
+### Progresso
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Progresso da atualização cadastral | Decimal | Exibe a porcentagem de progresso de conclusão das atualizações, com base na seguinte fórmula: (Atualizados / Total) * 100 | 66.6% |
+
+**E** exibe os resultados retornados, contendo os seguintes campos:
+
+| Campo | Tipo | Ordenável | Descrição | Exemplo |
+| --- | --- | :---: | --- | --- |
+| Exploração / Núcleo | Texto | Não | Exibe o código da exploração pecuária ou do núcleo de produção | “312345678910001” |
+| Espécie | Texto | Sim | Exibe a espécie explorada na exploração pecuária ou núcleo de produção | “Bovino” |
+| Data da Última Atualização | Texto | Sim | Exibe a data da última alteração realizada na atualização | “12/04/2026” |
+| Situação | Texto | Sim | Exibe se a situação da atualização da exploração ou núcleo em questão, que pode ser “Atualizado” ou “Pendente” | “Atualizado” |
+
+**E** exibe as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Concluir | Disponível se não há explorações ou núcleos pendentes para o estabelecimento agropecuário em questão  Conclui a atualização, salva os dados informados e volta para a tela de busca |
+| Emitir declaração | Disponível se a atualização de todas as explorações/núcleos já foi concluída Emite a declaração de realização da atualização cadastral, contendo as seguintes informações: nome e CPF do produtor titular, etapa de atualização realizada, explorações e/ou núcleos da atualização e nome do estabelecimento agropecuário das explorações e/ou núcleos. |
+| Visualizar | Disponível se a atualização da exploração/núcleo já foi concluída  Disponível para cada item retornado Vai para a tela de visualizar o rebanho atualizado do item em questão |
+| Atualizar | Disponível se a atualização de todas as explorações/núcleos ainda não foi concluída e não existe uma etapa posterior aberta  Disponível para cada item retornado Vai para a tela de atualizar o rebanho do item em questão |
+| Adicionar novo | Exibe as opções de selecionar a adição de uma nova exploração pecuária ou novo núcleo de produção |
+| Nova exploração | Vai para a tela de adicionar nova exploração pecuária |
+| Novo núcleo | Vai para a tela de adicionar novo núcleo de produção |
+
+## 5. Atualizar o cadastro de rebanho de uma exploração / núcleo
+
+**Dado que** estou na tela de atualização do rebanho de uma exploração ou núcleo  
+**Então** o sistema exibe um formulário, contendo os seguintes campos como somente leitura:
+
+### Identificação da atualização
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Exploração / Núcleo | Texto | Exibe o código da exploração pecuária / núcleo - espécie explorada | 312345678910001 Bovino |
+| Estabelecimento Agropecuário | Texto | Exibe o Nome - Código do estabelecimento agropecuário | Fazenda Santa Clara 31234567891 |
+| Etapa de Atualização Cadastral | Texto | Exibe a etapa atual de atualização cadastral | 202601 |
+| Produtor Titular | Texto | Exibe o Nome - CPF do produtor titular | Divino de Souza Sobrinho 685.784.465-89 |
+
+**E** os seguinte campos para realizar a atualização:
+
+### Mortalidade / Nascimento / Evolução / Revisão Final
+
+### Faixa Etária (Uma ou mais)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Faixa Etária | Texto | - | Somente leitura Valores = faixas etárias cadastradas para a espécie em questão, pré-filtrados da seguinte forma: Mortalidade: Todas as faixas Nascimento: Primeira faixa Evolução: Todas as faixas Revisão final: Todas as faixas | “De 0 a 12 Meses” | Vazio |
+
+### Machos
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Existente | Texto | - | Somente leitura Exibe os valores atuais | 10 | Vazio |
+| Valor Informado (Mortalidade, Evolução ou Nascimento) | Inteiro | Não | Disponível se não for a seção “Revisão final” | 5 | 0 |
+| Resultado | Texto | - | Somente leitura Deve ser calculado conforme RNE006 | 5 | Vazio |
+
+### Fêmeas
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+Cada faixa etária contém os mesmos campos descritos na seção **Machos**.
+
+### Total
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Total | Texto | - | Somente leitura Exibe a soma total da coluna | 10 | Vazio |
+
+### Justificativa de Mortalidade Irregular
+
+Disponível se a taxa de mortalidade não estiver na normalidade (ver RNE006.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Justificativa — Informe o porquê a atualização do rebanho está fora dos padrões estabelecidos pela portaria vigente | Texto longo | Se usuário for Produtor Sim senão Não | - | “Texto justificando” | Vazio |
+
+### Documentos Comprobatórios (Zero ou mais)
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Documento Comprobatório  — Documentos que justifiquem o problema. Exemplo: boletim de ocorrência, atestado, foto, etc. | Arquivo | Não | - | “anexo.pdf” | Vazio |
+
+**E** as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Todas atualizações cadastrais de rebanho | Reinicia todos os valores digitais para os valores padrão |
+| Restaurar | Reinicia todos os valores digitados na tabela para os valores padrão |
+| Avançar / Voltar | Navega entre as seções de Mortalidade, Evolução, Nascimento e Revisão Final |
+| Concluir | Disponível na seção de Revisão Final Vai para a tela de confirmação |
+
+### Confirmação da atualização  
+
+**Quando** realizo a ação “Concluir”  
+**E** todos os campos e regras de negócio foram validados corretamente  
+**Então** o sistema exibe as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Cancelar | Volta para a tela de atualizar |
+| Salvar | Conclui a atualização cadastral e vai para a tela de listar explorações pecuárias / núcleos de produção da atualização cadastral |
+
+## 6. Visualizar rebanho de uma exploração / núcleo
+
+**Dado que** estou na tela de visualização do rebanho de uma exploração / núcleo  
+**Então** o sistema exibe os campos do **formulário da seção “Revisão Final”**, no critério de aceitação 5 como somente leitura, com seus valores já preenchidos  
+**E** exibe as seguintes ações:
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Todas atualizações cadastrais de rebanho | Volta para a tela de listar |
+
+## Regras de negócio específicas
+
+### RNE001 — Unicidade
+
+O cadastro deve ser único no sistema. Para garantir essa unicidade, deve-se considerar a combinação dos seguintes dados: número da atualização cadastral, CPF/CNPJ do produtor titular e código da propriedade.
+
+### RNE002 — Conclusão da atualização
+
+Para que uma atualização cadastral seja concluída, é necessário que todos os rebanhos das explorações pecuárias e dos núcleos de produção vinculados a ela estejam atualizados.
+
+### RNE003 — Alterações antes da conclusão
+
+A atualização do rebanho de uma exploração pecuária ou de um núcleo de produção pode ser alterada enquanto a atualização cadastral correspondente não for concluída. Após a conclusão, não é mais possível realizar alterações.
+
+### RNE004 — Cálculo em tempo de execução
+
+O sistema deve exibir, em tempo de execução, a atualização imediata e automática dos valores calculados nas tabelas da atualização cadastral, a cada alteração realizada pelo usuário, sem necessidade de recarregamento da interface. A tabela deve ser composta pelas seguintes colunas e elementos, responsável pelo cálculo:
+
+  * Valor Atual (Existente)
+
+  * Valor Informado pelo Usuário: (Mortalidade, Evolução ou Nascimento)
+
+  * Valor Calculado (Resultado)
+
+  * Cálculo Realizado (Resumo do Valor Calculado)
+
+### RNE005 — Valores existentes entre seções
+
+Ao avançar no preenchimento da atualização, a coluna  “Existente” deve considerar as modificações já informadas pelo usuário, na coluna anterior, considerando-se as eventuais mortes e realocação em faixas etárias.
+
+### RNE006 — Cálculo dos resultados
+
+A coluna resultado deve calcular os valores automaticamente para cada faixa etária (linha), conforme as regras abaixo. Além disso, um resumo do cálculo realizado deve ser gerado, seguindo as mesmas regras:
+
+  * Mortalidade:
+
+    * **Resultado = Existente − Mortalidade**
+
+  * Evolução
+
+    * Para primeira linha:
+
+      * Não possui faixa etária anterior, portanto não há soma de evolução vinda da faixa anterior.
+
+      * **Resultado = Existente − Evolução da linha atual**
+
+    * Da segunda linha até a penúltima:
+
+      * O cálculo depende da relação entre linhas consecutivas, considerando os valores de evolução entre faixas etárias
+
+      * **Resultado = Existente + Evolução da linha anterior − Evolução da linha atual**
+
+    * Para a última linha: 
+
+      * Não possui faixa etária seguinte, portanto não há subtração de evolução para faixa seguinte
+
+      * **Resultado = Existente + Evolução da linha atual** 
+
+  * Nascimento:
+
+    * **Resultado = Existente + Nascimento**
+
+### RN007 — Mortalidade
+
+**MORTALIDADE**: 
+
+  * A mortalidade informada na atualização deve ser menor ou igual ao percentual parametrizado no cadastro de taxas de controle da espécie, quando existente. 
+
+  * Caso o valor informado ultrapasse esse limite, o sistema **deve exibir a seção “Justificativa de Mortalidade Irregular" e permitir o lançamento da informação.**
+
+  * Nesse caso, o sistema deve gerar um alerta informando a anormalidade para o estabelecimento agropecuário e enviar uma notificação ao produtor titular informando que o estabelecimento está sujeito à fiscalização.
+
+### RNE008 — Evolução entre faixas etárias
+
+**EVOLUÇÃO**: 
+
+  * A evolução do rebanho só pode ocorrer entre faixas etárias subsequentes. 
+
+  * Ao aumentar a quantidade em uma faixa etária, o sistema deve automaticamente debitar o mesmo valor da faixa etária anterior. 
+
+  * Para que isso ocorra, o valor informado deve ser menor ou igual à “Quantidade de animais existentes” da faixa etária anterior. 
+
+  * Como consequência, a faixa etária inicial deve permanecer bloqueada para edição, e o usuário não pode reduzir o valor de uma faixa etária, apenas aumentar o da faixa seguinte.
+
+### RNE009 — Nascimento
+
+**NASCIMENTO:** 
+
+  * Apenas animais com idade entre 0 e 12 meses podem ser registrados como nascidos. 
+
+  * A natalidade informada na atualização deve ser menor ou igual ao percentual parametrizado no cadastro de taxas de controle da espécie, quando existente. 
+
+  * A taxa de natalidade **deve considerar o número de fêmeas em idade reprodutiva.** 
+
+  * Caso o valor informado ultrapasse esse limite, o sistema **deve impedir o lançamento da informação.**
+
+### RNE010 — Atualização do rebanho
+
+Após conclusão da atualização, o rebanho deve ser atualizado de acordo com os lançamentos realizados, somando ou subtraindo os valores conforme descrito acima.
+
+### RNE011 — Confirmação dos dados do produtor
+
+Ao exibir a tela de visualização de uma atualização cadastral de rebanho dentro de uma etapa de atualização cadastral, o sistema deve solicitar a confirmação dos dados cadastrais do produtor titular, exibindo seus dados de contato para conferência.
+
+  * A confirmação dos dados é obrigatória e deve ser realizada uma única vez por produtor titular em cada etapa de atualização cadastral, antes da continuidade do processo.
+
+  * Caso os dados estejam incorretos, o usuário poderá utilizar a opção Atualizar dados, sendo redirecionado para a tela de edição cadastral. Após a atualização e retorno à tela de visualização, o sistema deverá solicitar novamente a confirmação dos dados.
+
+  * Após a confirmação, o sistema não deverá solicitar nova validação para a mesma atualização cadastral
+
+### RNE012 — Situação da atualização cadastral
+
+A situação de uma atualização cadastral se altera automaticamente da seguinte forma:
+
+  * Uma atualização cadastral se inicia com a situação “Pendente”;
+
+  * Se a atualização for concluída (ver RNE002) antes da data de fim da Etapa de Atualização, então sua situação se altera para “Atualizado Regular”;
+
+  * Se a atualização for concluída depois da data de fim da Etapa de Atualização E antes de uma nova Etapa ser aberta, então sua situação se altera para “Atualizado com Atraso”;
+
+  * Se a atualização não for concluída antes da abertura de uma nova Etapa de Atualização e não houver início de preenchimento parcial da atualização, então sua situação se altera para “Inadimplente Não Iniciado” e não pode mais ser atualizada.
+
+  * Se a atualização não for concluída antes da abertura de uma nova Etapa de Atualização e houver início de preenchimento da atualização, então sua situação se altera para “Inadimplente Não Concluído” e não pode mais ser atualizada.
+
+### RNE013 — Situação da exploração ou núcleo
+
+A situação de uma atualização cadastral de um exploração/núcleo específico se altera da seguinte forma:
+
+  * Uma atualização se inicia com a situação “Pendente”;
+
+  * Se a atualização de uma exploração/núcleo for realizada, então a situação se altera para “Atualizado”
+
+## Histórias e referências relacionadas
+
+* [US042 - Gerenciar pessoa física](https://docs.google.com/document/u/0/d/1Dc-0vVj1HAU8_f37r9A94BEV6EmzwOB8prnP7w6I9GU/edit)  
+* [US044 - Gerenciar pessoa jurídica](https://docs.google.com/document/u/0/d/12SyAx0pJcA4s1GLWBvVVYyk8r0mf9WZWsWt4a1soefc/edit)  
+* [US050 - Gerenciar estabelecimento agropecuário](https://docs.google.com/document/u/0/d/1curRcFHfzSoTb8Y_56fHVTq-LLt4XVD-r0knkogrLQU/edit)  
+* [US060 - Gerenciar exploração pecuária](https://docs.google.com/document/u/0/d/1f9kKkY_CeNIatNbdBJNzVo1X2LdEoZLcAmzH7zJO8_U/edit)  
+* [US073 - Gerenciar núcleo de produção](https://docs.google.com/document/u/0/d/17ED-UCPhjGtFrI2ym3hBtiusUxlsfZQK5K3m-SmHbaE/edit)  
+* [US083 - Taxas de controle da espécie](https://docs.google.com/document/u/1/d/1g1IhrQW09ehV2qBdUwb-veSU35NnaEQsMhKKqzMu-84/edit)
+
+## Referências
+
+* [Documentação comum a várias histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit?usp=sharing)  
+* [Componentes](https://docs.google.com/document/d/1FsKpUb2RN-2kHn-Pd557tVJJA-aN637U-ZgQ0UG-nd8/edit?tab=t.0) 
+
+## Protótipos
+
+* [Listar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=29773-58018&p=f&t=OGguSjeBQStSgxTb-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978)  
+* [Segundo Listar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=31248-55892&p=f&t=OGguSjeBQStSgxTb-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978)  
+* [Atualizar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=29773-58333&p=f&t=OGguSjeBQStSgxTb-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978)  
+* [Visualizar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=35305-62521&p=f&t=OGguSjeBQStSgxTb-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978)
+
+## Histórico da fonte
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| v1.2 | 28/07/2026 | Atualizações para contemplar o papel **Produtor**   |
+| v1.1 | 27/04/2026 | Atualizações após sanar dúvidas levantadas na planning.   |
+| v1.0 | 27/04/2026 | Primeira versão da história. |
+
+## Pendências da fonte
+
+A fonte alterna os exemplos da etapa entre 2026/01 e 202601; o formato deve ser confirmado junto à US080. A ação “Todas atualizações cadastrais de rebanho” na tela de atualização descreve reiniciar valores, enquanto na visualização descreve voltar à listagem; confirmar o comportamento da primeira tela. O campo Resultado foi associado à RNE006, a mortalidade irregular à RN007 e a validação do produtor à RNE011, corrigindo referências internas inconsistentes da fonte. As fórmulas de evolução da RNE006 usam uma convenção diferente da entrada na faixa seguinte descrita na RNE008; confirmar também a fórmula da última linha. A RN007 foi mantida com a identificação original. A fonte não explicita a classificação de uma conclusão realizada na própria Data do Fim nem o tratamento do progresso com total zero.

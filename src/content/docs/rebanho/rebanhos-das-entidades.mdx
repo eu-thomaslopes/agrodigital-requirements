@@ -1,0 +1,140 @@
+---
+title: Rebanhos das Entidades
+docType: requirement
+module: rebanho
+entity: rebanhos-das-entidades
+entityPlural: rebanhos das entidades
+lifecycle: draft
+usID:
+  - US081
+icon: beef
+---
+
+**Eu**, como usuário do sistema, **quero** gerenciar Rebanhos das Entidades, **para que** eu possa permitir a gestão eficiente dessas informações.
+
+## 1. Listar rebanho
+
+**Dado que** estou na tela listagem  
+**Então** o sistema exibe o rebanho da entidade em questão, contendo os seguintes campos:
+
+### Rebanho atual (zero ou um registro ativo)
+
+### Faixa Etária (Uma ou mais)
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Faixa Etária | Texto | Exibe as faixas etárias cadastradas para a espécie | “De 0 a 12 Meses” |
+
+Disponível se a espécie POSSUI sexo definido.
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Machos | Texto | Exibe a quantidade de machos na faixa etária em questão | 20 |
+| Fêmeas | Texto | Exibe a quantidade de fêmeas na faixa etária em questão | 15 |
+
+Disponível se a espécie NÃO POSSUI sexo definido.
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Animais | Texto | Exibe a quantidade de animais na faixa etária em questão | 15 |
+
+### Total
+
+Disponível se a espécie POSSUI sexo definido.
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Machos | Texto | Exibe a quantidade total de machos | 50 |
+| Fêmeas | Texto | Exibe a quantidade total de fêmeas | 65 |
+
+Disponível se a espécie NÃO POSSUI sexo definido.
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Animais | Texto | Exibe a quantidade total de animais | 15 |
+
+### Histórico de itens inativos (zero ou mais)
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Tipo de Atualização | Texto | Exibe o tipo de atualização, conforme as opções definidas na RNE006. | Criação de Rebanho |
+| Data da Atualização | Texto | Exibe a data em que houve a atualização | “12/02/2012” |
+
+**E** exibe as seguintes ações:
+
+### Ações do Histórico
+
+| Ação | Descrição |
+| --- | --- |
+| Visualizar | Disponível para todas as atualizações com tipo diferente de “Criação de Rebanho”:  Vai para o registro da atualização em questão (Ajuste de Rebanho, Lançamento de Rebanho, Atualização Cadastral de Rebanho, Emissão de GTA, Emissão de ATA) |
+
+### Ações de Navegação
+
+| Ação | Descrição |
+| --- | --- |
+| Gerenciar Rebanho | Exibe as opções de atualização do rebanho |
+| Atualização Cadastral do Rebanho | Disponível apenas para as entidades “Exploração Pecuária” e “Núcleo de Produção”:  Vai para a tela de atualização cadastral de rebanho |
+| Ajuste de Rebanho | Vai para a tela de ajuste de rebanho |
+| Lançamento de Rebanho | Vai para a tela de lançamento de rebanho |
+| Emissão de GTA | Vai para a tela de emissão de GTA |
+| Emissão de ATA | Vai para a tela de emissão de ATA |
+
+## Regras de negócio específicas
+
+### RNE001 — Entidades com rebanho
+
+As seguintes entidades do sistema possuem rebanho: Exploração Pecuária, Núcleo de Produção, Produtor, Evento Pecuário, Estabelecimento Agroindustrial (Abatedouro Frigorífico), Revendedora de Animais Vivos, Instituição de Ensino e Pesquisa, Local de Pesagem, Local de Realização de Exame, Estabelecimento Genérico, Unidade de Vigilância Agropecuária
+
+### RNE002 — Rebanhos por espécie
+
+O sistema deve gerenciar os rebanhos das entidades da seguinte forma:
+
+  * Para Exploração Pecuária e Núcleo de Produção: Permitir apenas um rebanho, de acordo com sua espécie
+
+  * Para Evento Pecuário: Permitir um rebanho para cada espécie do evento
+
+  * Para Revendedora de Animais Vivos, Instituição de Ensino e Pesquisa, Local de Pesagem, Local de Realização de Exame, Estabelecimento Genérico e Unidade de Vigilância Agropecuária: Permitir um rebanho para cada uma das espécies do sistema
+
+### RNE003 — Inicialização do rebanho
+
+O rebanho é inicializado automaticamente na criação da entidade com 0 animais em todas as faixas etárias da espécie, para ambos os sexos (se a espécie possuir sexo definido).
+
+### RNE004 — Inicialização do rebanho — repetição da fonte
+
+Aplica-se a mesma inicialização definida na **RNE003**. A fonte repete essa regra sob os dois identificadores.
+
+### RNE005 — Movimentação por entidade
+
+As regras de movimentação do rebanho variam conforme a entidade associada, conforme descrito a seguir:
+
+  * Exploração Pecuária
+
+    * Para explorações com espécies que não possuem controle por núcleo, o rebanho é definido diretamente na exploração. Nesse caso, quaisquer atualizações devem ocorrer na própria exploração.
+
+    * Para explorações com espécies que possuem controle por núcleo, o rebanho da exploração corresponde à soma dos rebanhos de seus núcleos. Nesse caso, quaisquer atualizações devem ocorrer exclusivamente nos rebanhos dos núcleos, não sendo permitidas alterações diretamente no rebanho da exploração. Dessa forma, a tela de rebanho dessas explorações trata-se apenas da visualização consolidada dos rebanhos de seus núcleos.
+
+  * Núcleo de Produção, Produtor, Evento Pecuário, Revendedora de Animais Vivos, Estabelecimento Agroindustrial (Frigorífico), Açougue, Aeroporto/Porto e Instituição de Ensino e Pesquisa:
+
+    * O rebanho é definido diretamente na entidade. Nesse caso, quaisquer atualizações devem ocorrer diretamente no rebanho da entidade. 
+
+### RNE006 — Tipos de atualização
+
+As atualizações que alteram os valores de um rebanho, respeitadas as regras acima, podem ocorrer das seguintes formas:
+
+  * Criação de Rebanho: Ocorre apenas na inicialização do rebanho, quando uma nova entidade é criada. Nesse caso, o rebanho é automaticamente inicializado com 0 animais. **Disponível para todas as entidades**
+
+  * Ajuste de Rebanho: Pode ocorrer a qualquer momento. Trata-se da sobrescrita dos valores atuais do rebanho, desconsiderando os valores anteriormente cadastrados. Ao realizar um ajuste, o sistema substitui integralmente os valores existentes na faixa etária pelos novos valores informados, sem realizar soma ou subtração. **Disponível para todas as entidades**
+
+  * Lançamento de Rebanho: Pode ocorrer a qualquer momento. Trata-se da soma ou subtração de animais no rebanho, considerando-se os valores atuais cadastrados em cada faixa etária. Pode contemplar alterações por mortalidade, nascimento, evolução, roubo/extravio ou descarte. **Disponível para todas as entidades**
+
+  * Emissão de GTA de Entrada: Trata-se da movimentação de animais entre diferentes rebanhos por meio da emissão de Guia de Transporte Animal (GTA). Pode contemplar alterações de entrada, ou seja, em que a entidade em questão conste no destino, sob regras específicas definidas nos requisitos de emissão de GTA. **Disponível para todas as entidades**
+
+  * Emissão de GTA de Saída: Trata-se da movimentação de animais entre diferentes rebanhos por meio da emissão de Guia de Transporte Animal (GTA). Pode contemplar alterações de saída, ou seja, em que a entidade em questão conste na procedência, sob regras específicas definidas nos requisitos de emissão de GTA. **Disponível para todas as entidades**
+
+  * Emissão de ATA: Trata-se da movimentação de animais entre diferentes rebanhos por meio da emissão de Autorização de Transferência Animal (ATA). Pode contemplar alterações de entrada e saída de animais, sob regras específicas definidas nos requisitos de emissão de ATA. **Disponível para explorações pecuárias, núcleos de produção e eventos pecuários**
+
+  * Atualização Cadastral de Rebanho: Pode ocorrer conforme as etapas de atualização são abertas no sistema. Trata-se de uma campanha periódica e rotineira de atualização dos dados do rebanho. Ao realizar a atualização cadastral, considera-se os valores atuais cadastrados. Pode contemplar alterações por mortalidade, nascimento e evolução. **Disponível apenas para Exploração pecuária e Núcleo de produção.**
+
+## Pendências da fonte
+
+RNE003 e RNE004 repetem a mesma regra; ambas foram preservadas para manter a rastreabilidade. A RNE001 inclui Produtor e Estabelecimento Agroindustrial, mas a RNE002 não define a quantidade de rebanhos para essas entidades. A RNE005 menciona Açougue e Aeroporto/Porto, ausentes da RNE001, e não detalha todas as entidades nela listadas; confirmar o escopo. A RNE006 não enumera Adição e Venda entre os lançamentos, embora apareçam na US085. A referência do histórico a RN002 foi corrigida para RNE006, que define os tipos de atualização.
