@@ -23,6 +23,37 @@ const index = createStoryReferenceIndex(entries.map((entry) => ({
     const content = metadata?.closest('.sl-markdown-content');
     if (!metadata || !content) return;
     const index: StoryReferenceIndex = JSON.parse(metadata.dataset.storyReferenceIndex ?? '{}');
+
+    // Referências importadas podem já ter links para os documentos de origem.
+    for (const heading of content.querySelectorAll('h2')) {
+      const title = (heading.textContent ?? '').normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
+      if (title !== 'historias e referencias relacionadas') continue;
+      let section = (heading.closest('.sl-heading-wrapper') ?? heading).nextElementSibling;
+      while (section && !section.matches('h2, .level-h2') && !section.querySelector(':scope > h2')) {
+        for (const link of section.querySelectorAll<HTMLAnchorElement>('a[href]')) {
+          const code = (link.textContent ?? '').match(/^\s*(US\d+)(?![\p{L}\p{N}_])/u)?.[1];
+          if (!code) continue;
+          const reference = index[code];
+          if (!reference) {
+            // Não inventa um destino para histórias que ainda não têm página.
+            const label = document.createElement('span');
+            label.title = `${code} — história ainda não cadastrada no site`;
+            label.append(...link.childNodes);
+            link.replaceWith(label);
+            continue;
+          }
+          link.href = reference.href;
+          link.textContent = reference.title;
+          link.title = `${code} — ${reference.title}`;
+          link.dataset.storyCode = code;
+          link.removeAttribute('target');
+          link.removeAttribute('rel');
+        }
+        section = section.nextElementSibling;
+      }
+    }
+
     const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
     const nodes: Text[] = [];
     while (walker.nextNode()) nodes.push(walker.currentNode as Text);

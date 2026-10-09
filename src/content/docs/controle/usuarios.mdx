@@ -1,0 +1,151 @@
+---
+title: Usuários
+docType: requirement
+module: controle
+entity: usuarios
+entityPlural: usuários
+lifecycle: draft
+usID:
+  - US040
+  - US041
+---
+
+## 1. Buscar usuário
+
+**Dado que** estou na tela inicial para usuários autenticados  
+**Quando** acesso o menu **Usuários**  
+**Então** o sistema exibe a tela de busca.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Nome ou CPF do usuário | Texto curto | Não | Alfanumérico.<br />Tamanho máximo = 255 caracteres. | `José da Silva` | Vazio |
+| Situação | Seleção simples | Não | Valores = `Ativo`, `Inativo`, `Suspenso`. | `Ativo` | Vazio |
+
+O sistema solicita que o usuário selecione pelo menos um filtro ou utilize o campo de busca para visualizar os resultados.
+
+| Ação | Comportamento |
+| --- | --- |
+| Adicionar Novo | Abre a tela de cadastro de usuário. |
+| Pesquisar | Realiza a busca utilizando o campo de busca e os filtros. |
+| Inicial | Retorna à tela inicial para usuários autenticados. |
+
+## 2. Listar usuários
+
+**Dado que** estou na tela de busca  
+**E** o campo de busca ou pelo menos um filtro foi preenchido corretamente  
+**Quando** realizo a ação **Pesquisar**  
+**Então** o sistema retorna os registros compatíveis e exibe:
+
+| Campo | Tipo | Ordenável | Descrição | Exemplo |
+| --- | --- | :---: | --- | --- |
+| Nome | Texto | Sim | Nome do usuário. | `Joaquim da Silva` |
+| CPF | Texto | Não | CPF do usuário. | `444.009.956-40` |
+| Email | Texto | Não | E-mail do usuário, se existir. | `joaquim@email.com` |
+| Situação | Texto | Sim | Situação do cadastro. | `Ativo` |
+
+Para cada resultado, o sistema exibe **Visualizar** e **Editar**, que abrem as respectivas telas do usuário selecionado.
+
+### Erro de validação
+
+Se o campo de busca ou algum filtro não for preenchido corretamente, o sistema não realiza a busca, apresenta uma mensagem indicando os problemas e destaca os campos obrigatórios ausentes ou com erros de validação.
+
+### Busca sem resultados
+
+Se os dados forem válidos e não houver registros compatíveis, o sistema **não exibe** a mensagem `Nenhum resultado foi encontrado`, conforme a redação da US041. Esse comportamento está registrado nas pendências da fonte.
+
+## 3. Cadastrar usuário
+
+**Dado que** estou na tela de cadastro de usuário, no contexto de administração do sistema  
+**Então** o sistema exibe o formulário descrito a seguir.
+
+### Informações básicas
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| CPF | Texto numérico | Sim | Tamanho = 11 dígitos.<br />Formato = XXX.XXX.XXX-XX.<br />Validação dos dígitos verificadores.<br />Unicidade conforme RNE001. | `444.009.956-40` | Vazio |
+| Nome | Texto curto | Sim | Consulta à API de CPF.<br />Somente leitura.<br />Alfanumérico.<br />Tamanho máximo = 255 caracteres. | `Joaquim da Silva` | Valor obtido pela API de CPF |
+| Email | Texto curto | Não | Alfanumérico.<br />Tamanho máximo = 255 caracteres.<br />Formato de e-mail válido. | `pessoa@email.com` | Vazio |
+
+O cadastro depende da disponibilidade da API de CPF, conforme RNE002.
+
+### Ações e resultado
+
+| Ação | Comportamento |
+| --- | --- |
+| Adicionar | Valida os dados informados e salva o cadastro. |
+| Todos os usuários | Retorna à tela de busca. |
+
+Em caso de sucesso, o sistema exibe uma mensagem e as ações **Voltar**, que retorna à busca, e **Visualizar**, que abre a visualização do usuário cadastrado.
+
+## 4. Visualizar usuário
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe todos os campos do cadastro preenchidos e como somente leitura e acrescenta:
+
+| Seção | Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- | --- |
+| Situação do Cadastro | Situação | Texto | Situação atual do usuário. | `Ativo` |
+| Alterações do Cadastro | Usuário | Texto | Usuário que efetuou a última alteração. | `Lucas Pedro Conte` |
+| Alterações do Cadastro | Data e Hora da Modificação | Data e hora | Data e hora da última alteração. | `14/04/2012 07:29` |
+
+O sistema exibe **Editar**, que abre a edição do usuário, e **Todos os usuários**, que retorna à busca.
+
+## 5. Editar usuário
+
+**Dado que** estou na tela de edição  
+**Então** o sistema exibe os campos do cadastro preenchidos e permite editar apenas **Email**. **CPF**, **Nome** e os campos adicionais da visualização permanecem como somente leitura.
+
+| Ação | Comportamento |
+| --- | --- |
+| Salvar | Abre a confirmação das edições. |
+| Ativar/Inativar | Altera a situação para `Ativo` ou `Inativo`, dependendo da situação atual, conforme CA002 e RN002. |
+| Visualizar usuário | Retorna à tela de visualização. |
+
+Na confirmação, **Cancelar** retorna à edição; **Salvar** valida os dados, persiste as alterações e retorna à visualização.
+
+## Regras de negócio específicas
+
+### RNE001 — Unicidade
+
+O cadastro de um usuário deve ser único no sistema pelo **CPF**.
+
+### RNE002 — Disponibilidade da API de CPF
+
+Se a API de CPF estiver inacessível, o sistema deve impedir o cadastro do usuário.
+
+## Critérios de aceitação e regras comuns
+
+Aplicam-se os critérios e regras do [documento comum às histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit):
+
+- **CA001 — Salvar cadastro de uma entidade**.
+- **CA002 — Ativar/Inativar cadastro de uma entidade**.
+- **CA003 — Notificar erro ao usuário devido a falha técnica**.
+- **RN001 — Situação do cadastro de uma entidade**.
+- **RN002 — Ativação/Inativação de cadastros de uma entidade**.
+- **RN003 — Controle de alterações em uma entidade**.
+
+## Histórico da fonte
+
+| História | Versão | Data | Alteração |
+| --- | --- | --- | --- |
+| US040 — Gerenciar usuário | v1.0 | 10/10/2025 | Primeira versão da história. |
+| US041 — Buscar usuário | v1.0 | 10/10/2025 | Primeira versão da história. |
+
+## Histórias e referências relacionadas
+
+- [US040 — Gerenciar usuário](https://docs.google.com/document/d/19Qpn7NGB70PNRy-eg0pM7pnMwSVxhJJCU-cHlZOdW40/edit?tab=t.0), consolidada neste documento.
+- [US041 — Buscar usuário](https://docs.google.com/document/u/0/d/1wWQMVXiI4BvMR87XQoqQx2cbByRKtMgact9rmNUBdzk/edit), consolidada neste documento.
+- [Requisitos não funcionais e técnicos](https://docs.google.com/document/d/17IcCYOYvCMBbeJWeu7iPQepMjhCJAykMgbgh4IIetPg/edit?usp=sharing).
+
+## Protótipos
+
+- [Buscar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=10248-38968&starting-point-node-id=7297%3A51751).
+- [Cadastrar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=10194-40601&starting-point-node-id=7297%3A51751).
+- [Visualizar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=10194-41286&starting-point-node-id=7297%3A51751).
+- [Editar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=10194-43495&starting-point-node-id=7297%3A51751).
+
+## Pendências da fonte
+
+- A US041 determina que a mensagem de ausência de resultados não seja exibida. Confirmar se a negação é intencional e qual retorno deve ser apresentado ao usuário nesse caso.
+- A busca inclui `Suspenso`, mas a US040 só descreve a ação Ativar/Inativar. Confirmar como um usuário passa à situação Suspenso e como essa situação é tratada pela ação de edição.
+- Os campos da busca são opcionais, mas o cenário de erro menciona campos obrigatórios ausentes. Confirmar se isso se refere à exigência de informar pelo menos um critério de pesquisa.

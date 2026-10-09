@@ -1,0 +1,109 @@
+---
+title: Recuperação de senha
+docType: requirement
+module: controle
+entity: recuperacao-de-senha
+entityPlural: recuperações de senha
+lifecycle: draft
+usID:
+  - US011
+icon: key-round
+---
+
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
+## 1. Exibir tela de recuperação de senha
+
+**Dado que** estou na tela inicial do sistema (US009)  
+**Quando** realizo a ação **Esqueceu a senha?**  
+**Então** o sistema exibe o formulário a seguir.
+
+```componente
+componente: Informar CPF
+exemplo: 106.114.346-52
+```
+
+| Ação | Comportamento |
+| --- | --- |
+| Enviar Email | Solicita o envio da mensagem de recuperação para o e-mail do usuário, conforme a seção seguinte. |
+| Voltar | Retorna à tela inicial (US009). |
+
+## 2. Enviar mensagem de recuperação
+
+**Dado que** estou na tela de recuperação de senha  
+**Quando** realizo a ação **Enviar Email**  
+**E** os campos obrigatórios estão preenchidos corretamente  
+**E** o CPF informado está cadastrado no sistema  
+**Então** o sistema envia uma mensagem ao e-mail vinculado ao CPF e exibe:
+
+> **Verifique seu Email.** Enviamos para (email vinculado ao CPF) um link para você redefinir sua senha. Confira sua caixa de entrada, spam e lixeira.
+
+O sistema exibe **Voltar**, que retorna à tela inicial (US009).
+
+:::note[Link ou código a confirmar]
+A ação de envio e o título do critério da fonte mencionam um código de confirmação, enquanto a mensagem e a etapa seguinte descrevem um link no e-mail. A fonte também prevê erro de código inválido e reenvio de código, mas não define um campo para informá-lo. Esses elementos foram preservados sem acrescentar uma etapa de digitação de código.
+:::
+
+## 3. Redefinir senha
+
+**Dado que** estou no e-mail de recuperação  
+**Quando** realizo a ação **Redefinir Senha**  
+**Então**, no caso de sucesso, o sistema exibe o formulário de alteração de senha.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Senha | Texto | Sim | Tamanho mínimo = 8 caracteres.<br />Tamanho máximo = 70 caracteres.<br />Deve incluir letras maiúsculas, minúsculas, números e caracteres especiais.<br />Mascarada com `*`. | `Exemplo@1` | Vazio |
+| Confirmar Senha | Texto | Sim | Deve corresponder ao campo **Senha**.<br />Mascarada com `*`. | `Exemplo@1` | Vazio |
+
+| Ação | Comportamento |
+| --- | --- |
+| Alterar senha | Confirma a alteração, conforme a seção seguinte. |
+| Voltar | Retorna à tela inicial (US009). |
+
+### Erros de acesso à alteração
+
+| Cenário | Comportamento descrito na fonte |
+| --- | --- |
+| Campos obrigatórios ausentes ou preenchidos incorretamente | Não exibe a tela de alteração de senha.<br />Destaca os campos ausentes ou com erro e apresenta uma mensagem indicando os problemas. |
+| Campos válidos, mas código diferente do enviado ao e-mail | Não exibe a tela de alteração de senha e apresenta `Código inválido`. |
+
+## 4. Alterar senha
+
+**Dado que** estou na tela de alteração de senha  
+**Quando** realizo a ação **Alterar senha**  
+**E** os campos obrigatórios estão preenchidos corretamente  
+**Então** o sistema troca a senha do usuário e exibe **Fazer Login**, que retorna à tela inicial (US009).
+
+Se houver campos obrigatórios ausentes ou preenchidos incorretamente, o sistema não troca a senha, destaca os campos com problemas e exibe uma mensagem de erro indicando as validações que falharam.
+
+## Critérios de aceitação comuns
+
+Aplicam-se os critérios do [documento comum às histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit?usp=drivesdk):
+
+- **CA003 — Notificar erro ao usuário devido a falha técnica**.
+- **CA007 — Reenviar código de verificação**.
+
+## Histórico da fonte
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| v1.2 | 18/12/2025 | Atualização com o novo fluxo do sistema. |
+| v1.1 | 14/03/2025 | Paulo: padronização da escrita da história. |
+| v1.0 | 28/02/25 | Versão inicial. |
+
+## Histórias e referências relacionadas
+
+- [US009 — Tela inicial do sistema](https://docs.google.com/document/d/1cmweLsAkZT211MuEVV6D9gvSrTdmMzeZUrqu8FS-kmw/edit?usp=sharing).
+
+## Protótipos
+
+- [Email](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=2567-16872&starting-point-node-id=2131%3A11978).
+- [Código](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=2567-16934&starting-point-node-id=2131%3A11978).
+- [Nova senha](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=2567-16997&starting-point-node-id=2131%3A11978).
+
+## Pendências da fonte
+
+- Confirmar o fluxo por link ou código e os campos a que se refere a validação anterior à abertura da tela de alteração.
+- A confirmação menciona `Nova senha`, mas o formulário nomeia o campo `Senha`; a referência foi uniformizada para o nome do campo.
+- A fonte descreve a senha como alfanumérica e também exige caracteres especiais; a tabela explicita os requisitos de composição e tamanho.
+- A fonte utiliza o nome SIDAGRO; confirmar a identificação aplicável ao AgroDigital.

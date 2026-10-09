@@ -1,0 +1,61 @@
+---
+title: Autenticação de usuário
+docType: requirement
+module: controle
+entity: autenticacao-de-usuario
+entityPlural: autenticações de usuários
+lifecycle: draft
+usID:
+  - US010
+icon: key-round
+---
+
+## 1. Autenticar com CPF e senha
+
+**Dado que** estou na tela inicial do sistema (US009), com os campos de CPF e senha definidos nessa história  
+**Quando** realizo a ação **Entrar com CPF**  
+**E** todos os campos obrigatórios estão preenchidos corretamente  
+**E** as credenciais correspondem às de um usuário cadastrado  
+**Então** o sistema realiza o login e exibe a tela para usuários autenticados, de acordo com o perfil do usuário.
+
+| Cenário de erro | Comportamento |
+| --- | --- |
+| Campos válidos, mas credenciais incompatíveis com o cadastro | Não realiza o login e exibe `CPF/senha inválidos`. |
+| Campos obrigatórios ausentes ou preenchidos incorretamente | Não realiza o login.<br />Destaca os campos ausentes ou com erro e apresenta uma mensagem indicando os problemas. |
+
+## 2. Autenticar com GOV.BR
+
+**Dado que** estou na tela inicial do sistema (US009)  
+**Quando** realizo a ação de acesso ou cadastro com GOV.BR  
+**Então** o sistema trata o retorno da autenticação da seguinte forma:
+
+| Cenário | Comportamento |
+| --- | --- |
+| Autenticação GOV.BR bem-sucedida e usuário já cadastrado no sistema utilizando GOV.BR | Realiza o login e exibe a tela para usuários autenticados, de acordo com o perfil do usuário. |
+| Autenticação GOV.BR bem-sucedida e usuário sem cadastro no sistema utilizando GOV.BR | Não realiza o login e exibe o cadastro de usuário com GOV.BR (US012). |
+| Falha na autenticação GOV.BR | Não realiza o login e exibe `A autenticação falhou`. |
+
+## Critérios de aceitação comuns
+
+Aplica-se **CA003 — Notificar erro ao usuário devido a falha técnica**, conforme o [documento comum às histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit?usp=drivesdk).
+
+## Histórico da fonte
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| v1.1 | 14/03/2025 | Paulo: padronização da escrita e atualização do campo de login para CPF. |
+| v1.0 | 28/02/25 | Versão inicial. |
+
+## Histórias e referências relacionadas
+
+- [US009 — Tela inicial do sistema](https://docs.google.com/document/d/1cmweLsAkZT211MuEVV6D9gvSrTdmMzeZUrqu8FS-kmw/edit?usp=sharing).
+- [US012 — Cadastro de usuário](https://docs.google.com/document/d/1fHyL0G45nSa6PVnRZSARfPiZ8wwFQ0KYXytezlM47Yo/edit?tab=t.0).
+
+## Protótipos
+
+- [Tela inicial](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=2131-11978&p=f&t=rbwEVlC4iQ8Qm22d-1&scaling=scale-down&content-scaling=fixed&page-id=1%3A2&starting-point-node-id=2131%3A11978&show-proto-sidebar=1).
+
+## Pendências da fonte
+
+- A fonte utiliza o nome SIDAGRO; confirmar a identificação aplicável ao AgroDigital.
+- A ação GOV.BR aparece como `Entrar/cadastrar com GOV.BR` na US010 e como `Entrar com GOV.BR` na US009. O rótulo da tela é definido na US009.

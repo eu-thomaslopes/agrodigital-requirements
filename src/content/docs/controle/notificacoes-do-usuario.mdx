@@ -1,0 +1,93 @@
+---
+title: Notificações do usuário
+docType: requirement
+module: controle
+entity: notificacoes-do-usuario
+entityPlural: notificações do usuário
+lifecycle: draft
+usID:
+  - US019
+icon: bell
+---
+
+## 1. Exibir caixa de entrada de notificações
+
+**Dado que** estou autenticado no sistema  
+**Quando** acesso **Notificações** no menu superior  
+**Então** o sistema exibe a caixa de entrada, respeitando a RNE001, com o campo de busca a seguir.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Pesquisar Notificação | Texto curto | Não | Alfanumérico.<br />Tamanho máximo = 255 caracteres. | `Aviso de aprovação do cadastro de exploração pecuária` | Vazio |
+
+| Ação | Comportamento |
+| --- | --- |
+| Inicial | Retorna à tela inicial do sistema. |
+| (De)Selecionar todas | Marca ou desmarca todas as notificações para ações em lote. |
+| Marcar como lidas | Marca como lidas as notificações selecionadas. |
+| Marcar como não lidas | Marca como não lidas as notificações selecionadas. |
+
+O sistema lista todas as notificações do usuário em ordem decrescente de data, com os campos a seguir, e distingue visualmente as lidas das não lidas.
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Título da Notificação | Texto | Título da notificação. | `Novo cadastro aprovado` |
+| Prévia do Assunto | Texto | Prévia do assunto, limitada a uma linha. | `Sua solicitação de cadastro de exploração pecuária foi aprovada com sucesso...` |
+| Data da mensagem | Data e hora | Data e hora da notificação. | `04/04/2025 10:30` |
+| Status | Seleção | Indica se a notificação foi lida pelo usuário. | `Não lida` |
+
+| Ação por notificação | Comportamento |
+| --- | --- |
+| (De)Selecionar | Seleciona ou desseleciona a notificação para ações em lote. |
+| Visualizar | Abre os detalhes da notificação. |
+
+## 2. Buscar notificações
+
+**Dado que** estou na caixa de entrada de notificações  
+**Quando** insiro um termo no campo **Pesquisar Notificação**  
+**Então** o sistema filtra a lista e exibe apenas as notificações cujo título ou assunto contenha o termo buscado.
+
+## 3. Visualizar notificação
+
+**Dado que** estou na caixa de entrada de notificações  
+**Quando** realizo a ação **Visualizar** em uma notificação  
+**Então** o sistema abre os detalhes, marca a notificação como lida e exibe:
+
+| Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- |
+| Título da Notificação | Texto | Título da notificação. | `Novo cadastro aprovado` |
+| Assunto | Texto | Assunto completo, sem a limitação de uma linha da prévia. | `Sua solicitação de cadastro de exploração pecuária foi aprovada com sucesso! Você pode visualizar seus cadastros acessando a opção no menu principal. Não se esqueça de ficar atento à data de vencimento, para ter sua exploração sempre regularizada!` |
+| Data da mensagem | Data e hora | Data e hora da notificação. | `04/04/2025 10:30` |
+
+O sistema exibe **Voltar**, que retorna à listagem com todas as notificações.
+
+## Regras de negócio específicas
+
+### RNE001 — Notificações do usuário autenticado
+
+Apenas notificações vinculadas ao usuário autenticado devem ser exibidas.
+
+## Critérios de aceitação e regras comuns
+
+Aplicam-se os critérios e regras do [documento comum às histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit?usp=drivesdk):
+
+- **CA003 — Notificar erro ao usuário devido a falha técnica**.
+- **RN007 — Permissões de acesso**.
+
+## Histórico da fonte
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| v1.0 | 04/04/2025 | Versão inicial. |
+
+## Referências relacionadas
+
+- [Requisitos não funcionais e técnicos](https://docs.google.com/document/d/17IcCYOYvCMBbeJWeu7iPQepMjhCJAykMgbgh4IIetPg/edit?usp=sharing).
+
+## Protótipos
+
+- [Sistema de notificação](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=3431-13195&starting-point-node-id=2131%3A11978&t=Vfh3es8pT9vKbed9-1).
+
+## Referência da fonte
+
+A descrição original utiliza o nome SIDAGRO; confirmar a identificação aplicável ao AgroDigital.

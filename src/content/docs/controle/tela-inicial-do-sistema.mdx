@@ -1,0 +1,62 @@
+---
+title: Tela inicial do sistema
+docType: requirement
+module: controle
+entity: tela-inicial-do-sistema
+entityPlural: telas iniciais do sistema
+lifecycle: draft
+usID:
+  - US009
+icon: globe
+---
+
+import RequirementComponent from '../../../components/RequirementComponent.astro';
+
+## 1. Exibir tela inicial do sistema
+
+**Dado que** estou em um computador com acesso à internet  
+**Quando** acesso o endereço web do sistema  
+**Então** o sistema exibe a tela inicial com os campos a seguir.
+
+```componente
+componente: Informar CPF
+```
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Senha | Texto | Sim | Alfanumérico.<br />Tamanho máximo = 70 caracteres. | `Exemplo@1` | Vazio |
+
+| Ação | Comportamento |
+| --- | --- |
+| Entrar com CPF | Realiza a autenticação com CPF e senha (US010). |
+| Esqueceu a senha? | Abre a recuperação de senha (US011). |
+| Criar uma nova conta com CPF | Abre o cadastro de usuário com CPF (US012). |
+| Entrar com GOV.BR | Inicia a autenticação ou o cadastro via GOV.BR (US010 e US012). |
+
+## Critérios de aceitação e regras comuns
+
+Aplicam-se os critérios e regras do [documento comum às histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit?usp=drivesdk):
+
+- **CA003 — Notificar erro ao usuário devido a falha técnica**.
+- **RN007 — Permissões de acesso**.
+
+## Histórico da fonte
+
+| Versão | Data | Alteração |
+| --- | --- | --- |
+| v1.1 | 14/03/2025 | Paulo: padronização da escrita e atualização do campo de login para CPF. |
+| v1.0 | 28/02/25 | Versão inicial. |
+
+## Histórias e referências relacionadas
+
+- [US010 — Autenticação de usuário](https://docs.google.com/document/d/1XDrUzPhjtrw1dRjUc9Aw_uTZBq7dCFUQ18eAEYcQFKU/edit?usp=sharing).
+- [US011 — Recuperação de senha](https://docs.google.com/document/d/19um4LjiZ7Ng0f1H6R8zotzWU-g2EEgnRfwaHrRNiWGg/edit?usp=sharing).
+- [US012 — Cadastro de usuário](https://docs.google.com/document/d/1fHyL0G45nSa6PVnRZSARfPiZ8wwFQ0KYXytezlM47Yo/edit?tab=t.0).
+
+## Protótipos
+
+- [Tela inicial](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=2131-11978&starting-point-node-id=2131%3A11978&t=AFD2ZE528gbwEluI-1).
+
+## Referência da fonte
+
+A história identifica o sistema como SIDAGRO e informa o [endereço web do SIDAGRO](https://www.sidagro.ima.mg.gov.br/). Essa referência histórica foi preservada; confirmar o endereço e a identificação aplicáveis ao AgroDigital.

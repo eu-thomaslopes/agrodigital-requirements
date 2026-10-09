@@ -1,0 +1,176 @@
+---
+title: Papéis
+docType: requirement
+module: controle
+entity: papeis
+entityPlural: papéis
+lifecycle: draft
+usID:
+  - US046
+  - US047
+---
+
+## 1. Buscar papel
+
+**Dado que** estou na tela inicial para usuários autenticados  
+**Quando** acesso o menu **Papéis**, observadas as permissões de acesso  
+**Então** o sistema exibe a tela de busca.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Nome do Papel | Texto curto | Não | Alfanumérico.<br />Tamanho máximo = 255 caracteres. | `Responsável Técnico` | Vazio |
+| Tipo de Papel | Seleção simples | Não | Valores definidos na RNE002. | `Base` | Vazio |
+| Situação | Seleção simples | Não | Valores = `Ativo`, `Inativo`. | `Ativo` | Vazio |
+
+O sistema solicita que o usuário selecione pelo menos um filtro e/ou utilize o campo de busca para visualizar os resultados.
+
+| Ação | Comportamento |
+| --- | --- |
+| Adicionar Novo | Abre a tela de cadastro de papel. |
+| Pesquisar | Realiza a busca utilizando o nome e os filtros informados. |
+| Inicial | Retorna à tela inicial para usuários autenticados. |
+
+## 2. Listar papéis
+
+**Dado que** estou na tela de busca  
+**E** o campo de busca e/ou pelo menos um filtro foi preenchido corretamente  
+**Quando** realizo a ação **Pesquisar**  
+**E** existem registros compatíveis  
+**Então** o sistema exibe:
+
+| Campo | Tipo | Ordenável | Descrição | Exemplo |
+| --- | --- | :---: | --- | --- |
+| Nome do Papel | Texto | Sim | Nome do papel. | `Funcionário` |
+| Tipo de Papel | Texto | Sim | Tipo do papel, conforme RNE002. | `Base` |
+| Situação | Texto | Sim | Situação do cadastro. | `Ativo` |
+
+| Ação por resultado | Disponibilidade e comportamento |
+| --- | --- |
+| Visualizar | Abre a visualização do papel selecionado. |
+| Editar | Abre a edição do papel selecionado, respeitando a restrição de tipo prevista na RNE002. |
+| Copiar papel | Abre a tela de cópia do papel selecionado, conforme a seção **Copiar papel**. |
+
+## 3. Cadastrar papel
+
+**Dado que** estou na tela de cadastro  
+**Então** o sistema exibe o formulário descrito a seguir, indicando os campos obrigatórios.
+
+### Informações básicas
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Tipo de Papel | Texto | Sim | Somente leitura.<br />Valor = `Complementar`, conforme RNE002. | `Complementar` | `Complementar` |
+| Nome do Papel | Texto curto | Sim | Alfanumérico.<br />Tamanho máximo = 255 caracteres.<br />Unicidade conforme RNE001. | `Responsável Técnico` | Vazio |
+
+### Permissões de acesso
+
+As permissões podem ser definidas manualmente ou copiadas de um papel existente. O sistema lista todos os módulos de acesso e suas permissões, conforme a [Planilha de Módulos e Permissões do sistema](https://docs.google.com/spreadsheets/d/1izsOTuRQRO5BBblwXz5CDryzk9OGskvRrMOipWaUJ_g/edit?usp=sharing), e exibe o campo a seguir para cada permissão.
+
+| Campo | Tipo | Obrigatório | Validações | Exemplo | Valor padrão |
+| --- | --- | :---: | --- | --- | --- |
+| Permissão de acesso | Booleano | Sim | Valores = `Verdadeiro`, `Falso`. | `Verdadeiro` | `Falso` |
+
+A lista de módulos e permissões deve ser produzida a partir da configuração correspondente, sem manter uma cópia manual neste documento.
+
+### Ações e resultado
+
+| Ação | Comportamento |
+| --- | --- |
+| Adicionar | Valida os dados, salva o cadastro e abre a tela de sucesso. |
+| Todos os papéis | Retorna à tela de busca. |
+
+Em caso de sucesso, o sistema exibe uma mensagem e as ações **Voltar**, que retorna à busca, e **Visualizar**, que abre a visualização do papel cadastrado.
+
+## 4. Visualizar papel
+
+**Dado que** estou na tela de visualização  
+**Então** o sistema exibe todos os campos do cadastro preenchidos e como somente leitura e acrescenta:
+
+| Seção | Campo | Tipo | Descrição | Exemplo |
+| --- | --- | --- | --- | --- |
+| Situação do Cadastro | Situação | Texto | Situação atual do papel. | `Ativo` |
+| Alterações do Cadastro | Usuário | Texto | Usuário que efetuou a última alteração. | `Lucas Pedro Conte` |
+| Alterações do Cadastro | Data e Hora da Última Modificação | Data e hora | Data e hora da última alteração. | `14/04/2012 07:29` |
+
+| Ação | Disponibilidade e comportamento |
+| --- | --- |
+| Editar | Disponível para o tipo definido como editável na RNE002.<br />Abre a tela de edição. |
+| Copiar papel | Abre a tela de cópia, preenchendo as permissões com as do papel atual. |
+| Todos os papéis | Retorna à tela de busca. |
+
+## 5. Editar papel
+
+**Dado que** estou na tela de edição de um papel cuja alteração é permitida pela RNE002  
+**Então** o sistema exibe o nome e as permissões preenchidos e editáveis. **Tipo de Papel**, **Situação**, **Usuário** e **Data e Hora da Última Modificação** permanecem como somente leitura.
+
+| Ação | Comportamento |
+| --- | --- |
+| Salvar | Abre a confirmação das edições. |
+| Ativar/Inativar | Alterna a situação entre `Ativo` e `Inativo`, conforme RNE002 e RN008. |
+| Visualizar papel | Retorna à tela de visualização. |
+
+Na confirmação, **Cancelar** retorna à edição; **Salvar** valida os dados, persiste as alterações e retorna à visualização.
+
+## 6. Copiar papel
+
+**Dado que** estou na tela de visualização ou na listagem de papéis  
+**Quando** realizo a ação **Copiar papel**  
+**Então** o sistema abre o formulário de criação de um novo papel, com as permissões preenchidas conforme o papel de origem e o nome no padrão `Cópia de [Nome do Papel Copiado]`.
+
+O usuário pode alterar o nome e as permissões antes de salvar. Aplicam-se os campos, as validações e as ações do cadastro, incluindo a unicidade do nome. O novo papel utiliza o tipo padrão definido no cadastro, conforme RNE002.
+
+:::note[Tipo do papel copiado]
+O critério de cópia da US046 descreve todos os campos como editáveis, mas o cadastro e a regra de tipos impedem a criação de novos papéis Base. Nesta consolidação, o Tipo de Papel permanece somente leitura com o valor Complementar; confirmar essa redação na validação da história.
+:::
+
+## Regras de negócio específicas
+
+### RNE001 — Unicidade
+
+O cadastro de um papel deve ser único no sistema pelo **Nome do Papel**.
+
+### RNE002 — Tipos de papel
+
+| Tipo | Origem e restrições |
+| --- | --- |
+| Base | Vinculado a cadastros do sistema, como o de produtor.<br />Não pode ser removido nem inativado.<br />Usuários não podem cadastrar novos papéis desse tipo.<br />Permite apenas visualizar o papel ou copiar suas permissões. |
+| Complementar | Criado pelo usuário e não associado aos cadastros básicos do sistema.<br />Permite editar as permissões, inativar e posteriormente reativar o papel. |
+
+Ao inativar um papel editável, ele também deve ser inativado para todos os usuários que o possuem, conforme a regra da fonte.
+
+## Critérios de aceitação e regras comuns
+
+Aplicam-se os critérios e regras do [documento comum às histórias](https://docs.google.com/document/d/1xhtmFYVdhQd9cYu_YCneQSb6qQfkiKAq-ypn78Tvssg/edit):
+
+- **CA001 — Salvar cadastro de uma entidade**.
+- **CA003 — Notificar erro ao usuário devido a falha técnica**.
+- **CA009 — Busca sem resultados**.
+- **CA010 — Uso incorreto de filtros de busca**.
+- **CA011 — Indicação de filtros de busca aplicados**.
+- **RN003 — Controle de alterações em uma entidade**.
+- **RN007 — Permissões de acesso**.
+- **RN008 — Situação do cadastro de uma entidade sem opção de suspensão**.
+
+## Histórico da fonte
+
+| História | Versão | Data | Alteração |
+| --- | --- | --- | --- |
+| US046 — Gerenciar papel | v1.0 | 10/11/2025 | Primeira versão da história. |
+| US047 — Buscar papel | v1.0 | 10/11/2025 | Primeira versão da história. |
+
+## Histórias e referências relacionadas
+
+- [US046 — Gerenciar papel](https://docs.google.com/document/u/0/d/1q68TcyvMiDv6cF9mnmJA3OfS4MN18PV_UA4SC3SQFo8/edit), consolidada neste documento.
+- [US047 — Buscar papel](https://docs.google.com/document/u/0/d/1WfT_bE_RKpJIKQOfKIa8GsaQMeGP6CMBqYJwtuw5ulE/edit), consolidada neste documento.
+- [Requisitos não funcionais e técnicos](https://docs.google.com/document/d/17IcCYOYvCMBbeJWeu7iPQepMjhCJAykMgbgh4IIetPg/edit?usp=sharing).
+
+## Protótipos
+
+- [Buscar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=10523-40148&starting-point-node-id=2131%3A11978&t=KChYLLBf91PfGPzo-1).
+- [Cadastrar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=10523-40739&starting-point-node-id=2131%3A11978&t=KChYLLBf91PfGPzo-1).
+- [Visualizar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=10584-40731&starting-point-node-id=2131%3A11978&t=KChYLLBf91PfGPzo-1).
+- [Editar](https://www.figma.com/proto/OskE7fDaGfcx3uF5f1zQrU/Prot%C3%B3tipos?node-id=10584-41007&starting-point-node-id=2131%3A11978&t=KChYLLBf91PfGPzo-1).
+
+## Validação
+
+As duas fontes registram validação presencial de 03/11/2025 a 05/01/2025, na Cidade Administrativa, em Belo Horizonte/MG. A data final é anterior à inicial; o intervalo foi preservado e deve ser confirmado.
